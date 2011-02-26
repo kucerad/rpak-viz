@@ -20,7 +20,7 @@ bool CTdata::loadFromFiles(const char * filename, int cnt, int scaleX, int scale
 	scY = scaleY;
 	scZ = scaleZ;
 	char filen [50];
-	char * rawData;
+	unsigned char * rawData;
 	PNG ctfile;
 	int width=0, height=0; 
 	int x,y,z;
@@ -63,9 +63,9 @@ bool CTdata::loadFromFiles(const char * filename, int cnt, int scaleX, int scale
 
 
 float CTdata::getValueAt(int x, int y, int z, bool &inFlag){
-	x /= scX;
-	y /= scY;
-	z /= scZ;
+	//x /= scX;
+	//y /= scY;
+	//z /= scZ;
 	if (x<0 || y<0 || z<0 || x>dimX || y>dimY || z>dimZ){
 		// out of grid
 		return 0.0f;

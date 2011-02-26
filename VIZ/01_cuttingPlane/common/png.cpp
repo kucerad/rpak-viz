@@ -89,9 +89,9 @@ void PNG::setPixel(const int x, const int y, flint value){
 	image[4 * y * width + 4 * x + 3] = value.ch[3]; // A	
 }
 
-char * PNG::getData(){
+unsigned char * PNG::getData(){
 	int size = image.size();
-	char * dataOut = new char[size];
+	unsigned char * dataOut = new unsigned char[size];
 	for (int i=0; i<size; i++){
 		dataOut[i] = image[i];
 	}
