@@ -43,7 +43,7 @@ public:
 
 	void clear();
 	int width, height;
-	char * getData();
+	unsigned char * getData();
 private:
 	vector<unsigned char> image;
 

@@ -39,17 +39,19 @@ void CTtexture::makeView(v3 normal, float z){
 	v3 pos;			// coord in 3d space
 	v3 dataCenter = ct.getCenterPoint();
 	v3 offset     = n*z;
-	float rescaleFactor = width/256;
+	float rescaleFactor = 256/float(width);
 	float value;
 	v4 color;
 
 	int w2 = width/2, h2= height/2;
-	for (s = 0; s < width; s++){
-		for (t = 0; t < height; t++){
+	for (t = 0; t < height; t++){
+		for (s = 0; s < width; s++){
 			// calculate position in 3d
 			pos = u*((s-w2)*rescaleFactor) + v*((t-h2)*rescaleFactor);
 			pos += offset + dataCenter;
-
+			/*if (pos.x>=168.f && pos.y>=176){
+				printf("?\n");
+			}*/
 			// get value at this position
 			value = ct.getValueAt(pos);
 			value /= 3272;

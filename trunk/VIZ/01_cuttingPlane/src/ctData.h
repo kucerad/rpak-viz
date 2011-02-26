@@ -25,13 +25,14 @@ public:
 	
 private:
 	float *	data;
+
 	int dimX, dimY, dimZ;
 	float scX, scY, scZ;
 	float max;
 
 	// get value at position in grid [not scaled]
 	float getValueAt(int x, int y, int z, bool &inFlag);
-
 };
+
 
 #endif

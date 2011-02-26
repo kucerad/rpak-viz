@@ -29,5 +29,4 @@ float interpolate3Dlin(const float val1, const float val2, const float val3, con
 void getCoordsForInterpolation(const float realCoord, const int axisScale, int &lowerCoord, float &t){
 	lowerCoord	= int (realCoord/axisScale);
 	t			= realCoord/axisScale - lowerCoord;
-	lowerCoord *= axisScale;
 }
