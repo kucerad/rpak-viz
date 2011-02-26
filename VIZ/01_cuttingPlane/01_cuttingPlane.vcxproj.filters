@@ -33,12 +33,15 @@
     <ClCompile Include="common\utils.cpp">
       <Filter>utils</Filter>
     </ClCompile>
+    <ClCompile Include="src\colorMap.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ctTexture.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\ctData.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\texture.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="common\png.h">
@@ -52,6 +55,18 @@
     </ClInclude>
     <ClInclude Include="src\settings.h">
       <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="src\colorMap.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="common\Vector4.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="common\Vector3.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ctTexture.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

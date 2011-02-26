@@ -10,11 +10,15 @@ CTdata::~CTdata(){
 	}
 }
 
+v3 CTdata::getCenterPoint(){
+	return v3(float(dimX)/2, float(dimY)/2,float(dimZ)/2);
+}
+
 bool CTdata::loadFromFiles(const char * filename, int cnt, int scaleX, int scaleY, int scaleZ){
+	int chars = 0;
 	scX = scaleX;
 	scY = scaleY;
 	scZ = scaleZ;
-
 	char filen [50];
 	char * rawData;
 	PNG ctfile;
@@ -41,18 +45,22 @@ bool CTdata::loadFromFiles(const char * filename, int cnt, int scaleX, int scale
 				data[z*width*height + y*width +x] = val;
 			}
 		}
+		for (int i=0; i<chars; i++){
+			printf("\b");
+		}
+		chars = printf("LOADING CT images: %03i %%",((z+1)*100)/cnt);
+	
 	}
 	dimX = width;
 	dimY = height;
 	dimZ = cnt;
+	for (int i=0; i<chars; i++){
+			printf("\b");
+		}
+	printf("LOADING CT images (%i) DONE\n", cnt);
 	return true;
 }
 
-void CTdata::getCoordsForInterpolation(const float realCoord, const int axisScale, int &lowerCoord, float &t){
-	lowerCoord	= int (floor(realCoord/axisScale));
-	t			= realCoord/axisScale - lowerCoord;
-	lowerCoord *= axisScale;
-};
 
 float CTdata::getValueAt(int x, int y, int z, bool &inFlag){
 	x /= scX;
@@ -64,6 +72,10 @@ float CTdata::getValueAt(int x, int y, int z, bool &inFlag){
 	}
 	inFlag = true;
 	return data[ z*dimX*dimY + y*dimX + x ];
+}
+
+float CTdata::getValueAt(const v3 position){
+	return getValueAt(position.x, position.y, position.z);
 }
 
 float CTdata::getValueAt(const float x, const float y, const float z){

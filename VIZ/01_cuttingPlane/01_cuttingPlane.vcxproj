@@ -44,6 +44,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>.\common;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -69,16 +70,21 @@
     <ClCompile Include="common\LODEpng\lodepng.cpp" />
     <ClCompile Include="common\png.cpp" />
     <ClCompile Include="common\utils.cpp" />
+    <ClCompile Include="src\colorMap.cpp" />
     <ClCompile Include="src\ctData.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\ctTexture.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="common\LODEpng\lodepng.h" />
     <ClInclude Include="common\png.h" />
     <ClInclude Include="common\utils.h" />
+    <ClInclude Include="common\Vector3.h" />
+    <ClInclude Include="common\Vector4.h" />
+    <ClInclude Include="src\colorMap.h" />
     <ClInclude Include="src\ctData.h" />
     <ClInclude Include="src\settings.h" />
-    <ClInclude Include="src\texture.h" />
+    <ClInclude Include="src\ctTexture.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
