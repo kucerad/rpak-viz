@@ -1,18 +1,13 @@
 #ifndef _PNG_H
 #define _PNG_H
-#include "../common/LODEpng/lodepng.h"
+#include "LODEpng/lodepng.h"
 
-#include "../common/Vector4.h"
+#include "Vector4.h"
+#include "utils.h"
 
 #include <vector>
 #include <string>
 using namespace std;
-
-union flint{
-	float			f;
-	int				i;
-	unsigned char	ch[4];	
-};
 
 /**
 * PNG handles all work with png images used as textures...
@@ -50,10 +45,7 @@ public:
 	int width, height;
 	char * getData();
 private:
-	std::vector<unsigned char> image;
-
-	
-
+	vector<unsigned char> image;
 
 };
 
