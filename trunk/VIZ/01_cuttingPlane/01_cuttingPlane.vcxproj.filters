@@ -16,6 +16,9 @@
     <Filter Include="utils">
       <UniqueIdentifier>{8a6c0579-86e7-4714-b749-96c891198bca}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource Files\colorMaps">
+      <UniqueIdentifier>{d766d017-c305-48e0-9698-634de4cf0f4f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
@@ -68,5 +71,19 @@
     <ClInclude Include="src\ctTexture.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="colorMaps\cm_Black2White200.png">
+      <Filter>Resource Files\colorMaps</Filter>
+    </None>
+    <None Include="colorMaps\cm_2.png">
+      <Filter>Resource Files\colorMaps</Filter>
+    </None>
+    <None Include="colorMaps\cm_2b.png">
+      <Filter>Resource Files\colorMaps</Filter>
+    </None>
+    <None Include="colorMaps\cm_2c.png">
+      <Filter>Resource Files\colorMaps</Filter>
+    </None>
   </ItemGroup>
 </Project>
