@@ -102,7 +102,9 @@ float CTdata::getValueAt(const float x, const float y, const float z){
 		// at least one point is inside 3D grid... 
 		// interpolate then
 		val = interpolate3Dlin(val1, val2, val3, val4, val5, val6, val7, val8, xt, yt, zt);
+	} else {
+		return BACKGROUND_VALUE;
 	}
 
-	return val;
+	return val/3272;
 }
