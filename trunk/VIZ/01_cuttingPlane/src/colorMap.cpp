@@ -18,7 +18,7 @@ void ColorMap::loadFromFile(const char * filename){
 	
 //		get color for value [0.0 - 1.0]
 v4 ColorMap::mapValueToColor(const float value){
-	if (value==BACKGROUND_VALUE){
+	if (value<=BACKGROUND_VALUE){
 		return BACKGROUND_COLOR;
 	}
 	int	  x;

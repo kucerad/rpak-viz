@@ -54,7 +54,6 @@ void CTtexture::makeView(v3 normal, float z){
 			}*/
 			// get value at this position
 			value = ct.getValueAt(pos);
-			value /= 3272;
 			// get color for the value
 			color = cm.mapValueToColor(value);
 			// scale color from range 0-255 to 0.0-1.0
