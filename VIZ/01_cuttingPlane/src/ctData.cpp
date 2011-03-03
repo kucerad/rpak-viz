@@ -45,27 +45,22 @@ bool CTdata::loadFromFiles(const char * filename, int cnt, int scaleX, int scale
 				data[z*width*height + y*width +x] = val;
 			}
 		}
-		for (int i=0; i<chars; i++){
-			printf("\b");
-		}
+		BACKSPACE(chars);
 		chars = printf("LOADING CT images: %03i %%",((z+1)*100)/cnt);
 	
 	}
 	dimX = width;
 	dimY = height;
 	dimZ = cnt;
-	for (int i=0; i<chars; i++){
-			printf("\b");
-		}
+
+	// backspace...
+	BACKSPACE(chars);
 	printf("LOADING CT images (%i) DONE\n", cnt);
 	return true;
 }
 
 
 float CTdata::getValueAt(int x, int y, int z, bool &inFlag){
-	//x /= scX;
-	//y /= scY;
-	//z /= scZ;
 	if (x<0 || y<0 || z<0 || x>dimX || y>dimY || z>dimZ){
 		// out of grid
 		return 0.0f;

@@ -49,19 +49,15 @@ void CTtexture::makeView(v3 normal, float z){
 			// calculate position in 3d
 			pos = u*((s-w2)*rescaleFactor) + v*((t-h2)*rescaleFactor);
 			pos += offset + dataCenter;
-			/*if (pos.x>=168.f && pos.y>=176){
-				printf("?\n");
-			}*/
+			
 			// get value at this position
 			value = ct.getValueAt(pos);
+			
 			// get color for the value
 			color = cm.mapValueToColor(value);
+			
 			// scale color from range 0-255 to 0.0-1.0
 			color = color/255.f;
-
-			//if (color.y>0.5f){
-			//	printf("JOOO\n");
-			//}
 
 			// write into texture data...
 			data[channels*t*width+channels*s + 0] = color.x;

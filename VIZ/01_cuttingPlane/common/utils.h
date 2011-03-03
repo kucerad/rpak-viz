@@ -11,6 +11,8 @@ enum eAXIS {
 	Z
 };
 
+#define BACKSPACE(cnt) for (int i=0; i<cnt; i++){printf("\b");}
+ 
 
 Vector4	  interpolate1DlinVector4(const Vector4& vecA, const Vector4& vecB, const float t);
 
