@@ -10,6 +10,7 @@ public:
 	CTtexture();
 	~CTtexture();
 	void init(int _width, int _height, int _channels, const char * cmFilename, const char * ctFilename, int ctCnt, int ctX, int ctY, int ctZ);
+	void changeCm(const char * cmFilename);
 	void makeView(v3 normal, float z);
 	float * getData();
 
