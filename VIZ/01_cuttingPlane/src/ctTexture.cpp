@@ -20,6 +20,7 @@ void CTtexture::init(int _width, int _height, int _channels, const char * cmFile
 }
 
 void CTtexture::changeCm(const char * cmFilename) {
+	cm.cm.clear();
 	cm.loadFromFile(cmFilename);
 }
 
