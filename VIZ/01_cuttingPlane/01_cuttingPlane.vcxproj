@@ -63,14 +63,14 @@
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>.\common;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\Roman\Desktop\A4M39VIZ\Ukol1\VIZ\01_cuttingPlane\glut\include;.\common;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <OutputFile>$(SolutionDir)\bin\$(Configuration)\$(ProjectName).exe</OutputFile>
-      <AdditionalLibraryDirectories>../libs/GLFW/msvc10;../libs/AntTweakBar;../libs/GLUT;../libs/GLEW;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:\Users\Roman\Desktop\A4M39VIZ\Ukol1\VIZ\01_cuttingPlane\glut\lib;../libs/GLFW/msvc10;../libs/AntTweakBar;../libs/GLUT;../libs/GLEW;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>opengl32.lib;glu32.lib;glfw.lib;glew32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
