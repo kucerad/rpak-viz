@@ -19,6 +19,10 @@ void CTtexture::init(int _width, int _height, int _channels, const char * cmFile
 	ct.loadFromFiles(ctFilename, ctCnt, ctX, ctY, ctZ);
 }
 
+void CTtexture::changeCm(const char * cmFilename) {
+	cm.loadFromFile(cmFilename);
+}
+
 float * CTtexture::getData(){
 	return data;
 }
