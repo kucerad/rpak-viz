@@ -19,8 +19,8 @@ public:
 	//		get color for value [0.0 - 1.0]
 	v4		mapValueToColor(const float value); 
 
-private:
 	PNG			cm;
+private:
 	int			width;
 };
 
