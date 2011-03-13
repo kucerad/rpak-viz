@@ -85,5 +85,8 @@
     <None Include="colorMaps\cm_2c.png">
       <Filter>Resource Files\colorMaps</Filter>
     </None>
+    <None Include="colorMaps\spectrum.png">
+      <Filter>Resource Files\colorMaps</Filter>
+    </None>
   </ItemGroup>
 </Project>
