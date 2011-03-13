@@ -17,10 +17,10 @@ public:
 	int width, height;
 	v3 axis;
 	float angle;
+	ColorMap cm;
 private:
 	int channels;
 	CTdata ct;
-	ColorMap cm; 
 	float * data;
 
 };
