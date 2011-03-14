@@ -27,6 +27,116 @@ void CTtexture::changeCm(const char * cmFilename) {
 float * CTtexture::getData(){
 	return data;
 }
+bool CTtexture::intersect(const v3 &l0, const v3 &p0, const v3 &normal, const v3 &line, float max, const v3 &u, const v3 &v, v3 &intersection){
+	// http://en.wikipedia.org/wiki/Line-plane_intersection
+		
+	float up = (p0 - l0).dot(normal);
+	float dot = line.dot(normal);
+	float d = -1.0f;
+	if (dot<EPSILON && dot>-EPSILON){
+		if (up<EPSILON && up>-EPSILON){			
+			// line on plane
+			// no intersections
+		} else {
+			// colinear...
+			// skip - no intersection
+		}
+	} else {
+		// intersection
+		d = up/dot;
+	}
+	// intersection in proper range?
+	if (d>=0.0f && d<=max){
+		// true intersection
+		// get position in plane coords...
+		v3 p = p0 - line*d + l0;
+		intersection.x = u.dot(p);
+		intersection.y = v.dot(p);
+		intersection.z = 0;
+		return true;
+	} // else {
+		// false alarm!!!!
+	//}
+	return false;
+}
+
+void CTtexture::calcIntersections(const v3 &normal, const v3 &u, const v3 &v, const float _z){
+	intersections.clear();
+	v3 p0 = normal*_z;
+	v3 p;
+	float x(ct.szX),y(ct.szY),z(ct.szZ);
+	float d=0, dot=0, up;
+	float max;
+	v3 intersection;
+	v3 line;
+	v3 halfCenter(ct.szX*0.5,ct.szY*0.5,ct.szZ*0.5);
+	v3 l0;
+	// for each of the 3 faces of data cube
+		// X
+		line = v3(1,0,0);
+		max = ct.szX;
+		// for each edge on the face
+		l0 = v3(0,0,0) - halfCenter;
+		if (intersect(l0, p0, normal, line, max, u, v, intersection)){
+			intersections.push_back(intersection);	
+		}
+		l0 = v3(0,y,0) - halfCenter;
+		if (intersect(l0, p0, normal, line, max, u, v, intersection)){
+			intersections.push_back(intersection);	
+		}
+		l0 = v3(0,y,z) - halfCenter;
+		if (intersect(l0, p0, normal, line, max, u, v, intersection)){
+			intersections.push_back(intersection);	
+		}
+		l0 = v3(0,0,z) - halfCenter;
+		if (intersect(l0, p0, normal, line, max, u, v, intersection)){
+			intersections.push_back(intersection);	
+		}
+	
+		// Y
+		line = v3(0,1,0);
+		max = ct.szY;
+		// for each edge on the face
+		l0 = v3(0,0,0) - halfCenter;
+		if (intersect(l0, p0, normal, line, max, u, v, intersection)){
+			intersections.push_back(intersection);	
+		}
+		l0 = v3(0,0,z) - halfCenter;
+		if (intersect(l0, p0, normal, line, max, u, v, intersection)){
+			intersections.push_back(intersection);	
+		}
+		l0 = v3(x,y,z) - halfCenter;
+		if (intersect(l0, p0, normal, line, max, u, v, intersection)){
+			intersections.push_back(intersection);	
+		}
+		l0 = v3(x,0,0) - halfCenter;
+		if (intersect(l0, p0, normal, line, max, u, v, intersection)){
+			intersections.push_back(intersection);	
+		}
+
+		// Z
+		line = v3(0,0,1);
+		max = ct.szZ;
+		// for each edge on the face
+		l0 = v3(0,0,0) - halfCenter;
+		if (intersect(l0, p0, normal, line, max, u, v, intersection)){
+			intersections.push_back(intersection);	
+		}
+		l0 = v3(0,y,0) - halfCenter;
+		if (intersect(l0, p0, normal, line, max, u, v, intersection)){
+			intersections.push_back(intersection);	
+		}
+		l0 = v3(x,y,0) - halfCenter;
+		if (intersect(l0, p0, normal, line, max, u, v, intersection)){
+			intersections.push_back(intersection);	
+		}
+		l0 = v3(x,0,0) - halfCenter;
+		if (intersect(l0, p0, normal, line, max, u, v, intersection)){
+			intersections.push_back(intersection);	
+		}
+		// number of intersections?
+		printf ("Intersections: %i\n", intersections.size());
+}
 
 void CTtexture::makeView(v3 normal, float z){
 	v3 u(1.0, 0.0, 0.0);
@@ -39,6 +149,9 @@ void CTtexture::makeView(v3 normal, float z){
 	n = normal.getNormalized();
 	u.rotate(angle, axis);
 	v.rotate(angle, axis);
+
+	calcIntersections(n, u, v, z);
+
 
 	int s,t;		// coord in plane space
 	v3 pos;			// coord in 3d space
