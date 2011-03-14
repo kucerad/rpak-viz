@@ -4,6 +4,9 @@
 #include "ctData.h"
 #include "colorMap.h"
 #include "Vector4.h"
+#include <vector>
+
+using namespace std;
 
 class CTtexture{
 public:
@@ -19,10 +22,13 @@ public:
 	float angle;
 	ColorMap cm;
 private:
-	int channels;
-	CTdata ct;
-	float * data;
+	int			channels;
+	CTdata		ct;
+	float		* data;
 
+	vector<v3>	intersections;	
+	void		calcIntersections(const v3 &normal, const v3 &u, const v3 &v, const float z);
+	bool		intersect(const v3 &l0, const v3 &p0, const v3 &normal, const v3 &line, float max, const v3 &u, const v3 &v, v3 &intersection);
 };
 
 #endif

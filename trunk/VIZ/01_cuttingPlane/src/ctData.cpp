@@ -53,6 +53,9 @@ bool CTdata::loadFromFiles(const char * filename, int cnt, int scaleX, int scale
 	dimY = height;
 	dimZ = cnt;
 
+	szX = dimX * scX;
+	szY = dimY * scY;
+	szZ = dimZ * scZ;
 	// backspace...
 	BACKSPACE(chars);
 	printf("LOADING CT images (%i) DONE\n", cnt);

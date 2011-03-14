@@ -53,11 +53,12 @@ public:
 	}
 
 	v3		getCenterPoint();
-	
+	float szX, szY, szZ;
 private:
 	float *	data;
 
 	int dimX, dimY, dimZ;
+	
 	float scX, scY, scZ;
 	float max;
 
