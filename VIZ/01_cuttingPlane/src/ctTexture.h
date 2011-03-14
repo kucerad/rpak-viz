@@ -6,6 +6,8 @@
 #include "Vector4.h"
 #include <vector>
 
+extern float rotAngle;
+
 using namespace std;
 
 class CTtexture{

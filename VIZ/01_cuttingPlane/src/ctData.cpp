@@ -11,7 +11,7 @@ CTdata::~CTdata(){
 }
 
 v3 CTdata::getCenterPoint(){
-	return v3(scX*float(dimX)/2, scY*float(dimY)/2,scZ*float(dimZ)/2);
+	return v3(scX*float(dimX)*0.5, scY*float(dimY)*0.5,scZ*float(dimZ)*0.5);
 }
 
 bool CTdata::loadFromFiles(const char * filename, int cnt, int scaleX, int scaleY, int scaleZ){
