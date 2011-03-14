@@ -19,6 +19,8 @@ public:
 	void makeView(v3 normal, float z);
 	float * getData();
 
+	void getBox(v3 &min, v3 &max);
+
 	int width, height;
 	v3 axis;
 	float angle;
