@@ -139,6 +139,18 @@ void CTtexture::calcIntersections(const v3 &normal, const v3 &u, const v3 &v, co
 		printf ("Intersections: %i\n", intersections.size());
 }
 
+void CTtexture::getBox(v3 &min, v3 &max) {
+	for (int i=0; i < intersections.size(); i++ ) {
+		if (min.x > intersections[i].x) {min.x = intersections[i].x;}
+		if (min.y > intersections[i].y) {min.y = intersections[i].y;}
+		if (min.z > intersections[i].z) {min.z = intersections[i].z;}
+
+		if (max.x < intersections[i].x) {max.x = intersections[i].x;}
+		if (max.y < intersections[i].y) {max.y = intersections[i].y;}
+		if (max.z < intersections[i].z) {max.z = intersections[i].z;}
+	}
+}
+
 void CTtexture::makeView(v3 normal, float z){
 	v3 u(1.0, 0.0, 0.0);
 	v3 v(0.0, 1.0, 0.0);
@@ -156,6 +168,12 @@ void CTtexture::makeView(v3 normal, float z){
 
 	calcIntersections(n, u, v, z);
 
+	v3 min(1000, 1000, 1000);
+	v3 max(-1000, -1000, -1000);
+	getBox(min, max);
+
+	v3 center((min.x+max.x)/2, (min.y+max.y)/2, (min.z+max.z)/2);
+	float rescale = sqrt((max.x-min.x)/500 * (max.x-min.x)/500 + (max.y-min.y)/500 * (max.y-min.y)/500)/1.4142135;
 
 	int s,t;		// coord in plane space
 	v3 pos;			// coord in 3d space
@@ -169,7 +187,7 @@ void CTtexture::makeView(v3 normal, float z){
 	for (t = 0; t < height; t++){
 		for (s = 0; s < width; s++){
 			// calculate position in 3d
-			pos = u*((s-w2)*rescaleFactor) + v*((t-h2)*rescaleFactor);
+			pos = u*((s-w2)*rescaleFactor*rescale) + v*((t-h2)*rescaleFactor*rescale);
 			pos += offset + dataCenter;
 			
 			// get value at this position
