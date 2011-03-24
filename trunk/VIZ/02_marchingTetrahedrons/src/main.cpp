@@ -20,7 +20,7 @@
 #include "../common/common.h"
 #include "../common/models/elephant.h"
 #include "../common/models/cube.h"
-
+  
 // GLOBAL CONSTANTS____________________________________________________________
 const char* VS_FILE_NAME     = "shaders/vs.glsl";  // Vertex shader source file
 const char* GS_FILE_NAME     = "shaders/gs.glsl";  // Geometry shader source file
