@@ -1,68 +1,110 @@
-//-----------------------------------------------------------------------------
-//  [PGR2] Simple GLSL Example
-//  27/02/2008
-//-----------------------------------------------------------------------------
-//  Controls: 
-//    [mouse-left-button]  ... scene rotation
-//    [t], [T]             ... move scene forward/backward
-//    [r]                  ... toggle scene rotation
-//    [v]                  ... toggle vertex shader
-//    [g]                  ... toggle geometry shader
-//    [f]                  ... toggle fragment shader
-//    [s]                  ... toggle programmable pipeline (shaders)
-//    [b]                  ... build shader programs
-//    [w]                  ... toggle wire mode
-//    [c]                  ... toggle face culling
-//    [space]              ... change model type
-//-----------------------------------------------------------------------------
 #define USE_ANTTWEAKBAR
+#define NULL 0
 
-#include "../common/common.h"
-#include "../common/models/elephant.h"
-#include "../common/models/cube.h"
+#include <stdarg.h>
+#include "common.h"
+#include "models/cube.h"
+#include "png.h"
+#include "utils.h"
+#include <assert.h>
+#include "ctTexture.h"
+#include "./GL/glut.h"
+
 
 // GLOBAL CONSTANTS____________________________________________________________
-const char* VS_FILE_NAME     = "shaders/vs.glsl";  // Vertex shader source file
-const char* GS_FILE_NAME     = "shaders/gs.glsl";  // Geometry shader source file
-const char* FS_FILE_NAME     = "shaders/fs.glsl";  // Fragment shader source file
+#define BUFFER_OFFSET(i) ((char*) NULL + (i))
 
 // GLOBAL VARIABLES____________________________________________________________
-GLint    g_WindowWidth       = 800;    // Window width
-GLint    g_WindowHeight      = 600;    // Window height
+GLint g_WindowWidth   = 800;              // Window width
+GLint g_WindowHeight  = 600;              // Window height
 
-GLfloat  g_SceneRot[]        = { 0.0f, 0.0f, 0.0f, 1.0f }; // Scene orientation
-GLfloat  g_SceneTraX         = 0.0f;   // Scene translation along x-axis
-GLfloat  g_SceneTraY         = 0.0f;   // Scene translation along y-axis
-GLfloat  g_SceneTraZ         = 5.0f;   // Scene translation along z-axis
-bool     g_SceneRotEnabled   = false;  // Scene auto-rotation enabled/disabled
-bool     g_WireMode          = false;  // Wire mode enabled/disabled
-bool     g_FaceCulling       = false;  // Face culling enabled/disabled
+CTtexture	ctTex;
+GLuint		textureID;
+GLuint		cmID;
+v3			ctNormal(0.f, 0.f, 1.f);
+float		ctZ = 0;
+float		z = -2.0;
+float  nDir[3] = {ctNormal.x, ctNormal.y, ctNormal.z};
+double time = 0;
+bool  g_bCubeRotation = false;             // Cube rotation enabled
+float rotAngle = 0;
 
-bool     g_UseShaders        = true;  // Programmable pipeline on/off
-bool     g_UseVertexShader   = true;  // Use vertex shader
-bool     g_UseGeometryShader = false;  // Use geometry shader
-bool     g_UseFragmentShader = true;  // Use fragment shader
-
-enum EGeometry                         // Geometry type enum
-{	
-   ELEPHANT_GEOMETRY = 0, 
-   CUBE_GEOMETRY,
-   NUM_GEOMETRY_TYPES
-};
-int      g_GeometryType       = ELEPHANT_GEOMETRY; // Geometry type
-
-
-// GLSL variables
-GLuint   g_ProgramId       = 0;      // Shader program id
 
 // FORWARD DECLARATIONS________________________________________________________
-#ifdef USE_ANTTWEAKBAR
-   void TW_CALL cbSetShaderStatus(const void*, void*);
-   void TW_CALL cbGetShaderStatus(void*, void*);
-#endif
-void TW_CALL cbCompileShaderProgram(void *clientData);
-void initGUI();
+void initGUI(void);
 
+//vykresleni textu ve 3D, pouzito pro skore
+void strokeOutput(char *format,...) {
+	va_list args;
+	char buffer[200], *p;
+
+	va_start(args, format);
+	vsprintf(buffer, format, args);
+	va_end(args);
+	  
+	glLineWidth(1.0);
+	for (p = buffer; *p; p++) {
+		glutStrokeCharacter(GLUT_STROKE_ROMAN, *p);
+	}
+}
+
+void drawNumber(int number) {
+	glPushAttrib(GL_LINE_BIT);
+	  strokeOutput("%i", number);
+	glPopAttrib();
+}
+
+//-----------------------------------------------------------------------------
+// Name: immediateMode()
+// Desc: 
+//-----------------------------------------------------------------------------
+void drawCube()
+{
+	glBegin(GL_QUADS);
+		for (int iVertex = 0; iVertex < NUM_CUBE_VERTICES; iVertex++)
+		{
+			glColor3fv (&CUBE_COLOR_ARRAY[3*iVertex]);
+			glVertex3fv(&CUBE_VERTEX_ARRAY[3*iVertex]);
+		}
+	glEnd();
+}
+void drawPlane()
+{
+	glBegin(GL_QUADS);
+		
+			glTexCoord2f(0.f, 0.0f);
+			glVertex3f(-1.f, -1.f, 0.f);
+
+			glTexCoord2f(ctTex.width, 0.0f);
+			glVertex3f(1.f, -1.f, 0.f);
+
+			glTexCoord2f(ctTex.width, ctTex.height);
+			glVertex3f(1.f, 1.f, 0.f);
+
+			glTexCoord2f(0.0f, ctTex.height);
+			glVertex3f(-1.f, 1.f, 0.f);
+
+	glEnd();
+}
+
+void drawColorMap()
+{
+	glBegin(GL_QUADS);
+		
+			glTexCoord2f(0.f, 0.5f);
+			glVertex3f(-1.f, -1.1f, 0.f);
+
+			glTexCoord2f(ctTex.cm.cm.width, 0.5f);
+			glVertex3f(1.f, -1.1f, 0.f);
+
+			glTexCoord2f(ctTex.cm.cm.width, 0.5f);
+			glVertex3f(1.f, -1.05f, 0.f);
+
+			glTexCoord2f(0.0f, 0.5f);
+			glVertex3f(-1.f, -1.05f, 0.f);
+
+	glEnd();
+}
 
 //-----------------------------------------------------------------------------
 // Name: cbDisplay()
@@ -70,38 +112,47 @@ void initGUI();
 //-----------------------------------------------------------------------------
 void cbDisplay()
 {
-   static GLfloat scene_rot = 0.0f;
 
-   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-   glPolygonMode(GL_FRONT_AND_BACK, g_WireMode ? GL_LINE : GL_FILL);
-   (g_FaceCulling) ? glEnable(GL_CULL_FACE) : glDisable(GL_CULL_FACE);
-
+	
+  static GLfloat s_SceneRotation = 0.0f;
+  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); 
+  glDisable(GL_LIGHTING);
 	// Setup camera
    glLoadIdentity();
-   glTranslatef(g_SceneTraX, g_SceneTraY, -g_SceneTraZ);
-   pgr2AddQuaternionRotationToTransformation(g_SceneRot);
-   glRotatef(scene_rot, 0.0f, 1.0f, 0.0f);
+   glTranslatef(0.0f, 0.0f, z);
+   glRotatef(s_SceneRotation, 1.0f, 1.0f, 1.0f);
+   
+   // enable texture
+   glEnable(GL_TEXTURE_RECTANGLE_ARB);
+    glBindTexture(GL_TEXTURE_RECTANGLE_ARB, textureID);
+		// draw cutting plane 
+		drawPlane();
+	glBindTexture(GL_TEXTURE_RECTANGLE_ARB, 0);
 
-   // Turn on programmable pipeline
-   if (g_UseShaders)
-   {
-		   glUseProgram(g_ProgramId);    // Active shader program
-   }
+	glBindTexture(GL_TEXTURE_RECTANGLE_ARB, cmID);
+		// draw color map
+		drawColorMap();
+	glBindTexture(GL_TEXTURE_RECTANGLE_ARB, 0);
 
-   // Draw model
-   switch (g_GeometryType)
-   {
-      case ELEPHANT_GEOMETRY :	pgr2DrawElephant(); break;
-      case CUBE_GEOMETRY     :	pgr2DrawCube();     break;
-   }
+   glDisable(GL_TEXTURE_RECTANGLE_ARB);
+   
+  
 
-   // Turn off programmable pipeline
-   glUseProgram(NULL);
+  glPushMatrix();
+	glTranslatef(-1.08f, -1.1f, 0.0f);
+	glScalef(0.0005f, 0.0005f, 0.0005f);
+	drawNumber(0);
+  glPopMatrix();
 
-   if (g_SceneRotEnabled)
-   {
-      scene_rot++;
-   }
+  glPushMatrix();
+	glTranslatef(1.03f, -1.1f, 0.0f);
+	glScalef(0.0005f, 0.0005f, 0.0005f);
+	drawNumber(3272);
+  glPopMatrix();
+
+	glEnable(GL_LIGHTING);
+
+	s_SceneRotation += (g_bCubeRotation) ? 1.0f : 0.0f;
 }
 
 
@@ -114,100 +165,138 @@ void cbInitGL()
    // Init app GUI
    initGUI();
 
-	// Set OpenGL state variables
-   glClearColor(0.4f, 0.4f, 0.7f, 0);
-   glColor4f(1.0f, 0.0f, 0.0f, 1.0f);
-   glEnable(GL_LIGHTING);
-   glEnable(GL_LIGHT0);
-   glEnable(GL_DEPTH_TEST);
-   (g_FaceCulling) ? glEnable(GL_CULL_FACE) : glDisable(GL_CULL_FACE);
+   // Setup OpenGL state variables
+	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 
-   GLfloat light_amb[4] = {0.4f, 0.4f, 0.4f, 1.0f};
-   GLfloat light_dif[4] = {0.0f, 0.0f, 0.0f, 1.0f};
-   GLfloat light_spe[4] = {0.5f, 0.5f, 0.5f, 1.0f};
-   GLfloat light_pos[4] = {0.0f, 3.0f, 3.0f, 1.0f};
-   GLfloat light_dir[4] = {0.0f,-1.5f,-3.0f, 1.0f};
-	
-   GLfloat material_amd[4] = {1.0f, 0.1f, 0.1f, 1.0f};
-   GLfloat material_spe[4] = {0.8f, 0.8f, 0.8f, 1.0f};
+	glShadeModel(GL_SMOOTH);
+	glEnable(GL_DEPTH_TEST);
 
-   glMaterialfv(GL_FRONT_AND_BACK,  GL_AMBIENT, material_amd);
-   glMaterialfv(GL_FRONT_AND_BACK,  GL_DIFFUSE, material_amd);
-   glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, material_spe);
-   glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, 128);
+	glEnable(GL_TEXTURE_RECTANGLE_ARB);
+	glGenTextures(1, &textureID);
+	glBindTexture(GL_TEXTURE_RECTANGLE_ARB, textureID);
+		glTexParameteri(GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_WRAP_S, GL_CLAMP); 
+		glTexParameteri(GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_WRAP_T, GL_CLAMP);
+		glTexParameteri(GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+		glTexImage2D(GL_TEXTURE_RECTANGLE_ARB, 0, GL_RGBA32F, ctTex.width, ctTex.height, 0, GL_RGBA, GL_FLOAT, ctTex.getData());
 
-   glEnable(GL_LIGHT1);
-   glLightfv(GL_LIGHT1, GL_POSITION      , light_pos);
-   glLightfv(GL_LIGHT1, GL_SPOT_DIRECTION, light_dir);
-   glLightfv(GL_LIGHT1, GL_AMBIENT       , light_amb);
-   glLightfv(GL_LIGHT1, GL_DIFFUSE       , light_dif);
-   glLightfv(GL_LIGHT1, GL_SPECULAR	     , light_spe);
-   glLightf (GL_LIGHT1, GL_SPOT_CUTOFF	  , 24);
-   glLightf (GL_LIGHT1, GL_SPOT_EXPONENT , 128);
+		glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
+	glBindTexture(GL_TEXTURE_RECTANGLE_ARB, 0);
 
-   cbCompileShaderProgram(NULL);
+	glGenTextures(1, &cmID);
+	glBindTexture(GL_TEXTURE_RECTANGLE_ARB, cmID);
+		glTexParameteri(GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_WRAP_S, GL_REPEAT); 
+		glTexParameteri(GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_WRAP_T, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexImage2D(GL_TEXTURE_RECTANGLE_ARB, 0, GL_RGBA, ctTex.cm.cm.width, ctTex.cm.cm.height, 0, GL_RGBA, GL_UNSIGNED_BYTE, ctTex.cm.cm.getData());
+
+		glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
+	glBindTexture(GL_TEXTURE_RECTANGLE_ARB, 0);
+
+	glDisable(GL_TEXTURE_RECTANGLE_ARB);
+
 }
 
+void updateTexture(){
+	ctNormal.x = nDir[0];
+	ctNormal.y = nDir[1];
+	ctNormal.z = nDir[2];
+	ctNormal.normalize();
+	glEnable(GL_TEXTURE_RECTANGLE_ARB);
+	glBindTexture(GL_TEXTURE_RECTANGLE_ARB, textureID);
+		ctTex.makeView(ctNormal, ctZ);
+		glTexImage2D(GL_TEXTURE_RECTANGLE_ARB, 0, GL_RGBA32F, ctTex.width, ctTex.height, 0, GL_RGBA, GL_FLOAT, ctTex.getData());
+	glBindTexture(GL_TEXTURE_RECTANGLE_ARB, 0);
+	glDisable(GL_TEXTURE_RECTANGLE_ARB);
+}
 
-//-----------------------------------------------------------------------------
-// Name: cbCompileShaderProgram()
-// Desc: 
-//-----------------------------------------------------------------------------
-void TW_CALL cbCompileShaderProgram(void *clientData)
+void updateColorMap() {
+	glEnable(GL_TEXTURE_RECTANGLE_ARB);
+	glBindTexture(GL_TEXTURE_RECTANGLE_ARB, cmID);
+		glTexImage2D(GL_TEXTURE_RECTANGLE_ARB, 0, GL_RGBA, ctTex.cm.cm.width, ctTex.cm.cm.height, 0, GL_RGBA, GL_UNSIGNED_BYTE, ctTex.cm.cm.getData());
+	glBindTexture(GL_TEXTURE_RECTANGLE_ARB, 0);
+	glDisable(GL_TEXTURE_RECTANGLE_ARB);
+}
+
+void TW_CALL cbUpdateTexture(void *clientData)
 {
-   // Delete shader program if exists
-   if (g_ProgramId)
-   {
-      glDeleteProgram(g_ProgramId);
-   }
-
-   // Create shader program object
-   g_ProgramId = glCreateProgram();
-
-   if (g_UseVertexShader)
-   {
-      // Create shader objects for vertex shader
-      GLuint id = pgr2CreateShaderFromFile(GL_VERTEX_SHADER, VS_FILE_NAME);
-      glAttachShader(g_ProgramId, id);
-      glDeleteShader(id);
-   }
-   if (g_UseGeometryShader)
-   {
-      // Create shader objects for geometry shader
-      GLuint id = pgr2CreateShaderFromFile(GL_GEOMETRY_SHADER, GS_FILE_NAME);
-      glAttachShader(g_ProgramId, id);
-      glDeleteShader(id);
-	   glProgramParameteriEXT(g_ProgramId, GL_GEOMETRY_VERTICES_OUT_EXT, 6);
-	   glProgramParameteriEXT(g_ProgramId, GL_GEOMETRY_INPUT_TYPE_EXT, 
-                             GL_TRIANGLES);
-	   glProgramParameteriEXT(g_ProgramId, GL_GEOMETRY_OUTPUT_TYPE_EXT, 
-                             GL_TRIANGLE_STRIP);
-   }
-   if (g_UseFragmentShader)
-   {
-      // Create shader objects for fragment shader
-      GLuint id = pgr2CreateShaderFromFile(GL_FRAGMENT_SHADER, FS_FILE_NAME);
-      glAttachShader(g_ProgramId, id);
-      glDeleteShader(id);
-   }
-
-   // Link shader program
-   glLinkProgram(g_ProgramId);
-   if (!pgr2CheckProgramLinkStatus(g_ProgramId))
-   {
-      pgr2CheckProgramInfoLog(g_ProgramId);
-      printf("Shader program creation failed.\n\n");
-      glDeleteProgram(g_ProgramId);
-      g_ProgramId  = 0;
-      g_UseShaders = false;
-      return;
-   }
-   else
-   {
-      printf("Shader program compiled successfully.\n\n");
-   }
+	updateTexture();
 }
 
+void TW_CALL cbUpdateTexture1(void *clientData)
+{
+	ctTex.changeCm("colorMaps/cm_2c.png");
+	updateColorMap();
+	updateTexture();
+}
+
+void TW_CALL cbUpdateTexture2(void *clientData)
+{
+	ctTex.changeCm("colorMaps/cm_2.png");
+	updateColorMap();
+	updateTexture();
+}
+
+void TW_CALL cbUpdateTexture3(void *clientData)
+{
+	ctTex.changeCm("colorMaps/spectrum.png");
+	updateColorMap();
+	updateTexture();
+}
+
+void TW_CALL cbAxisX(void *clientData)
+{
+	rotAngle = 270;
+	nDir[0] = 1;
+	nDir[1] = 0;
+	nDir[2] = 0;
+	updateTexture();
+}
+
+void TW_CALL cbAxisY(void *clientData)
+{
+	rotAngle = 0;
+	nDir[0] = 0;
+	nDir[1] = 1;
+	nDir[2] = 0;
+	updateTexture();
+}
+
+void TW_CALL cbAxisZ(void *clientData)
+{
+	rotAngle = 0;
+	nDir[0] = 0;
+	nDir[1] = 0;
+	nDir[2] = 1;
+	updateTexture();
+}
+
+void TW_CALL cbSetZ(const void *value, void *clientData)
+{ 
+    ctZ = *(const float*)value;  // for instance
+	ctTex.makeView(ctNormal, ctZ);
+	updateTexture();
+}
+void TW_CALL cbGetZ(void *value, void *clientData)
+{ 
+    *(float *)value = ctZ;  // for instance
+
+}
+
+void TW_CALL cbSetR(const void *value, void *clientData)
+{ 
+    rotAngle = *(const float*)value;  // for instance
+	ctTex.makeView(ctNormal, ctZ);
+	updateTexture();
+}
+
+void TW_CALL cbGetR(void *value, void *clientData)
+{ 
+    *(float *)value = rotAngle;  // for instance
+
+}
 
 //-----------------------------------------------------------------------------
 // Name: initGUI()
@@ -224,55 +313,30 @@ void initGUI()
 
    TwWindowSize(g_WindowWidth, g_WindowHeight);
    TwBar *controlBar = TwNewBar("Controls");
-   TwDefine(" Controls position='10 10' size='200 320' refresh=0.1 ");
-   /*
-   TwAddVarCB(controlBar, "use_shaders", TW_TYPE_BOOLCPP, cbSetShaderStatus,
-      cbGetShaderStatus, NULL, " label='shaders' key=s help='Turn \
-      programmable pipeline on/off.' ");
+   TwDefine(" Controls position='10 10' size='200 350' valueswidth=100 ");
 
-   // Shader panel setup
-   TwAddVarRW(controlBar, "vs", TW_TYPE_BOOLCPP, &g_UseVertexShader,
-    " group='Shaders' label='vertex' key=v help='Toggle vertex shader.' ");
-   TwAddVarRW(controlBar, "gs", TW_TYPE_BOOLCPP, &g_UseGeometryShader,
-    " group='Shaders' label='geometry' key=g help='Toggle geometry shader.' ");
-   TwAddVarRW(controlBar, "fs", TW_TYPE_BOOLCPP, &g_UseFragmentShader,
-    " group='Shaders' label='fragment' key=f help='Toggle fragment shader.' ");
-   TwAddButton(controlBar, "build", cbCompileShaderProgram, NULL, 
-    " group='Shaders' label='build' key=b help='Build shader program.' ");
-// TwDefine( " Controls/Shaders readonly=true "); 
+   //TwAddVarRW(controlBar, "rotate", TW_TYPE_BOOLCPP, &g_bCubeRotation, " group='Scene' key=r help='Cube rotation.' ");
+   //TwAddVarRW(controlBar, "z", TW_TYPE_FLOAT, &z, " group='Scene' min=-100 max=0 step=0.1 ");
 
-*/
-   // Render panel setup
-   TwAddVarRW(controlBar, "wiremode", TW_TYPE_BOOLCPP, &g_WireMode,
-    " group='Render' label='wire mode' key=w help='Toggle wire mode.' ");
-   TwAddVarRW(controlBar, "face_culling", TW_TYPE_BOOLCPP, &g_FaceCulling,
-      " group=Render label='face culling' key=c help='Toggle face culling.' ");
+   TwAddVarCB(controlBar, "Rotation", TW_TYPE_FLOAT, cbSetR, cbGetR, NULL, " group='CT' min=-360 max=360 step=1 ");
+   
+   TwAddVarRW(controlBar, "Normal", TW_TYPE_DIR3F, &nDir, " group='CT' ");
+   
+   TwAddVarCB(controlBar, "Cut", TW_TYPE_FLOAT, cbSetZ, cbGetZ, NULL, " group='CT' min=-200 max=200 step=1 ");
+   
+   TwAddButton(controlBar, "UPDATE", cbUpdateTexture, NULL, " group='CT' label='Update CT view' "); 
 
-   // Scene panel setup
-   TwEnumVal geometry_type[] = 
-   { 
-      { ELEPHANT_GEOMETRY    , "Elephant"},
-      { CUBE_GEOMETRY        , "Cube"    },
-   };
-   TwType geom_type = TwDefineEnum("Model", geometry_type, 
-                                        NUM_GEOMETRY_TYPES);
-   TwAddVarRW(controlBar, "model", geom_type, &g_GeometryType, 
-              " group='Scene' keyIncr=Space help='Change model.' ");
-   TwAddVarRW(controlBar, "auto-rotation", TW_TYPE_BOOLCPP, &g_SceneRotEnabled,
-    " group='Scene' label='rotation' key=r help='Toggle scene rotation.' ");
-   TwAddVarRW(controlBar, "TranslateX", TW_TYPE_FLOAT, &g_SceneTraX, 
-    " group='Scene' label='translate X' min=-500 max=500 step=0.1 \
-    keyIncr=x keyDecr=X help='Scene translation X.' ");
-   TwAddVarRW(controlBar, "TranslateY", TW_TYPE_FLOAT, &g_SceneTraY, 
-    " group='Scene' label='translate Y' min=-500 max=500 step=0.1 \
-    keyIncr=y keyDecr=Y help='Scene translation Y.' ");
-   TwAddVarRW(controlBar, "TranslateZ", TW_TYPE_FLOAT, &g_SceneTraZ, 
-    " group='Scene' label='translate Z' min=1 max=1000 step=0.1 \
-    keyIncr=z keyDecr=Z help='Scene translation Z.' ");
-   TwAddVarRW(controlBar, "SceneRotation", TW_TYPE_QUAT4F, &g_SceneRot, 
-    " group='Scene' label='rotation' open help='Toggle scene orientation.' ");
+   TwAddButton(controlBar, "PohledX", cbAxisX, NULL, " group='Axis' label='Axis X' "); 
+   TwAddButton(controlBar, "PohledY", cbAxisY, NULL, " group='Axis' label='Axis Y' ");
+   TwAddButton(controlBar, "PohledZ", cbAxisZ, NULL, " group='Axis' label='Axis Z' ");
+
+   TwAddButton(controlBar, "UPDATE1", cbUpdateTexture1, NULL, " group='ColorMap' label='Black - white' "); 
+   TwAddButton(controlBar, "UPDATE2", cbUpdateTexture2, NULL, " group='ColorMap' label='Red - white' "); 
+   TwAddButton(controlBar, "UPDATE3", cbUpdateTexture3, NULL, " group='ColorMap' label='Spectrum' "); 
+
 #endif
 }
+
 
 
 //-----------------------------------------------------------------------------
@@ -282,9 +346,9 @@ void initGUI()
 void cbWindowSizeChanged(int width, int height)
 {
    glViewport(0, 0, width, height);
-   glMatrixMode(GL_PROJECTION);
+	glMatrixMode(GL_PROJECTION);
    glLoadIdentity();
-   gluPerspective(55.0f, GLfloat(width)/height, 0.1f, 1000.0f);
+   gluPerspective(60.0f, GLfloat(width) / height, 1.0f, 1000.0f);
 	glMatrixMode(GL_MODELVIEW);
 
    g_WindowWidth  = width;
@@ -298,99 +362,19 @@ void cbWindowSizeChanged(int width, int height)
 //-----------------------------------------------------------------------------
 void cbKeyboardChanged(int key, int action)
 {
-   switch (key)
+#ifndef USE_ANTTWEAKBAR
+	if (key == GLFW_KEY_SPACE)
    {
-	   case GLFW_KEY_SPACE:
-         g_GeometryType = (g_GeometryType + 1) % NUM_GEOMETRY_TYPES;
-      break;
-	  case 'x' : g_SceneTraX        += 0.1f;                               break;
-	  case 'X' : g_SceneTraX        -= 0.1f;							   break;
-	  case 'y' : g_SceneTraY        += 0.1f;                               break;
-	  case 'Y' : g_SceneTraY        -= 0.1f;							   break;
-      case 'z' : g_SceneTraZ        += 0.1f;                               break;
-      case 'Z' : g_SceneTraZ        -= (g_SceneTraZ > 0.5) ? 0.1f : 0.0f;  break;
-      case 'r' : g_SceneRotEnabled   = !g_SceneRotEnabled;                 break;
-      case 'v' : g_UseVertexShader   = !g_UseVertexShader;                 break;
-      case 'g' : g_UseFragmentShader = !g_UseFragmentShader;               break;
-      case 'f' : g_UseGeometryShader = !g_UseGeometryShader;               break;
-      case 'w' : g_WireMode          = !g_WireMode;                        break;
-      case 'c' : g_FaceCulling       = !g_FaceCulling;                     break;
-      case 's' : 
-         g_UseShaders = !g_UseShaders;
-      case 'b' : 
-         cbCompileShaderProgram(NULL);
-         return;
-      break;
-	}
-
-   printf("[s] g_UseShaders         %s\n", g_UseShaders ? "true" : "false");
-   printf("[v] g_UseVertexShader    %s\n", g_UseVertexShader ? "true" : "false");
-   printf("[f] g_UseFragmentShader  %s\n", g_UseFragmentShader ? "true" : "false");
-   printf("[g] g_UseGeometryShader  %s\n", g_UseGeometryShader ? "true" : "false");
-   printf("[w] g_WireMode           %s\n", g_WireMode ? "true" : "false");
-   printf("[c] g_FaceCulling        %s\n\n", g_FaceCulling ? "true" : "false");
-}
-
-
-#ifdef USE_ANTTWEAKBAR
-//-----------------------------------------------------------------------------
-// Name: cbSetShaderStatus()
-// Desc: 
-//-----------------------------------------------------------------------------
-void TW_CALL cbSetShaderStatus(const void *value, void *clientData)
-{
-   g_UseShaders = *(bool*)(value);
-   // Try to compile shader program
-   if (g_UseShaders)
-   {
-      cbCompileShaderProgram(NULL);
+      g_TransportMode = (g_TransportMode + 1) % NUM_TRANSPORT_MODES;
    }
-// TwDefine((g_UseShaders) ? " Controls/Shaders readonly=false " : 
-//                           " Controls/Shaders readonly=true "); 
-}
-
-
-//-----------------------------------------------------------------------------
-// Name: cbGetShaderStatus()
-// Desc: 
-//-----------------------------------------------------------------------------
-void TW_CALL cbGetShaderStatus(void *value, void *clientData)
-{
-    *(bool*)(value) = g_UseShaders;
-} 
-#else
-bool    g_MouseRotationEnabled   = false;
-
-//-----------------------------------------------------------------------------
-// Name: cbMouseButtonChanged()
-// Desc: internal
-//-----------------------------------------------------------------------------
-void GLFWCALL cbMouseButtonChanged(int button, int action)
-{
-   g_MouseRotationEnabled = ((button == GLFW_MOUSE_BUTTON_LEFT) && 
-                             (action == GLFW_PRESS));
-}
-
-
-//-----------------------------------------------------------------------------
-// Name: cbMousePositionChanged()
-// Desc: 
-//-----------------------------------------------------------------------------
-void cbMousePositionChanged(int x, int y)
-{
-   static int s_LastMousePoxX = x;
-   static int s_LastMousePoxY = y;
-
-   if (g_MouseRotationEnabled)
-   {
-      g_SceneRot[1] +=  0.9f*(x - s_LastMousePoxX);
-      g_SceneRot[2] +=  0.9f*(y - s_LastMousePoxY);
-      s_LastMousePoxX = x;
-      s_LastMousePoxY = y;
-   }
-}
 #endif
+}
+void initApp(){
+	ctTex.init(500, 500, 4, "colorMaps/spectrum.png", "ctdata/cthead-16bit%03i.png", 113, 1,1,2);
+	// create initial snapshot
+	ctTex.makeView(ctNormal, 0.f);
 
+}
 
 //-----------------------------------------------------------------------------
 // Name: main()
@@ -398,18 +382,14 @@ void cbMousePositionChanged(int x, int y)
 //-----------------------------------------------------------------------------
 int main(int argc, char* argv[]) 
 {
+   initApp();
    return common_main(g_WindowWidth, g_WindowHeight,
                       "VIZ Adam Kucera, Roman Polasek",
                       cbInitGL,              // init GL callback function
                       cbDisplay,             // display callback function
                       cbWindowSizeChanged,   // window resize callback function
                       cbKeyboardChanged,     // keyboard callback function
-#ifdef USE_ANTTWEAKBAR
                       NULL,                  // mouse button callback function
                       NULL                   // mouse motion callback function
-#else
-                      cbMouseButtonChanged,  // mouse button callback function
-                      cbMousePositionChanged // mouse motion callback function
-#endif
                       );
 }
