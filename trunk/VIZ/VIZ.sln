@@ -3,6 +3,8 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "01_cuttingPlane", "01_cuttingPlane\01_cuttingPlane.vcxproj", "{A54EEC2D-C2A6-4CCA-AB20-8F5571B1357C}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "02_marchingTetrahedrons", "02_marchingTetrahedrons\02_marchingTetrahedrons.vcxproj", "{A291B9B2-36E9-4B12-9F44-88D871044ED3}"
+EndProject
 Global
 	GlobalSection(SubversionScc) = preSolution
 		Svn-Managed = True
@@ -17,6 +19,10 @@ Global
 		{A54EEC2D-C2A6-4CCA-AB20-8F5571B1357C}.Debug|Win32.Build.0 = Debug|Win32
 		{A54EEC2D-C2A6-4CCA-AB20-8F5571B1357C}.Release|Win32.ActiveCfg = Release|Win32
 		{A54EEC2D-C2A6-4CCA-AB20-8F5571B1357C}.Release|Win32.Build.0 = Release|Win32
+		{A291B9B2-36E9-4B12-9F44-88D871044ED3}.Debug|Win32.ActiveCfg = Debug|Win32
+		{A291B9B2-36E9-4B12-9F44-88D871044ED3}.Debug|Win32.Build.0 = Debug|Win32
+		{A291B9B2-36E9-4B12-9F44-88D871044ED3}.Release|Win32.ActiveCfg = Release|Win32
+		{A291B9B2-36E9-4B12-9F44-88D871044ED3}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
