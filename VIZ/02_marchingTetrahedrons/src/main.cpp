@@ -17,9 +17,7 @@
 //-----------------------------------------------------------------------------
 #define USE_ANTTWEAKBAR
 
-#include "../common/common.h"
-#include "../common/models/elephant.h"
-#include "../common/models/cube.h"
+#include "common.h"
   
 // GLOBAL CONSTANTS____________________________________________________________
 const char* VS_FILE_NAME     = "shaders/vs.glsl";  // Vertex shader source file
@@ -89,11 +87,7 @@ void cbDisplay()
    }
 
    // Draw model
-   switch (g_GeometryType)
-   {
-      case ELEPHANT_GEOMETRY :	pgr2DrawElephant(); break;
-      case CUBE_GEOMETRY     :	pgr2DrawCube();     break;
-   }
+   
 
    // Turn off programmable pipeline
    glUseProgram(NULL);
