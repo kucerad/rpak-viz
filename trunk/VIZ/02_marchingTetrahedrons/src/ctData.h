@@ -38,7 +38,7 @@ struct p3iComparator {
 	  return false;
   }
 };
-
+static const char powersOf2[6]	 = {1,2,4,8,16,32};
 static const int tetrahedron5a[] = {
 								0,2,5,7,
 								0,1,2,5,

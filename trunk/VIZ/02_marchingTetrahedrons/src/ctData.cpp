@@ -139,16 +139,98 @@ void CTdata::triangulateCell5(int x, int y, int z, float isovalue)
 	cellVertices[6] = & getVertexAt(x  , y+1, z+1);
 	cellVertices[7] = & getVertexAt(x  , y+1, z+1);
 	int i, j;
-
+	char type;
 	// select tetrahedra vertices
 	Vertex* tetrahedraVertices[4];
 	for (i=0; i<5; i++){
+		type = 0;
 		for (j=0; j<4; j++){
 			tetrahedraVertices[j] = cellVertices[tetrahedraIds[i*4+j]];
+			if (tetrahedraVertices[j]->value>=isovalue){
+				type+=powersOf2[j];
+			}
 		}
-		// do some stuff with tetrahedraVertices...
+		// do some funny stuff with tetrahedraVertices...
+		/*
 
-	}
+		    _-0-_
+		  _-  |  -_
+		 3 - -|- - 1
+		  \   |   /
+		   \  |  /
+		    \ | /
+			 \|/
+			  2
+README:
+	- dvojice pøípadù se liší jen opaènou orientací roviny. Proto se
+	  pro nìkteré nastavuje flipFlag na true - ty se musí otoèit obrácenì
+    - je tøeba produkovat trojúhelníky a to i pro pøípad, 
+	  kdy se má vytvoøit 4 úhelník (tedy rozdìlit na dva trojúhelníky)
+	TODO : Takto produkovaná struktura by mìla redundantní body. 
+	       Vìtšina bodù je sdílená více trojúhelníky. Lze s výhodou využít ELEMENT_DRAW.
+		   proto je NUTNÉ pøedìlat uložištì bodù na nìco jako MAP a nepøidávat tam tedy bod,
+		   který má stejné souøadnice!!! 
+
+		*/
+// TODO
+		bool flipFlag = false;
+		switch (type){
+			case 0:
+			case 15:
+				// no intersection
+				break;
+
+			case 1:
+				flipFlag = true;
+			case 14:
+				// intersection with 3 edges from pt 0
+				
+				break;
+			case 2:
+				flipFlag = true;
+			case 13:
+				// intersection with 3 edges from pt 1
+
+				break;
+			case 4:
+				flipFlag = true;
+			case 11:
+				// intersection with 3 edges from pt 2
+
+				break;
+			case 8:
+				flipFlag = true;
+			case 7:
+				// intersection with 3 edges from pt 3
+
+				break;
+			case 3:
+				flipFlag = true;
+			case 12:
+				// intersection with 4 edges
+
+				break;
+
+			case 5:
+				flipFlag = true;
+			case 10:
+				// intersection with 4 edges
+
+				break;
+
+			case 6:
+				flipFlag = true;
+			case 9:
+				// intersection with 4 edges
+
+				break;
+
+
+		}
+
+
+
+	} // next tetrahedra...
 
 	
 }
