@@ -43,7 +43,7 @@ bool CTdata::loadFromFiles(const char * filename, int cnt, int scaleX, int scale
 	char filen [50];
 	unsigned char * rawData;
 	PNG ctfile;
-	int width=0, height=0; 
+	int width=0, height=0, width2, height2; 
 	int x,y,z;
 	float val;
 	for(z=0; z<cnt; z++){
@@ -55,15 +55,17 @@ bool CTdata::loadFromFiles(const char * filename, int cnt, int scaleX, int scale
 		rawData		= ctfile.getData();
 		height		= ctfile.height;
 		width		= ctfile.width;
+		width2		= width/2;
+		height2		= height/2;
 		if (data==NULL){
-			data = new float[cnt*width/2*height/2]; //data = new float[cnt*width*height];
+			data = new float[cnt*width2*height2]; //data = new float[cnt*width*height];
 		}
-		for (y=0; y<height/2; y++){ //height
-			for (x=0; x<width/2; x++){ //width
+		for (y=0; y<height2; y++){ //height
+			for (x=0; x<width2; x++){ //width
 				// 2x 8-bit to 1x 16-bit
 				val = 256*rawData[(2*y*width + 2*x)*2]+rawData[(2*y*width + 2*x)*2 + 1]; //val = 256*rawData[2*y*width + 2*x]+rawData[2*y*width + 2*x + 1];
 				// save in array
-				data[z*height/2*width/2 + y*width/2 +x] = val; //data[z*width*height + y*width +x] = val;
+				data[z*height2*width2 + y*width2 +x] = val; //data[z*width*height + y*width +x] = val;
 			}
 		}
 		BACKSPACE(chars);
@@ -71,8 +73,8 @@ bool CTdata::loadFromFiles(const char * filename, int cnt, int scaleX, int scale
 	
 	}
 
-	dimX = width/2;
-    dimY = height/2;
+	dimX = width2;
+    dimY = height2;
 	dimZ = cnt;
 
 	szX = dimX * scX;
