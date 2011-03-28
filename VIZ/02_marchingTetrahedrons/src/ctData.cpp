@@ -56,22 +56,23 @@ bool CTdata::loadFromFiles(const char * filename, int cnt, int scaleX, int scale
 		height		= ctfile.height;
 		width		= ctfile.width;
 		if (data==NULL){
-			data = new float[cnt*128*128]; //data = new float[cnt*width*height];
+			data = new float[cnt*width/2*height/2]; //data = new float[cnt*width*height];
 		}
-		for (y=0; y<128; y++){ //height
-			for (x=0; x<128; x++){ //width
+		for (y=0; y<height/2; y++){ //height
+			for (x=0; x<width/2; x++){ //width
 				// 2x 8-bit to 1x 16-bit
 				val = 256*rawData[(2*y*width + 2*x)*2]+rawData[(2*y*width + 2*x)*2 + 1]; //val = 256*rawData[2*y*width + 2*x]+rawData[2*y*width + 2*x + 1];
 				// save in array
-				data[z*128*128 + y*128 +x] = val; //data[z*width*height + y*width +x] = val;
+				data[z*height/2*width/2 + y*width/2 +x] = val; //data[z*width*height + y*width +x] = val;
 			}
 		}
 		BACKSPACE(chars);
 		chars = printf("LOADING CT images: %03i %%",((z+1)*100)/cnt);
 	
 	}
-	dimX = 128; //width
-	dimY = 128; //height
+
+	dimX = width/2;
+    dimY = height/2;
 	dimZ = cnt;
 
 	szX = dimX * scX;
