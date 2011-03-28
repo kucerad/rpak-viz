@@ -267,7 +267,7 @@ Vertex& CTdata::getVertexAt(int x, int y, int z)
 	p.x = x;
 	p.y = y;
 	p.z = z;
-	/*
+
 	// is Vetrex allready precomputed in vertexMap?
 	Vertex& v = vertexMap[p];
 	if (!v.isValid){
@@ -291,25 +291,9 @@ Vertex& CTdata::getVertexAt(int x, int y, int z)
 	} else {
 		printf("Vertex PRECOMP!!\n");
 	}
-	*/
-
-	Vertex v;
-	// position
-	v.position = v3(x*scX, y*scY, z*scZ);
-
-	// normal
-	float nx = getValueAt2(x-1, y, z) - getValueAt2(x+1, y, z);
-	float ny = getValueAt2(x, y-1, z) - getValueAt2(x, y+1, z);
-	float nz = getValueAt2(x, y, z-1) - getValueAt2(x, y, z+1);
-	v.normal = v3(nx, ny, nz);
-
-	// value
-	v.value	= getValueAt(x,y,z);
-
-	// validate
-	v.isValid = true;
 
 	return v;
+
 }
 
 bool CTdata::getMinMaxForCell(int x, int y, int z, float *maxV, float *minV)
