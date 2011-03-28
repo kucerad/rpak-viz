@@ -51,9 +51,6 @@ bool     g_UseGeometryShader = false;  // Use geometry shader
 bool     g_UseFragmentShader = true;  // Use fragment shader
 CTdata	 dataCT;
 
-
-
-
 enum EGeometry                         // Geometry type enum
 {	
    ELEPHANT_GEOMETRY = 0, 
@@ -113,7 +110,7 @@ void cbDisplay()
 
 void initApp()
 {
-
+	dataCT.loadFromFiles("ctdata/cthead-16bit%03i.png", 113, 1,1,2);
 
 }
 //-----------------------------------------------------------------------------
