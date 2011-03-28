@@ -16,10 +16,31 @@
     <Filter Include="Shaders">
       <UniqueIdentifier>{10b851f1-2014-4bcd-ae2d-f98a0d3e7d72}</UniqueIdentifier>
     </Filter>
+    <Filter Include="utils">
+      <UniqueIdentifier>{f179f20a-0d31-47d7-84b6-7f4fc8d7eaec}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\colorMap.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ctData.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ctTexture.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\include\png.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\include\utils.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\include\LODEpng\lodepng.cpp">
+      <Filter>utils</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -32,5 +53,37 @@
     <None Include="shaders\vs.glsl">
       <Filter>Shaders</Filter>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\colorMap.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ctData.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ctTexture.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\settings.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\texture.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\png.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\utils.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Vector3.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Vector4.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\LODEpng\lodepng.h">
+      <Filter>utils</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
