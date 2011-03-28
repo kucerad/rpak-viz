@@ -111,6 +111,7 @@ void cbDisplay()
 void initApp()
 {
 	dataCT.loadFromFiles("ctdata/cthead-16bit%03i.png", 113, 1,1,2);
+	dataCT.create3dIsosurface(500, 1, 1, 1);
 
 }
 //-----------------------------------------------------------------------------
