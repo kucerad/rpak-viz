@@ -177,28 +177,6 @@ void CTdata::triangulateCell5(int x, int y, int z, float isovalue)
 	cellVertices[7] = & getVertexAt(x  , y+1, z+1);
 	int i, j;
 	char type;
-
-	/*
-	vertices.push_back(cellVertices[0]->position.x-64);
-	vertices.push_back(-cellVertices[0]->position.z+64);
-	vertices.push_back(cellVertices[0]->position.y-64);
-		vertices.push_back(cellVertices[1]->position.x-64);
-	vertices.push_back(-cellVertices[1]->position.z+64);
-	vertices.push_back(cellVertices[1]->position.y-64);
-		vertices.push_back(cellVertices[2]->position.x-64);
-	vertices.push_back(-cellVertices[2]->position.z+64);
-	vertices.push_back(cellVertices[2]->position.y-64);
-
-	normals.push_back(cellVertices[0]->normal.x);
-	normals.push_back(-cellVertices[0]->normal.z);
-	normals.push_back(cellVertices[0]->normal.y);
-		normals.push_back(cellVertices[1]->normal.x);
-	normals.push_back(-cellVertices[1]->normal.z);
-	normals.push_back(cellVertices[1]->normal.y);
-		normals.push_back(cellVertices[2]->normal.x);
-	normals.push_back(-cellVertices[2]->normal.z);
-	normals.push_back(cellVertices[2]->normal.y);
-	*/
 	
 	// select tetrahedra vertices
 	Vertex* tetrahedraVertices[4];
@@ -250,8 +228,11 @@ README:
 				v1 = interpolate(*tetrahedraVertices[0], *tetrahedraVertices[1], isovalue);
 				v2 = interpolate(*tetrahedraVertices[0], *tetrahedraVertices[2], isovalue);
 				v3 = interpolate(*tetrahedraVertices[0], *tetrahedraVertices[3], isovalue);
-				push(v1, v2, v3);
-				
+				if (flipFlag) {
+					push(v1, v2, v3);
+				} else {
+					push(v3, v2, v1);
+				}
 				break;
 			case 2:
 				flipFlag = true;
@@ -260,7 +241,11 @@ README:
 				v1 = interpolate(*tetrahedraVertices[1], *tetrahedraVertices[0], isovalue);
 				v2 = interpolate(*tetrahedraVertices[1], *tetrahedraVertices[2], isovalue);
 				v3 = interpolate(*tetrahedraVertices[1], *tetrahedraVertices[3], isovalue);
-				push(v1, v2, v3);
+				if (flipFlag) {
+					push(v3, v2, v1);
+				} else {
+					push(v1, v2, v3);
+				}
 				break;
 			case 4:
 				flipFlag = true;
@@ -269,7 +254,11 @@ README:
 				v1 = interpolate(*tetrahedraVertices[2], *tetrahedraVertices[0], isovalue);
 				v2 = interpolate(*tetrahedraVertices[2], *tetrahedraVertices[1], isovalue);
 				v3 = interpolate(*tetrahedraVertices[2], *tetrahedraVertices[3], isovalue);
-				push(v1, v2, v3);
+				if (flipFlag) {
+					push(v1, v2, v3);
+				} else {
+					push(v3, v2, v1);
+				}
 				break;
 			case 8:
 				flipFlag = true;
@@ -278,7 +267,11 @@ README:
 				v1 = interpolate(*tetrahedraVertices[3], *tetrahedraVertices[0], isovalue);
 				v2 = interpolate(*tetrahedraVertices[3], *tetrahedraVertices[1], isovalue);
 				v3 = interpolate(*tetrahedraVertices[3], *tetrahedraVertices[2], isovalue);
-				push(v1, v2, v3);
+				if (flipFlag) {
+					push(v3, v2, v1);
+				} else {
+					push(v1, v2, v3);
+				}
 				break;
 			case 3:
 				flipFlag = true;
@@ -288,8 +281,13 @@ README:
 				v2 = interpolate(*tetrahedraVertices[0], *tetrahedraVertices[3], isovalue);
 				v3 = interpolate(*tetrahedraVertices[1], *tetrahedraVertices[3], isovalue);
 				v4 = interpolate(*tetrahedraVertices[1], *tetrahedraVertices[2], isovalue);
-				push(v1, v2, v3);
-				push(v3, v4, v1);
+				if (flipFlag) {
+					push(v1, v2, v3);
+					push(v3, v4, v1);					
+				} else {
+					push(v3, v2, v1);
+					push(v1, v4, v3);					
+				}
 				break;
 
 			case 5:
@@ -300,8 +298,13 @@ README:
 				v2 = interpolate(*tetrahedraVertices[0], *tetrahedraVertices[3], isovalue);
 				v3 = interpolate(*tetrahedraVertices[2], *tetrahedraVertices[3], isovalue);
 				v4 = interpolate(*tetrahedraVertices[2], *tetrahedraVertices[1], isovalue);
-				push(v1, v2, v3);
-				push(v3, v4, v1);
+				if (flipFlag) {
+					push(v3, v2, v1);
+					push(v1, v4, v3);				
+				} else {
+					push(v1, v2, v3);
+					push(v3, v4, v1);	
+				}
 				break;
 
 			case 6:
@@ -312,8 +315,13 @@ README:
 				v2 = interpolate(*tetrahedraVertices[1], *tetrahedraVertices[3], isovalue);
 				v3 = interpolate(*tetrahedraVertices[2], *tetrahedraVertices[3], isovalue);
 				v4 = interpolate(*tetrahedraVertices[2], *tetrahedraVertices[0], isovalue);
-				push(v1, v4, v3);
-				push(v3, v2, v1);
+				if (flipFlag) {
+					push(v2, v3, v4);
+					push(v4, v1, v2);
+				} else {
+					push(v4, v3, v2);
+					push(v2, v1, v4);												
+				}
 				break;
 		}
 	} // next tetrahedra...
