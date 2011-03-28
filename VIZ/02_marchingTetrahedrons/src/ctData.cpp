@@ -166,7 +166,7 @@ void CTdata::triangulateCell5(int x, int y, int z, float isovalue)
 	normals.push_back(cellVertices[2]->normal.z);
 	normals.push_back(cellVertices[2]->normal.y);
 
-	printf("%i \n", vertices.size());
+	//printf("%i \n", vertices.size());
 	
 	// select tetrahedra vertices
 	Vertex* tetrahedraVertices[4];
