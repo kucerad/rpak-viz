@@ -127,6 +127,7 @@ private:
 		}
 		return data[ z*dimX*dimY + y*dimX + x ];
 	}
+
 	inline float getValueAt2(int x, int y, int z){
 		x = max(min(x,dimX-1), 0);
 		y = max(min(y,dimY-1), 0);
@@ -134,6 +135,7 @@ private:
 
 		return data[ z*dimX*dimY + y*dimX + x ];
 	}
+
 	v3 **	normalArr;
 	int		normalArrSize;
 	inline bool getNormalAt(int x, int y, int z, v3* normal){
