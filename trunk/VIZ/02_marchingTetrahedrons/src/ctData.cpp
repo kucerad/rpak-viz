@@ -299,21 +299,26 @@ void CTdata::initBuffers(){
 	// create buffers
 	numIndices			= indices.size();
 	numVertices			= vertices.size();
-	pElementBufferData	= new GLuint	[ numIndices  ];
+	//pElementBufferData	= new GLuint	[ numIndices  ];
 	pVertexBufferData	= new GLfloat	[ numVertices ];
 	pNormalBufferData	= new GLfloat	[ numVertices ];
 	int i;
+	/*
 	for (i=0; i<numIndices; i++){
 		pElementBufferData[i]	= indices[i];
 	}
+	*/
 	for (i=0; i<numVertices; i++){
 		pVertexBufferData[i]	= vertices[i];
 		pNormalBufferData[i]	= normals[i];
 	}
+
 	// element buffer
+	/*
 	glGenBuffers(1,&elementBufferID);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, elementBufferID); // vytvoreni indexoveho bufferu
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, numIndices*sizeof(GLubyte), pElementBufferData, GL_STATIC_DRAW); // prazdna inicializace
+	*/
 	glGenBuffers(1,&vertexBufferID);
 		glBindBuffer(GL_ARRAY_BUFFER, vertexBufferID);
 		glBufferData(GL_ARRAY_BUFFER, 2*numVertices*3*sizeof(GLfloat), NULL, GL_STATIC_DRAW); // prazdna inicializace
@@ -327,17 +332,18 @@ void CTdata::initBuffers(){
 
 void CTdata::draw3dIsosurface()
 {
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, elementBufferID);
+	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, elementBufferID);
 	glBindBuffer(GL_ARRAY_BUFFER, vertexBufferID); 
 		glEnableClientState(GL_VERTEX_ARRAY);
 		glEnableClientState(GL_NORMAL_ARRAY);
 			glVertexPointer(3, GL_FLOAT, 0, BUFFER_OFFSET(0)); // posledni je BUFFER_OFFSET ve VBO
 			glNormalPointer(GL_FLOAT, 0, BUFFER_OFFSET(numVertices*3*sizeof(GLfloat)));
-			glDrawElements(GL_TRIANGLES, numIndices, GL_UNSIGNED_INT, BUFFER_OFFSET(0));
-		glDisableClientState(GL_COLOR_ARRAY);
+			glDrawArrays(GL_TRIANGLES, 0, numVertices);
+			//glDrawElements(GL_TRIANGLES, numIndices, GL_UNSIGNED_INT, BUFFER_OFFSET(0));
+		glDisableClientState(GL_NORMAL_ARRAY);
 		glDisableClientState(GL_VERTEX_ARRAY);
    glBindBuffer(GL_ARRAY_BUFFER, 0);
-   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+   //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
 
 void CTdata::destroy3dIsosurface()
