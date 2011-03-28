@@ -284,21 +284,36 @@ README:
 				flipFlag = true;
 			case 12:
 				// intersection with 4 edges
-
+				v1 = interpolate(*tetrahedraVertices[0], *tetrahedraVertices[2], isovalue);
+				v2 = interpolate(*tetrahedraVertices[0], *tetrahedraVertices[3], isovalue);
+				v3 = interpolate(*tetrahedraVertices[1], *tetrahedraVertices[3], isovalue);
+				v4 = interpolate(*tetrahedraVertices[1], *tetrahedraVertices[2], isovalue);
+				push(v1, v2, v3);
+				push(v3, v4, v1);
 				break;
 
 			case 5:
 				flipFlag = true;
 			case 10:
 				// intersection with 4 edges
-
+				v1 = interpolate(*tetrahedraVertices[0], *tetrahedraVertices[1], isovalue);
+				v2 = interpolate(*tetrahedraVertices[0], *tetrahedraVertices[3], isovalue);
+				v3 = interpolate(*tetrahedraVertices[2], *tetrahedraVertices[3], isovalue);
+				v4 = interpolate(*tetrahedraVertices[2], *tetrahedraVertices[1], isovalue);
+				push(v1, v2, v3);
+				push(v3, v4, v1);
 				break;
 
 			case 6:
 				flipFlag = true;
 			case 9:
 				// intersection with 4 edges
-
+				v1 = interpolate(*tetrahedraVertices[1], *tetrahedraVertices[0], isovalue);
+				v2 = interpolate(*tetrahedraVertices[1], *tetrahedraVertices[3], isovalue);
+				v3 = interpolate(*tetrahedraVertices[2], *tetrahedraVertices[3], isovalue);
+				v4 = interpolate(*tetrahedraVertices[2], *tetrahedraVertices[0], isovalue);
+				push(v1, v4, v3);
+				push(v3, v2, v1);
 				break;
 		}
 	} // next tetrahedra...
