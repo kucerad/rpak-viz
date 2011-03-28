@@ -22,6 +22,27 @@ CTdata::CTdata(){
 	stepY = 1;
 	stepZ = 1;
 
+	vertices.push_back(0.0);
+	vertices.push_back(0.0);
+	vertices.push_back(0.0);
+	vertices.push_back(0.0);
+	vertices.push_back(1.0);
+	vertices.push_back(0.0);
+	vertices.push_back(1.0);
+	vertices.push_back(1.0);
+	vertices.push_back(0.0);
+
+	normals.push_back(0.0);
+	normals.push_back(0.0);
+	normals.push_back(-1.0);
+	normals.push_back(0.0);
+	normals.push_back(0.0);
+	normals.push_back(-1.0);
+	normals.push_back(0.0);
+	normals.push_back(0.0);
+	normals.push_back(-1.0);
+
+
 }
 
 CTdata::~CTdata(){
@@ -106,7 +127,7 @@ void CTdata::create3dIsosurface(float isovalue, int _stepX, int _stepY, int _ste
 				}
 				if (maxV>=isovalue && minV<=isovalue){
 					// the cell of interest... :D
-					triangulateCell5(x,y,z, isovalue);
+					//triangulateCell5(x,y,z, isovalue);
 				}
 			}
 		}
