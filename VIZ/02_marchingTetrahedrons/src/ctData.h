@@ -104,8 +104,8 @@ public:
 		return getValueAt(position.x, position.y, position.z);
 	}
 
-	void create3dIsosurface(float isovalue, int stepX, int stepY, int stepZ);
-	void draw3dIsosurface();
+	void  create3dIsosurface(float isovalue, int stepX, int stepY, int stepZ);
+	void    draw3dIsosurface();
 	void destroy3dIsosurface();
 
 

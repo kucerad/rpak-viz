@@ -97,7 +97,7 @@ void cbDisplay()
    }
 
    // Draw model
-   
+   dataCT.draw3dIsosurface();
 
    // Turn off programmable pipeline
    glUseProgram(NULL);
