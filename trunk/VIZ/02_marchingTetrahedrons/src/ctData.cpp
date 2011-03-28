@@ -127,7 +127,7 @@ void CTdata::create3dIsosurface(float isovalue, int _stepX, int _stepY, int _ste
 				}
 				if (maxV>=isovalue && minV<=isovalue){
 					// the cell of interest... :D
-					//triangulateCell5(x,y,z, isovalue);
+					triangulateCell5(x,y,z, isovalue);
 				}
 			}
 		}
@@ -267,6 +267,7 @@ Vertex& CTdata::getVertexAt(int x, int y, int z)
 	p.x = x;
 	p.y = y;
 	p.z = z;
+	/*
 	// is Vetrex allready precomputed in vertexMap?
 	Vertex& v = vertexMap[p];
 	if (!v.isValid){
@@ -290,9 +291,25 @@ Vertex& CTdata::getVertexAt(int x, int y, int z)
 	} else {
 		printf("Vertex PRECOMP!!\n");
 	}
+	*/
+
+	Vertex v;
+	// position
+	v.position = v3(x*scX, y*scY, z*scZ);
+
+	// normal
+	float nx = getValueAt2(x-1, y, z) - getValueAt2(x+1, y, z);
+	float ny = getValueAt2(x, y-1, z) - getValueAt2(x, y+1, z);
+	float nz = getValueAt2(x, y, z-1) - getValueAt2(x, y, z+1);
+	v.normal = v3(nx, ny, nz);
+
+	// value
+	v.value	= getValueAt(x,y,z);
+
+	// validate
+	v.isValid = true;
 
 	return v;
-
 }
 
 bool CTdata::getMinMaxForCell(int x, int y, int z, float *maxV, float *minV)
@@ -348,7 +365,7 @@ void CTdata::initBuffers(){
 		// do druhe pulky normaly
 		glBufferSubData(GL_ARRAY_BUFFER,numVertices*3*sizeof(GLfloat), numVertices*3*sizeof(GLfloat), pNormalBufferData);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);	
+	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);	
 }
 
 void CTdata::draw3dIsosurface()
