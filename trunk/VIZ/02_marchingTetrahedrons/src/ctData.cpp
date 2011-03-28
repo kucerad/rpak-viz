@@ -22,27 +22,6 @@ CTdata::CTdata(){
 	stepY = 1;
 	stepZ = 1;
 
-	vertices.push_back(0.0);
-	vertices.push_back(0.0);
-	vertices.push_back(0.0);
-	vertices.push_back(0.0);
-	vertices.push_back(1.0);
-	vertices.push_back(0.0);
-	vertices.push_back(1.0);
-	vertices.push_back(1.0);
-	vertices.push_back(0.0);
-
-	normals.push_back(0.0);
-	normals.push_back(0.0);
-	normals.push_back(-1.0);
-	normals.push_back(0.0);
-	normals.push_back(0.0);
-	normals.push_back(-1.0);
-	normals.push_back(0.0);
-	normals.push_back(0.0);
-	normals.push_back(-1.0);
-
-
 }
 
 CTdata::~CTdata(){
@@ -166,6 +145,29 @@ void CTdata::triangulateCell5(int x, int y, int z, float isovalue)
 	cellVertices[7] = & getVertexAt(x  , y+1, z+1);
 	int i, j;
 	char type;
+	
+	vertices.push_back(cellVertices[0]->position.x-64);
+	vertices.push_back(cellVertices[0]->position.z);
+	vertices.push_back(cellVertices[0]->position.y-64);
+		vertices.push_back(cellVertices[1]->position.x-64);
+	vertices.push_back(cellVertices[1]->position.z);
+	vertices.push_back(cellVertices[1]->position.y-64);
+		vertices.push_back(cellVertices[2]->position.x-64);
+	vertices.push_back(cellVertices[2]->position.z);
+	vertices.push_back(cellVertices[2]->position.y-64);
+
+	normals.push_back(cellVertices[0]->normal.x);
+	normals.push_back(cellVertices[0]->normal.z);
+	normals.push_back(cellVertices[0]->normal.y);
+		normals.push_back(cellVertices[1]->normal.x);
+	normals.push_back(cellVertices[1]->normal.z);
+	normals.push_back(cellVertices[1]->normal.y);
+		normals.push_back(cellVertices[2]->normal.x);
+	normals.push_back(cellVertices[2]->normal.z);
+	normals.push_back(cellVertices[2]->normal.y);
+
+	printf("%i \n", vertices.size());
+	
 	// select tetrahedra vertices
 	Vertex* tetrahedraVertices[4];
 	for (i=0; i<5; i++){
@@ -176,6 +178,7 @@ void CTdata::triangulateCell5(int x, int y, int z, float isovalue)
 				type+=powersOf2[j];
 			}
 		}
+		
 		// do some funny stuff with tetrahedraVertices...
 		/*
 
@@ -199,6 +202,7 @@ README:
 
 		*/
 // TODO
+
 		bool flipFlag = false;
 		switch (type){
 			case 0:
@@ -272,7 +276,7 @@ Vertex& CTdata::getVertexAt(int x, int y, int z)
 	Vertex& v = vertexMap[p];
 	if (!v.isValid){
 		// not precomputed... compute now...
-		printf("vertex not precomputed...\n");
+		//printf("vertex not precomputed...\n");
 
 		// position
 		v.position = v3(x*scX, y*scY, z*scZ);
@@ -281,7 +285,8 @@ Vertex& CTdata::getVertexAt(int x, int y, int z)
 		float nx = getValueAt2(x-1, y, z) - getValueAt2(x+1, y, z);
 		float ny = getValueAt2(x, y-1, z) - getValueAt2(x, y+1, z);
 		float nz = getValueAt2(x, y, z-1) - getValueAt2(x, y, z+1);
-		v.normal	= v3(nx, ny, nz);
+		v.normal = v3(nx, ny, nz);
+		v.normal.normalize();
 
 		// value
 		v.value	= getValueAt(x,y,z);
@@ -289,7 +294,7 @@ Vertex& CTdata::getVertexAt(int x, int y, int z)
 		// validate
 		v.isValid = true;
 	} else {
-		printf("Vertex PRECOMP!!\n");
+		//printf("Vertex PRECOMP!!\n");
 	}
 
 	return v;
@@ -319,7 +324,7 @@ bool CTdata::getMinMaxForCell(int x, int y, int z, float *maxV, float *minV)
 
 void CTdata::initBuffers(){
 	// create buffers
-	numIndices			= indices.size();
+	//numIndices			= indices.size();
 	numVertices			= vertices.size();
 	//pElementBufferData	= new GLuint	[ numIndices  ];
 	pVertexBufferData	= new GLfloat	[ numVertices ];
@@ -341,13 +346,13 @@ void CTdata::initBuffers(){
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, elementBufferID); // vytvoreni indexoveho bufferu
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, numIndices*sizeof(GLubyte), pElementBufferData, GL_STATIC_DRAW); // prazdna inicializace
 	*/
-	glGenBuffers(1,&vertexBufferID);
+	glGenBuffers(1, &vertexBufferID);
 		glBindBuffer(GL_ARRAY_BUFFER, vertexBufferID);
-		glBufferData(GL_ARRAY_BUFFER, 2*numVertices*3*sizeof(GLfloat), NULL, GL_STATIC_DRAW); // prazdna inicializace
+		glBufferData(GL_ARRAY_BUFFER, 2*numVertices*sizeof(GLfloat), NULL, GL_STATIC_DRAW); // prazdna inicializace
 		// do prvni pulky pole pozice
-		glBufferSubData(GL_ARRAY_BUFFER,0, numVertices*3*sizeof(GLfloat), pVertexBufferData);
+		glBufferSubData(GL_ARRAY_BUFFER, 0, numVertices*sizeof(GLfloat), pVertexBufferData);
 		// do druhe pulky normaly
-		glBufferSubData(GL_ARRAY_BUFFER,numVertices*3*sizeof(GLfloat), numVertices*3*sizeof(GLfloat), pNormalBufferData);
+		glBufferSubData(GL_ARRAY_BUFFER, numVertices*sizeof(GLfloat), numVertices*sizeof(GLfloat), pNormalBufferData);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);	
 }
@@ -360,7 +365,7 @@ void CTdata::draw3dIsosurface()
 		glEnableClientState(GL_NORMAL_ARRAY);
 			glVertexPointer(3, GL_FLOAT, 0, BUFFER_OFFSET(0)); // posledni je BUFFER_OFFSET ve VBO
 			glNormalPointer(GL_FLOAT, 0, BUFFER_OFFSET(numVertices*3*sizeof(GLfloat)));
-			glDrawArrays(GL_TRIANGLES, 0, numVertices);
+			glDrawArrays(GL_TRIANGLES, 0, numVertices/3);
 			//glDrawElements(GL_TRIANGLES, numIndices, GL_UNSIGNED_INT, BUFFER_OFFSET(0));
 		glDisableClientState(GL_NORMAL_ARRAY);
 		glDisableClientState(GL_VERTEX_ARRAY);
