@@ -273,7 +273,7 @@ public:
 	{
 		struct{float x, y, z;};
 		struct{float r, s, t;};
-		struct{float r, g, t;};
+		struct{float r, g, b;};
 		float data[3];
 	};
 };

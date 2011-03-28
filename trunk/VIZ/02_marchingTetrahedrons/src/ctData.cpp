@@ -1,5 +1,7 @@
 #include "ctData.h"
 
+#define BUFFER_OFFSET(i) ((char*) NULL + (i))
+
 CTdata::CTdata(){
 	data				= NULL;
 	
@@ -322,14 +324,12 @@ void CTdata::initBuffers(){
 
 void CTdata::draw3dIsosurface()
 {
-	glColor(color.r, color.g, color.b);
-
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, elementBufferID);
 	glBindBuffer(GL_ARRAY_BUFFER, vertexBufferID); 
 		glEnableClientState(GL_VERTEX_ARRAY);
 		glEnableClientState(GL_NORMAL_ARRAY);
 			glVertexPointer(3, GL_FLOAT, 0, BUFFER_OFFSET(0)); // posledni je BUFFER_OFFSET ve VBO
-			glNormalPointer(3, GL_FLOAT, 0, BUFFER_OFFSET(numVertices*3*sizeof(GLfloat)));
+			glNormalPointer(GL_FLOAT, 0, BUFFER_OFFSET(numVertices*3*sizeof(GLfloat)));
 			glDrawElements(GL_TRIANGLES, numIndices, GL_UNSIGNED_INT, BUFFER_OFFSET(0));
 		glDisableClientState(GL_COLOR_ARRAY);
 		glDisableClientState(GL_VERTEX_ARRAY);
