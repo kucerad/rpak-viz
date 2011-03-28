@@ -56,22 +56,22 @@ bool CTdata::loadFromFiles(const char * filename, int cnt, int scaleX, int scale
 		height		= ctfile.height;
 		width		= ctfile.width;
 		if (data==NULL){
-			data = new float[cnt*width*height];
+			data = new float[cnt*128*128]; //data = new float[cnt*width*height];
 		}
-		for (y=0; y<height; y++){
-			for (x=0; x<width; x++){
+		for (y=0; y<128; y++){ //height
+			for (x=0; x<128; x++){ //width
 				// 2x 8-bit to 1x 16-bit
-				val = 256*rawData[2*y*width + 2*x]+rawData[2*y*width + 2*x + 1];
+				val = 256*rawData[(2*y*width + 2*x)*2]+rawData[(2*y*width + 2*x)*2 + 1]; //val = 256*rawData[2*y*width + 2*x]+rawData[2*y*width + 2*x + 1];
 				// save in array
-				data[z*width*height + y*width +x] = val;
+				data[z*128*128 + y*128 +x] = val; //data[z*width*height + y*width +x] = val;
 			}
 		}
 		BACKSPACE(chars);
 		chars = printf("LOADING CT images: %03i %%",((z+1)*100)/cnt);
 	
 	}
-	dimX = width;
-	dimY = height;
+	dimX = 128; //width
+	dimY = 128; //height
 	dimZ = cnt;
 
 	szX = dimX * scX;
@@ -137,8 +137,8 @@ void CTdata::triangulateCell5(int x, int y, int z, float isovalue)
 	cellVertices[2] = & getVertexAt(x+1, y+1, z  );
 	cellVertices[3] = & getVertexAt(x  , y+1, z  );
 	cellVertices[4] = & getVertexAt(x  , y  , z+1);
-	cellVertices[5] = & getVertexAt(x  , y  , z+1);
-	cellVertices[6] = & getVertexAt(x  , y+1, z+1);
+	cellVertices[5] = & getVertexAt(x+1, y  , z+1);
+	cellVertices[6] = & getVertexAt(x+1, y+1, z+1);
 	cellVertices[7] = & getVertexAt(x  , y+1, z+1);
 	int i, j;
 	char type;
