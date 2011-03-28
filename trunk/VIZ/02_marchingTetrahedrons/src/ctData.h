@@ -69,6 +69,10 @@ public:
 	// load CT 3d grid from files... filename in format like in printf with one %i
 	bool	loadFromFiles(const char * filename, int cnt, int scaleX, int scaleY, int scaleZ);
 
+	Vertex interpolate (Vertex v1, Vertex v2, float isovalue);
+	void push(Vertex v1, Vertex v2, Vertex v3);
+
+
 	// get value at real position
 	inline float	getValueAt(const float x, const float y, const float z){
 		// get nearby coordinates
