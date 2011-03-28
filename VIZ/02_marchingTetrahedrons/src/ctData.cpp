@@ -118,6 +118,38 @@ void CTdata::create3dIsosurface(float isovalue, int _stepX, int _stepY, int _ste
 	initBuffers();
 }
 
+Vertex CTdata::interpolate (Vertex v1, Vertex v2, float isovalue) {
+	Vertex v;
+	float t = (v1.value-isovalue)/(v1.value-v2.value);
+	v.position = v1.position*(1-t) + v2.position*t;
+	v.normal = v1.normal*(1-t) + v2.normal*t;
+	v.normal.normalize();
+	v.value = isovalue;
+	return v;
+}
+
+void CTdata::push(Vertex v1, Vertex v2, Vertex v3) {
+	vertices.push_back(v1.position.x-64);
+	vertices.push_back(-v1.position.z+64);
+	vertices.push_back(v1.position.y-64);
+	vertices.push_back(v2.position.x-64);
+	vertices.push_back(-v2.position.z+64);
+	vertices.push_back(v2.position.y-64);
+	vertices.push_back(v3.position.x-64);
+	vertices.push_back(-v3.position.z+64);
+	vertices.push_back(v3.position.y-64);
+
+	normals.push_back(v1.normal.x);
+	normals.push_back(-v1.normal.z);
+	normals.push_back(v1.normal.y);
+	normals.push_back(v2.normal.x);
+	normals.push_back(-v2.normal.z);
+	normals.push_back(v2.normal.y);
+	normals.push_back(v3.normal.x);
+	normals.push_back(-v3.normal.z);
+	normals.push_back(v3.normal.y);
+}
+
 /*	
 *	Use 5 tetraherons to triangulate isosurface in cell
 *	Fill vertices, indices and normals
@@ -145,28 +177,28 @@ void CTdata::triangulateCell5(int x, int y, int z, float isovalue)
 	cellVertices[7] = & getVertexAt(x  , y+1, z+1);
 	int i, j;
 	char type;
-	
+
+	/*
 	vertices.push_back(cellVertices[0]->position.x-64);
-	vertices.push_back(cellVertices[0]->position.z);
+	vertices.push_back(-cellVertices[0]->position.z+64);
 	vertices.push_back(cellVertices[0]->position.y-64);
 		vertices.push_back(cellVertices[1]->position.x-64);
-	vertices.push_back(cellVertices[1]->position.z);
+	vertices.push_back(-cellVertices[1]->position.z+64);
 	vertices.push_back(cellVertices[1]->position.y-64);
 		vertices.push_back(cellVertices[2]->position.x-64);
-	vertices.push_back(cellVertices[2]->position.z);
+	vertices.push_back(-cellVertices[2]->position.z+64);
 	vertices.push_back(cellVertices[2]->position.y-64);
 
 	normals.push_back(cellVertices[0]->normal.x);
-	normals.push_back(cellVertices[0]->normal.z);
+	normals.push_back(-cellVertices[0]->normal.z);
 	normals.push_back(cellVertices[0]->normal.y);
 		normals.push_back(cellVertices[1]->normal.x);
-	normals.push_back(cellVertices[1]->normal.z);
+	normals.push_back(-cellVertices[1]->normal.z);
 	normals.push_back(cellVertices[1]->normal.y);
 		normals.push_back(cellVertices[2]->normal.x);
-	normals.push_back(cellVertices[2]->normal.z);
+	normals.push_back(-cellVertices[2]->normal.z);
 	normals.push_back(cellVertices[2]->normal.y);
-
-	//printf("%i \n", vertices.size());
+	*/
 	
 	// select tetrahedra vertices
 	Vertex* tetrahedraVertices[4];
@@ -202,6 +234,7 @@ README:
 
 		*/
 // TODO
+		Vertex v1, v2, v3, v4;
 
 		bool flipFlag = false;
 		switch (type){
@@ -214,25 +247,38 @@ README:
 				flipFlag = true;
 			case 14:
 				// intersection with 3 edges from pt 0
+				v1 = interpolate(*tetrahedraVertices[0], *tetrahedraVertices[1], isovalue);
+				v2 = interpolate(*tetrahedraVertices[0], *tetrahedraVertices[2], isovalue);
+				v3 = interpolate(*tetrahedraVertices[0], *tetrahedraVertices[3], isovalue);
+				push(v1, v2, v3);
 				
 				break;
 			case 2:
 				flipFlag = true;
 			case 13:
 				// intersection with 3 edges from pt 1
-
+				v1 = interpolate(*tetrahedraVertices[1], *tetrahedraVertices[0], isovalue);
+				v2 = interpolate(*tetrahedraVertices[1], *tetrahedraVertices[2], isovalue);
+				v3 = interpolate(*tetrahedraVertices[1], *tetrahedraVertices[3], isovalue);
+				push(v1, v2, v3);
 				break;
 			case 4:
 				flipFlag = true;
 			case 11:
 				// intersection with 3 edges from pt 2
-
+				v1 = interpolate(*tetrahedraVertices[2], *tetrahedraVertices[0], isovalue);
+				v2 = interpolate(*tetrahedraVertices[2], *tetrahedraVertices[1], isovalue);
+				v3 = interpolate(*tetrahedraVertices[2], *tetrahedraVertices[3], isovalue);
+				push(v1, v2, v3);
 				break;
 			case 8:
 				flipFlag = true;
 			case 7:
 				// intersection with 3 edges from pt 3
-
+				v1 = interpolate(*tetrahedraVertices[3], *tetrahedraVertices[0], isovalue);
+				v2 = interpolate(*tetrahedraVertices[3], *tetrahedraVertices[1], isovalue);
+				v3 = interpolate(*tetrahedraVertices[3], *tetrahedraVertices[2], isovalue);
+				push(v1, v2, v3);
 				break;
 			case 3:
 				flipFlag = true;
@@ -254,12 +300,7 @@ README:
 				// intersection with 4 edges
 
 				break;
-
-
 		}
-
-
-
 	} // next tetrahedra...
 
 	
@@ -364,7 +405,7 @@ void CTdata::draw3dIsosurface()
 		glEnableClientState(GL_VERTEX_ARRAY);
 		glEnableClientState(GL_NORMAL_ARRAY);
 			glVertexPointer(3, GL_FLOAT, 0, BUFFER_OFFSET(0)); // posledni je BUFFER_OFFSET ve VBO
-			glNormalPointer(GL_FLOAT, 0, BUFFER_OFFSET(numVertices*3*sizeof(GLfloat)));
+			glNormalPointer(GL_FLOAT, 0, BUFFER_OFFSET(numVertices*sizeof(GLfloat)));
 			glDrawArrays(GL_TRIANGLES, 0, numVertices/3);
 			//glDrawElements(GL_TRIANGLES, numIndices, GL_UNSIGNED_INT, BUFFER_OFFSET(0));
 		glDisableClientState(GL_NORMAL_ARRAY);
