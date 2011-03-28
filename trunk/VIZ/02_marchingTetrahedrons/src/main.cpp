@@ -113,7 +113,7 @@ void initApp()
 	dataCT.loadFromFiles("ctdata/cthead-16bit%03i.png", 113, 1,1,2);
 	dataCT.create3dIsosurface(500, 1, 1, 1);
 
-	glColor3f(1.0, 0.0, 1.0);
+	glColor3f(1.0, 0.0, 0.0);
 	dataCT.draw3dIsosurface();
 }
 //-----------------------------------------------------------------------------
