@@ -16,9 +16,18 @@
 //    [space]              ... change model type
 //-----------------------------------------------------------------------------
 #define USE_ANTTWEAKBAR
+#define NULL 0
 
+#include "settings.h"
+#include <stdarg.h>
 #include "common.h"
-  
+#include "png.h"
+#include "utils.h"
+#include <assert.h>
+#include "ctTexture.h"
+#include "ctData.h"
+//#include "./GL/glut.h"
+
 // GLOBAL CONSTANTS____________________________________________________________
 const char* VS_FILE_NAME     = "shaders/vs.glsl";  // Vertex shader source file
 const char* GS_FILE_NAME     = "shaders/gs.glsl";  // Geometry shader source file
@@ -40,6 +49,10 @@ bool     g_UseShaders        = true;  // Programmable pipeline on/off
 bool     g_UseVertexShader   = true;  // Use vertex shader
 bool     g_UseGeometryShader = false;  // Use geometry shader
 bool     g_UseFragmentShader = true;  // Use fragment shader
+CTdata	 dataCT;
+
+
+
 
 enum EGeometry                         // Geometry type enum
 {	
@@ -98,7 +111,11 @@ void cbDisplay()
    }
 }
 
+void initApp()
+{
 
+
+}
 //-----------------------------------------------------------------------------
 // Name: cbInitGL()
 // Desc: 
@@ -107,6 +124,8 @@ void cbInitGL()
 {
    // Init app GUI
    initGUI();
+
+   initApp();
 
 	// Set OpenGL state variables
    glClearColor(0.4f, 0.4f, 0.7f, 0);
