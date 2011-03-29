@@ -40,7 +40,7 @@ GLint    g_WindowHeight      = 600;    // Window height
 GLfloat  g_SceneRot[]        = { 0.0f, 0.0f, 0.0f, 1.0f }; // Scene orientation
 GLfloat  g_SceneTraX         = 0.0f;   // Scene translation along x-axis
 GLfloat  g_SceneTraY         = 0.0f;   // Scene translation along y-axis
-GLfloat  g_SceneTraZ         = 5.0f;   // Scene translation along z-axis
+GLfloat  g_SceneTraZ         = 150.0f;   // Scene translation along z-axis
 bool     g_SceneRotEnabled   = false;  // Scene auto-rotation enabled/disabled
 bool     g_WireMode          = false;  // Wire mode enabled/disabled
 bool     g_FaceCulling       = false;  // Face culling enabled/disabled
@@ -50,6 +50,8 @@ bool     g_UseVertexShader   = true;  // Use vertex shader
 bool     g_UseGeometryShader = false;  // Use geometry shader
 bool     g_UseFragmentShader = true;  // Use fragment shader
 CTdata	 dataCT;
+int cutValue = 500;
+
 
 enum EGeometry                         // Geometry type enum
 {	
@@ -72,6 +74,10 @@ void TW_CALL cbCompileShaderProgram(void *clientData);
 void initGUI();
 
 
+void updateMesh() {
+	dataCT.create3dIsosurface(cutValue, 1, 1, 1);
+}
+
 //-----------------------------------------------------------------------------
 // Name: cbDisplay()
 // Desc: 
@@ -88,7 +94,7 @@ void cbDisplay()
    glLoadIdentity();
    glTranslatef(g_SceneTraX, g_SceneTraY, -g_SceneTraZ);
    pgr2AddQuaternionRotationToTransformation(g_SceneRot);
-   glRotatef(scene_rot, 0.0f, 1.0f, 0.0f);
+   glRotatef(scene_rot-145, 0.0f, 1.0f, 0.0f);
 
    // Turn on programmable pipeline
    if (g_UseShaders)
@@ -112,7 +118,7 @@ void cbDisplay()
 void initApp()
 {
 	dataCT.loadFromFiles("ctdata/cthead-16bit%03i.png", 113, 1,1,1);
-	dataCT.create3dIsosurface(500, 1, 1, 1);
+	updateMesh();
 }
 //-----------------------------------------------------------------------------
 // Name: cbInitGL()
@@ -219,6 +225,33 @@ void TW_CALL cbCompileShaderProgram(void *clientData)
    }
 }
 
+void TW_CALL cbBones(void *clientData)
+{
+	cutValue = 1150;
+	updateMesh();
+}
+
+void TW_CALL cbSkin(void *clientData)
+{
+	cutValue = 500;
+	updateMesh();
+}
+
+void TW_CALL cbSetZ(const void *value, void *clientData)
+{ 
+    cutValue = *(const int*)value;
+}
+void TW_CALL cbGetZ(void *value, void *clientData)
+{ 
+    *(int *)value = cutValue;  // for instance
+
+}
+
+void TW_CALL cbUpdate(void *clientData)
+{
+	updateMesh();
+}
+
 
 //-----------------------------------------------------------------------------
 // Name: initGUI()
@@ -236,49 +269,29 @@ void initGUI()
    TwWindowSize(g_WindowWidth, g_WindowHeight);
    TwBar *controlBar = TwNewBar("Controls");
    TwDefine(" Controls position='10 10' size='200 320' refresh=0.1 ");
-   /*
-   TwAddVarCB(controlBar, "use_shaders", TW_TYPE_BOOLCPP, cbSetShaderStatus,
-      cbGetShaderStatus, NULL, " label='shaders' key=s help='Turn \
-      programmable pipeline on/off.' ");
 
-   // Shader panel setup
-   TwAddVarRW(controlBar, "vs", TW_TYPE_BOOLCPP, &g_UseVertexShader,
-    " group='Shaders' label='vertex' key=v help='Toggle vertex shader.' ");
-   TwAddVarRW(controlBar, "gs", TW_TYPE_BOOLCPP, &g_UseGeometryShader,
-    " group='Shaders' label='geometry' key=g help='Toggle geometry shader.' ");
-   TwAddVarRW(controlBar, "fs", TW_TYPE_BOOLCPP, &g_UseFragmentShader,
-    " group='Shaders' label='fragment' key=f help='Toggle fragment shader.' ");
-   TwAddButton(controlBar, "build", cbCompileShaderProgram, NULL, 
-    " group='Shaders' label='build' key=b help='Build shader program.' ");
-// TwDefine( " Controls/Shaders readonly=true "); 
+   TwAddButton(controlBar, "BonesView", cbBones, NULL, " group='Default values' label='Bones' "); 
+   TwAddButton(controlBar, "SkinView", cbSkin, NULL, " group='Default values' label='Skin' "); 
 
-*/
+   TwAddVarCB(controlBar, "Cut", TW_TYPE_INT16, cbSetZ, cbGetZ, NULL, " group='Custom value' min=0 max=3272 step=1 ");
+   TwAddButton(controlBar, "UPDATE", cbUpdate, NULL, " group='Custom value' label='Update mesh' "); 
+ 
    // Render panel setup
    TwAddVarRW(controlBar, "wiremode", TW_TYPE_BOOLCPP, &g_WireMode,
-    " group='Render' label='wire mode' key=w help='Toggle wire mode.' ");
+    " group='Render' label='wire mode' key=p help='Toggle wire mode.' ");
    TwAddVarRW(controlBar, "face_culling", TW_TYPE_BOOLCPP, &g_FaceCulling,
-      " group=Render label='face culling' key=c help='Toggle face culling.' ");
+      " group=Render label='face culling' key=o help='Toggle face culling.' ");
 
-   // Scene panel setup
-   TwEnumVal geometry_type[] = 
-   { 
-      { ELEPHANT_GEOMETRY    , "Elephant"},
-      { CUBE_GEOMETRY        , "Cube"    },
-   };
-   TwType geom_type = TwDefineEnum("Model", geometry_type, 
-                                        NUM_GEOMETRY_TYPES);
-   TwAddVarRW(controlBar, "model", geom_type, &g_GeometryType, 
-              " group='Scene' keyIncr=Space help='Change model.' ");
    TwAddVarRW(controlBar, "auto-rotation", TW_TYPE_BOOLCPP, &g_SceneRotEnabled,
     " group='Scene' label='rotation' key=r help='Toggle scene rotation.' ");
    TwAddVarRW(controlBar, "TranslateX", TW_TYPE_FLOAT, &g_SceneTraX, 
-    " group='Scene' label='translate X' min=-500 max=500 step=0.1 \
+    " group='Scene' label='translate X' min=-500 max=500 step=1 \
     keyIncr=x keyDecr=X help='Scene translation X.' ");
    TwAddVarRW(controlBar, "TranslateY", TW_TYPE_FLOAT, &g_SceneTraY, 
-    " group='Scene' label='translate Y' min=-500 max=500 step=0.1 \
+    " group='Scene' label='translate Y' min=-500 max=500 step=1 \
     keyIncr=y keyDecr=Y help='Scene translation Y.' ");
    TwAddVarRW(controlBar, "TranslateZ", TW_TYPE_FLOAT, &g_SceneTraZ, 
-    " group='Scene' label='translate Z' min=1 max=1000 step=0.1 \
+    " group='Scene' label='translate Z' min=-500 max=500 step=1 \
     keyIncr=z keyDecr=Z help='Scene translation Z.' ");
    TwAddVarRW(controlBar, "SceneRotation", TW_TYPE_QUAT4F, &g_SceneRot, 
     " group='Scene' label='rotation' open help='Toggle scene orientation.' ");
@@ -311,35 +324,22 @@ void cbKeyboardChanged(int key, int action)
 {
    switch (key)
    {
-	   case GLFW_KEY_SPACE:
-         g_GeometryType = (g_GeometryType + 1) % NUM_GEOMETRY_TYPES;
-      break;
-	  case 'x' : g_SceneTraX        += 0.1f;                               break;
-	  case 'X' : g_SceneTraX        -= 0.1f;							   break;
-	  case 'y' : g_SceneTraY        += 0.1f;                               break;
-	  case 'Y' : g_SceneTraY        -= 0.1f;							   break;
-      case 'z' : g_SceneTraZ        += 0.1f;                               break;
-      case 'Z' : g_SceneTraZ        -= (g_SceneTraZ > 0.5) ? 0.1f : 0.0f;  break;
+	  case 'a' : g_SceneTraX        += 1.0f;                               break;
+	  case 'd' : g_SceneTraX        -= 1.0f;							   break;
+	  case 's' : g_SceneTraY        += 1.0f;                               break;
+	  case 'w' : g_SceneTraY        -= 1.0f;							   break;
+      case 'q' : g_SceneTraZ        += 1.0f;                               break;
+      case 'e' : g_SceneTraZ        -= 1.0f;							   break;
       case 'r' : g_SceneRotEnabled   = !g_SceneRotEnabled;                 break;
-      case 'v' : g_UseVertexShader   = !g_UseVertexShader;                 break;
-      case 'g' : g_UseFragmentShader = !g_UseFragmentShader;               break;
-      case 'f' : g_UseGeometryShader = !g_UseGeometryShader;               break;
-      case 'w' : g_WireMode          = !g_WireMode;                        break;
-      case 'c' : g_FaceCulling       = !g_FaceCulling;                     break;
-      case 's' : 
+      case 'p' : g_WireMode          = !g_WireMode;                        break;
+      case 'o' : g_FaceCulling       = !g_FaceCulling;                     break;
+      case 'v' : 
          g_UseShaders = !g_UseShaders;
       case 'b' : 
          cbCompileShaderProgram(NULL);
          return;
       break;
 	}
-
-   printf("[s] g_UseShaders         %s\n", g_UseShaders ? "true" : "false");
-   printf("[v] g_UseVertexShader    %s\n", g_UseVertexShader ? "true" : "false");
-   printf("[f] g_UseFragmentShader  %s\n", g_UseFragmentShader ? "true" : "false");
-   printf("[g] g_UseGeometryShader  %s\n", g_UseGeometryShader ? "true" : "false");
-   printf("[w] g_WireMode           %s\n", g_WireMode ? "true" : "false");
-   printf("[c] g_FaceCulling        %s\n\n", g_FaceCulling ? "true" : "false");
 }
 
 
