@@ -121,8 +121,6 @@ bool CTdata::loadFromFiles(const char * filename, int cnt, int scaleX, int scale
 void CTdata::create3dIsosurface(float isovalue, int _stepX, int _stepY, int _stepZ)
 {
 	destroy3dIsosurface();
-	vertices.clear();
-	normals.clear();
 	// prepare structures
 	stepX = _stepX;
 	stepY = _stepY;
@@ -148,6 +146,8 @@ void CTdata::create3dIsosurface(float isovalue, int _stepX, int _stepY, int _ste
 	}
 
 	// vertices, indices and normals MUST be filled in NOW!
+	printf("Triangles: %i\n", vertices.size()/9);
+
 
 	// initialization of buffers
 	initBuffers();
@@ -490,9 +490,12 @@ void CTdata::destroy3dIsosurface()
 	pVertexBufferData	= NULL;
 	pNormalBufferData	= NULL;
 	//pElementBufferData	= NULL;
+	vertexMap.clear();
 	numIndices			= 0;
 	numVertices			= 0;
 	glDeleteBuffers(1, &vertexBufferID);
 	//glDeleteBuffers(1, &elementBufferID);
+	vertices.clear();
+	normals.clear();
 }
 

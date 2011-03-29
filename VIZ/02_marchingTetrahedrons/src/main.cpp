@@ -254,7 +254,7 @@ void initGUI()
    TwAddButton(controlBar, "BonesView", cbBones, NULL, " group='Default values' label='Bones' "); 
    TwAddButton(controlBar, "SkinView", cbSkin, NULL, " group='Default values' label='Skin' "); 
 
-   TwAddVarCB(controlBar, "Cut", TW_TYPE_INT16, cbSetZ, cbGetZ, NULL, " group='Custom value' min=0 max=3272 step=1 ");
+   TwAddVarCB(controlBar, "Isovalue", TW_TYPE_INT16, cbSetZ, cbGetZ, NULL, " group='Custom value' min=0 max=3272 step=1 ");
    TwAddButton(controlBar, "UPDATE", cbUpdate, NULL, " group='Custom value' label='Update mesh' "); 
  
    // Render panel setup
