@@ -155,8 +155,8 @@ void CTdata::create3dIsosurface(float isovalue, int _stepX, int _stepY, int _ste
 Vertex CTdata::interpolate (Vertex v1, Vertex v2, float isovalue) {
 	Vertex v;
 	float t = (v1.value-isovalue)/(v1.value-v2.value);
-	v.position = v1.position*(1-t) + v2.position*t;
-	v.normal = -(v1.normal*(1-t) + v2.normal*t);
+	v.position = (v1.position*(1-t) + v2.position*t);
+	v.normal = (v1.normal*(1-t) + v2.normal*t);
 	v.normal.normalize();
 	v.value = isovalue;
 	return v;
@@ -245,10 +245,9 @@ README:
 		   který má stejné souøadnice!!! 
 
 		*/
-// TODO
 		Vertex v1, v2, v3, v4;
 
-		bool flipFlag = false;
+		bool flipFlag = true;
 		switch (type){
 			case 0:
 			case 15:
@@ -256,60 +255,59 @@ README:
 				break;
 
 			case 1:
-				flipFlag = true;
+				flipFlag = false;
 			case 14:
 				// intersection with 3 edges from pt 0
 				v1 = interpolate(*tetrahedraVertices[0], *tetrahedraVertices[1], isovalue);
 				v2 = interpolate(*tetrahedraVertices[0], *tetrahedraVertices[2], isovalue);
 				v3 = interpolate(*tetrahedraVertices[0], *tetrahedraVertices[3], isovalue);
 				if (flipFlag) {
-					//push(v1, v3, v2);
+					push(v3, v2, v1);
 				} else {
-					tetrahedrons.push_back(new Tetrahedron(tetrahedraVertices[0]->position, tetrahedraVertices[1]->position, tetrahedraVertices[2]->position, tetrahedraVertices[3]->position));
 					push(v1, v2, v3);
 				}
 				break;
 			case 2:
-				flipFlag = true;
+				flipFlag = false;
 			case 13:
 				// intersection with 3 edges from pt 1
 				v1 = interpolate(*tetrahedraVertices[1], *tetrahedraVertices[0], isovalue);
 				v2 = interpolate(*tetrahedraVertices[1], *tetrahedraVertices[2], isovalue);
 				v3 = interpolate(*tetrahedraVertices[1], *tetrahedraVertices[3], isovalue);
 				if (flipFlag) {
-					//push(v3, v2, v1);
+					push(v1, v2, v3);
 				} else {
-					//push(v1, v2, v3);
+					push(v1, v3, v2);
 				}
 				break;
 			case 4:
-				flipFlag = true;
+				flipFlag = false;
 			case 11:
 				// intersection with 3 edges from pt 2
 				v1 = interpolate(*tetrahedraVertices[2], *tetrahedraVertices[0], isovalue);
 				v2 = interpolate(*tetrahedraVertices[2], *tetrahedraVertices[1], isovalue);
 				v3 = interpolate(*tetrahedraVertices[2], *tetrahedraVertices[3], isovalue);
 				if (flipFlag) {
-					//push(v1, v2, v3);
+					push(v1, v3, v2);
 				} else {
-					//push(v3, v2, v1);
+					push(v1, v2, v3);
 				}
 				break;
 			case 8:
-				flipFlag = true;
+				flipFlag = false;
 			case 7:
 				// intersection with 3 edges from pt 3
 				v1 = interpolate(*tetrahedraVertices[3], *tetrahedraVertices[0], isovalue);
 				v2 = interpolate(*tetrahedraVertices[3], *tetrahedraVertices[1], isovalue);
 				v3 = interpolate(*tetrahedraVertices[3], *tetrahedraVertices[2], isovalue);
 				if (flipFlag) {
-					//push(v3, v2, v1);
+					push(v1, v2, v3);
 				} else {
-					//push(v1, v2, v3);
+					push(v1, v3, v2);
 				}
 				break;
 			case 3:
-				flipFlag = true;
+				flipFlag = false;
 			case 12:
 				// intersection with 4 edges
 				v1 = interpolate(*tetrahedraVertices[0], *tetrahedraVertices[2], isovalue);
@@ -317,16 +315,16 @@ README:
 				v3 = interpolate(*tetrahedraVertices[1], *tetrahedraVertices[3], isovalue);
 				v4 = interpolate(*tetrahedraVertices[1], *tetrahedraVertices[2], isovalue);
 				if (flipFlag) {
-					//push(v1, v2, v3);
-					//push(v1, v3, v4);					
+					push(v1, v3, v2);
+					push(v1, v4, v3);					
 				} else {
-					//push(v3, v2, v1);
-					//push(v1, v4, v3);					
+					push(v1, v2, v3);
+					push(v1, v3, v4);					
 				}
 				break;
 
 			case 5:
-				flipFlag = true;
+				flipFlag = false;
 			case 10:
 				// intersection with 4 edges
 				v1 = interpolate(*tetrahedraVertices[0], *tetrahedraVertices[1], isovalue);
@@ -334,16 +332,16 @@ README:
 				v3 = interpolate(*tetrahedraVertices[2], *tetrahedraVertices[3], isovalue);
 				v4 = interpolate(*tetrahedraVertices[2], *tetrahedraVertices[1], isovalue);
 				if (flipFlag) {
-					//push(v3, v2, v1);
-					//push(v1, v4, v3);				
+					push(v1, v2, v3);
+					push(v1, v3, v4);				
 				} else {
-					//push(v1, v2, v3);
-					//push(v3, v4, v1);	
+					push(v1, v3, v2);
+					push(v1, v4, v3);	
 				}
 				break;
 
 			case 6:
-				flipFlag = true;
+				flipFlag = false;
 			case 9:
 				// intersection with 4 edges
 				v1 = interpolate(*tetrahedraVertices[1], *tetrahedraVertices[0], isovalue);
@@ -351,11 +349,11 @@ README:
 				v3 = interpolate(*tetrahedraVertices[2], *tetrahedraVertices[3], isovalue);
 				v4 = interpolate(*tetrahedraVertices[2], *tetrahedraVertices[0], isovalue);
 				if (flipFlag) {
-					//push(v2, v3, v4);
-					//push(v4, v1, v2);
+					push(v2, v4, v3);
+					push(v4, v2, v1);
 				} else {
-					//push(v4, v3, v2);
-					//push(v2, v1, v4);												
+					push(v4, v2, v3);
+					push(v2, v4, v1);												
 				}
 				break;
 		}
@@ -363,10 +361,16 @@ README:
 
 	
 }
-void CTdata::drawTetrahedrons(){
-	for (int i=0; i<tetrahedrons.size(); i++){
-		tetrahedrons[i]->draw();
+void CTdata::drawTetrahedrons(int id){
+	if (id<0 || id>=tetrahedrons.size())
+	{
+		for (int i=0; i<tetrahedrons.size(); i++){
+			tetrahedrons[i]->draw();
+		}
+		return;
 	}
+	tetrahedrons[id]->draw();
+
 }
 
 

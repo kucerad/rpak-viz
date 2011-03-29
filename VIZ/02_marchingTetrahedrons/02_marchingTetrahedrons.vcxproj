@@ -110,6 +110,7 @@
     <ClInclude Include="src\settings.h" />
     <ClInclude Include="src\texture.h" />
     <ClInclude Include="Tetrahedron.h" />
+    <ClInclude Include="Vertex.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

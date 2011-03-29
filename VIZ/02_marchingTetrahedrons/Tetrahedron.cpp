@@ -10,7 +10,7 @@ Tetrahedron::Tetrahedron(v3 &a, v3 &b, v3 &c, v3 &d)
 	colors[0] = v3(1.0, 0.0, 0.0);
 	colors[1] = v3(0.0, 1.0, 0.0);
 	colors[2] = v3(0.0, 0.0, 1.0);
-	colors[3] = v3(1.0, 1.0, 0.0);
+	colors[3] = v3(1.0, 1.0, 1.0);
 }
 
 
