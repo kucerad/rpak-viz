@@ -40,7 +40,7 @@ GLint    g_WindowHeight      = 600;    // Window height
 GLfloat  g_SceneRot[]        = { 0.0f, 0.0f, 0.0f, 1.0f }; // Scene orientation
 GLfloat  g_SceneTraX         = 0.0f;   // Scene translation along x-axis
 GLfloat  g_SceneTraY         = 0.0f;   // Scene translation along y-axis
-GLfloat  g_SceneTraZ         = 150.0f;   // Scene translation along z-axis
+GLfloat  g_SceneTraZ         = 10.0f;   // Scene translation along z-axis
 bool     g_SceneRotEnabled   = false;  // Scene auto-rotation enabled/disabled
 bool     g_WireMode          = false;  // Wire mode enabled/disabled
 bool     g_FaceCulling       = false;  // Face culling enabled/disabled
@@ -87,11 +87,14 @@ void cbDisplay()
    static GLfloat scene_rot = 0.0f;
 
    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-   glPolygonMode(GL_FRONT_AND_BACK, g_WireMode ? GL_LINE : GL_FILL);
+   //glPolygonMode(GL_FRONT_AND_BACK, g_WireMode ? GL_LINE : GL_FILL);
+   glPolygonMode(GL_FRONT, GL_FILL);
+   glPolygonMode(GL_BACK, GL_LINE);
    (g_FaceCulling) ? glEnable(GL_CULL_FACE) : glDisable(GL_CULL_FACE);
 
 	// Setup camera
    glLoadIdentity();
+    //  glTranslatef(g_SceneTraX, g_SceneTraY, -100);
    glTranslatef(g_SceneTraX, g_SceneTraY, -g_SceneTraZ);
    pgr2AddQuaternionRotationToTransformation(g_SceneRot);
    glRotatef(scene_rot-145, 0.0f, 1.0f, 0.0f);
@@ -101,9 +104,12 @@ void cbDisplay()
    {
 		   glUseProgram(g_ProgramId);    // Active shader program
    }
-
+   
+ 
    // Draw model
    //glColor3f(1.0, 0.0, 0.0);
+   //glRotatef(180, 0.f,1.f,0.f);
+   //glScalef(0.1, 0.1, 0.1);
    dataCT.draw3dIsosurface();
 
    // Turn off programmable pipeline
@@ -117,8 +123,10 @@ void cbDisplay()
 
 void initApp()
 {
-	dataCT.loadFromFiles("ctdata/cthead-16bit%03i.png", 113, 1,1,1);
-	updateMesh();
+	//dataCT.loadFromFiles("ctdata/cthead-16bit%03i.png", 113, 1,1,1);
+	//updateMesh();
+	dataCT.loadSphere(10,10,10,0.f, 1000.f);
+	dataCT.create3dIsosurface(3, 1, 1, 1);
 }
 //-----------------------------------------------------------------------------
 // Name: cbInitGL()
@@ -132,20 +140,20 @@ void cbInitGL()
    initApp();
 
 	// Set OpenGL state variables
-   glClearColor(0.4f, 0.4f, 0.7f, 0);
-   glColor4f(1.0f, 0.0f, 0.0f, 1.0f);
+   glClearColor(0.3f, 0.3f, 0.3f, 1);
+   glColor4f(.5f, .5f, .5f, 1.0f);
    glEnable(GL_LIGHTING);
    glEnable(GL_LIGHT0);
    glEnable(GL_DEPTH_TEST);
    (g_FaceCulling) ? glEnable(GL_CULL_FACE) : glDisable(GL_CULL_FACE);
-
+   //glEnable(GL_CULL_FACE);
    GLfloat light_amb[4] = {0.4f, 0.4f, 0.4f, 1.0f};
    GLfloat light_dif[4] = {0.0f, 0.0f, 0.0f, 1.0f};
    GLfloat light_spe[4] = {0.5f, 0.5f, 0.5f, 1.0f};
    GLfloat light_pos[4] = {0.0f, 3.0f, 3.0f, 1.0f};
    GLfloat light_dir[4] = {0.0f,-1.5f,-3.0f, 1.0f};
 	
-   GLfloat material_amd[4] = {1.0f, 0.1f, 0.1f, 1.0f};
+   GLfloat material_amd[4] = {.5f, 0.5f, 0.5f, 1.0f};
    GLfloat material_spe[4] = {0.8f, 0.8f, 0.8f, 1.0f};
 
    glMaterialfv(GL_FRONT_AND_BACK,  GL_AMBIENT, material_amd);

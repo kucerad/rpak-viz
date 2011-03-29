@@ -68,6 +68,9 @@ public:
 	~CTdata();
 	// load CT 3d grid from files... filename in format like in printf with one %i
 	bool	loadFromFiles(const char * filename, int cnt, int scaleX, int scaleY, int scaleZ);
+	void	loadSphere(int _szX, int _szY, int _szZ, float minV, float maxV);
+	
+
 
 	Vertex interpolate (Vertex v1, Vertex v2, float isovalue);
 	void push(Vertex v1, Vertex v2, Vertex v3);
@@ -161,7 +164,7 @@ private:
 		return true;
 	}
 	Vertex& getVertexAt(int x, int y, int z);
-	
+	v3	center;
 
 	// cached attributes
 	map<Position3i, Vertex, p3iComparator> vertexMap;

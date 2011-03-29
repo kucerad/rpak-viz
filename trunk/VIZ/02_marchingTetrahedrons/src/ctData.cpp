@@ -34,7 +34,34 @@ CTdata::~CTdata(){
 v3 CTdata::getCenterPoint(){
 	return v3(scX*float(dimX)*0.5, scY*float(dimY)*0.5,scZ*float(dimZ)*0.5);
 }
-
+void	CTdata::loadSphere(int _szX, int _szY, int _szZ, float minV, float maxV)
+{
+	scX = scY = scZ = 1;
+	dimX = _szX;
+	dimY = _szY;
+	dimZ = _szZ;
+	szX = dimX * scX;
+	szY = dimY * scY;
+	szZ = dimZ * scZ;
+	data = new float[dimX*dimY*dimZ];
+	center = v3 (float(dimX)/2.0, float(dimY)/2.0,float(dimZ)/2.0);
+	v3 p;
+	v3 diff;
+	int x,y,z;
+	for (z=0; z<(dimZ); z+=1){
+		for (y=0; y<(dimY); y+=1){
+			for (x=0; x<(dimX); x+=1){
+				p = v3(x,y,z);
+				diff = center-p;
+				data[z*dimX*dimY + y*dimX +x] = diff.length();
+			}
+		}
+	}
+	center.x = szX/2.0;
+	center.y = szY/2.0;
+	center.z = szZ/2.0;
+}
+	
 bool CTdata::loadFromFiles(const char * filename, int cnt, int scaleX, int scaleY, int scaleZ){
 	int chars = 0;
 	scX = scaleX;
@@ -76,10 +103,15 @@ bool CTdata::loadFromFiles(const char * filename, int cnt, int scaleX, int scale
 	dimX = width2;
     dimY = height2;
 	dimZ = cnt;
+	
 
 	szX = dimX * scX;
 	szY = dimY * scY;
 	szZ = dimZ * scZ;
+	center.x = szX/2.0;
+	center.y = szY/2.0;
+	center.z = szZ/2.0;
+
 	// backspace...
 	BACKSPACE(chars);
 	printf("LOADING CT images (%i) DONE\n", cnt);
@@ -124,32 +156,32 @@ Vertex CTdata::interpolate (Vertex v1, Vertex v2, float isovalue) {
 	Vertex v;
 	float t = (v1.value-isovalue)/(v1.value-v2.value);
 	v.position = v1.position*(1-t) + v2.position*t;
-	v.normal = v1.normal*(1-t) + v2.normal*t;
+	v.normal = -(v1.normal*(1-t) + v2.normal*t);
 	v.normal.normalize();
 	v.value = isovalue;
 	return v;
 }
 
 void CTdata::push(Vertex v1, Vertex v2, Vertex v3) {
-	vertices.push_back(v1.position.x-64);
-	vertices.push_back(-v1.position.z+57);
-	vertices.push_back(v1.position.y-64);
-	vertices.push_back(v2.position.x-64);
-	vertices.push_back(-v2.position.z+57);
-	vertices.push_back(v2.position.y-64);
-	vertices.push_back(v3.position.x-64);
-	vertices.push_back(-v3.position.z+57);
-	vertices.push_back(v3.position.y-64);
+	vertices.push_back(v1.position.x);
+	vertices.push_back(v1.position.y);
+	vertices.push_back(v1.position.z);
+	vertices.push_back(v2.position.x);
+	vertices.push_back(v2.position.y);
+	vertices.push_back(v2.position.z);
+	vertices.push_back(v3.position.x);
+	vertices.push_back(v3.position.y);
+	vertices.push_back(v3.position.z);
 
 	normals.push_back(v1.normal.x);
-	normals.push_back(-v1.normal.z);
 	normals.push_back(v1.normal.y);
+	normals.push_back(v1.normal.z);
 	normals.push_back(v2.normal.x);
-	normals.push_back(-v2.normal.z);
 	normals.push_back(v2.normal.y);
+	normals.push_back(v2.normal.z);
 	normals.push_back(v3.normal.x);
-	normals.push_back(-v3.normal.z);
 	normals.push_back(v3.normal.y);
+	normals.push_back(v3.normal.z);
 }
 
 /*	
@@ -244,9 +276,9 @@ README:
 				v2 = interpolate(*tetrahedraVertices[1], *tetrahedraVertices[2], isovalue);
 				v3 = interpolate(*tetrahedraVertices[1], *tetrahedraVertices[3], isovalue);
 				if (flipFlag) {
-					push(v3, v2, v1);
+					//push(v3, v2, v1);
 				} else {
-					push(v1, v2, v3);
+					//push(v1, v2, v3);
 				}
 				break;
 			case 4:
@@ -257,9 +289,9 @@ README:
 				v2 = interpolate(*tetrahedraVertices[2], *tetrahedraVertices[1], isovalue);
 				v3 = interpolate(*tetrahedraVertices[2], *tetrahedraVertices[3], isovalue);
 				if (flipFlag) {
-					push(v1, v2, v3);
+					//push(v1, v2, v3);
 				} else {
-					push(v3, v2, v1);
+					//push(v3, v2, v1);
 				}
 				break;
 			case 8:
@@ -270,9 +302,9 @@ README:
 				v2 = interpolate(*tetrahedraVertices[3], *tetrahedraVertices[1], isovalue);
 				v3 = interpolate(*tetrahedraVertices[3], *tetrahedraVertices[2], isovalue);
 				if (flipFlag) {
-					push(v3, v2, v1);
+					//push(v3, v2, v1);
 				} else {
-					push(v1, v2, v3);
+					//push(v1, v2, v3);
 				}
 				break;
 			case 3:
@@ -284,11 +316,11 @@ README:
 				v3 = interpolate(*tetrahedraVertices[1], *tetrahedraVertices[3], isovalue);
 				v4 = interpolate(*tetrahedraVertices[1], *tetrahedraVertices[2], isovalue);
 				if (flipFlag) {
-					push(v1, v2, v3);
-					push(v3, v4, v1);					
+					//push(v1, v2, v3);
+					//push(v1, v3, v4);					
 				} else {
-					push(v3, v2, v1);
-					push(v1, v4, v3);					
+					//push(v3, v2, v1);
+					//push(v1, v4, v3);					
 				}
 				break;
 
@@ -301,11 +333,11 @@ README:
 				v3 = interpolate(*tetrahedraVertices[2], *tetrahedraVertices[3], isovalue);
 				v4 = interpolate(*tetrahedraVertices[2], *tetrahedraVertices[1], isovalue);
 				if (flipFlag) {
-					push(v3, v2, v1);
-					push(v1, v4, v3);				
+					//push(v3, v2, v1);
+					//push(v1, v4, v3);				
 				} else {
-					push(v1, v2, v3);
-					push(v3, v4, v1);	
+					//push(v1, v2, v3);
+					//push(v3, v4, v1);	
 				}
 				break;
 
@@ -318,11 +350,11 @@ README:
 				v3 = interpolate(*tetrahedraVertices[2], *tetrahedraVertices[3], isovalue);
 				v4 = interpolate(*tetrahedraVertices[2], *tetrahedraVertices[0], isovalue);
 				if (flipFlag) {
-					push(v2, v3, v4);
-					push(v4, v1, v2);
+					//push(v2, v3, v4);
+					//push(v4, v1, v2);
 				} else {
-					push(v4, v3, v2);
-					push(v2, v1, v4);												
+					//push(v4, v3, v2);
+					//push(v2, v1, v4);												
 				}
 				break;
 		}
@@ -337,7 +369,6 @@ Vertex& CTdata::getVertexAt(int x, int y, int z)
 	p.x = x;
 	p.y = y;
 	p.z = z;
-
 	// is Vetrex allready precomputed in vertexMap?
 	Vertex& v = vertexMap[p];
 	if (!v.isValid){
@@ -345,8 +376,8 @@ Vertex& CTdata::getVertexAt(int x, int y, int z)
 		//printf("vertex not precomputed...\n");
 
 		// position
-		v.position = v3(x*scX, y*scY, z*scZ);
-
+		v.position = v3(x*scX, y*scY, z*scZ)-center;
+		printf("POS[ %f , %f , %f ]\n", v.position.x, v.position.y, v.position.z);
 		// normal
 		float nx = getValueAt2(x-1, y, z) - getValueAt2(x+1, y, z);
 		float ny = getValueAt2(x, y-1, z) - getValueAt2(x, y+1, z);
