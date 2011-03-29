@@ -49,6 +49,9 @@ bool     g_UseShaders        = true;  // Programmable pipeline on/off
 bool     g_UseVertexShader   = true;  // Use vertex shader
 bool     g_UseGeometryShader = false;  // Use geometry shader
 bool     g_UseFragmentShader = true;  // Use fragment shader
+
+int      g_thID = 0;
+
 CTdata	 dataCT;
 int cutValue = 500;
 
@@ -114,9 +117,11 @@ void cbDisplay()
 
    // Turn off programmable pipeline
    glUseProgram(NULL);
+   
    glDisable(GL_LIGHTING);
-   dataCT.drawTetrahedrons();
+		dataCT.drawTetrahedrons(g_thID);
    glEnable(GL_LIGHTING);
+   
    if (g_SceneRotEnabled)
    {
       scene_rot++;
@@ -129,7 +134,7 @@ void initApp()
 	//dataCT.create3dIsosurface(500, 1, 1, 1);
 	//updateMesh();
 	dataCT.loadSphere(10,10,10,0.f, 1000.f);
-	dataCT.create3dIsosurface(3, 1, 1, 1);
+	dataCT.create3dIsosurface(3.1, 1, 1, 1);
 }
 //-----------------------------------------------------------------------------
 // Name: cbInitGL()
@@ -279,8 +284,7 @@ void initGUI()
 
    TwWindowSize(g_WindowWidth, g_WindowHeight);
    TwBar *controlBar = TwNewBar("Controls");
-   TwDefine(" Controls position='10 10' size='200 320' refresh=0.1 ");
-
+   TwDefine(" Controls position='10 10' size='200 350' refresh=0.1 ");
    TwAddButton(controlBar, "BonesView", cbBones, NULL, " group='Default values' label='Bones' "); 
    TwAddButton(controlBar, "SkinView", cbSkin, NULL, " group='Default values' label='Skin' "); 
 
@@ -295,6 +299,9 @@ void initGUI()
 
    TwAddVarRW(controlBar, "auto-rotation", TW_TYPE_BOOLCPP, &g_SceneRotEnabled,
     " group='Scene' label='rotation' key=r help='Toggle scene rotation.' ");
+   TwAddVarRW(controlBar, "Tetrahedra", TW_TYPE_INT32, &g_thID, 
+    " group='Scene' label='Select tetrahedra' min=0 max=200 step=1 \
+    keyIncr=x keyDecr=X help='Scene translation X.' ");
    TwAddVarRW(controlBar, "TranslateX", TW_TYPE_FLOAT, &g_SceneTraX, 
     " group='Scene' label='translate X' min=-500 max=500 step=1 \
     keyIncr=x keyDecr=X help='Scene translation X.' ");

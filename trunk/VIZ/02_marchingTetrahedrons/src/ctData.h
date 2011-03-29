@@ -6,20 +6,12 @@
 #include "utils.h"
 #include "settings.h"
 #include <map>
+#include "../Vertex.h"
 #include "../Tetrahedron.h"
 
+
 using namespace std;
-class Vertex{
-public:
-	Vertex(){
-		isValid=false;
-	}
-	~Vertex(){}
-	v3		normal;
-	v3		position;
-	float	value;
-	bool	isValid;
-};
+
 union Position3i{
 	int pos[3];
 	struct{int x, y, z;};
@@ -41,7 +33,8 @@ struct p3iComparator {
 };
 static const char powersOf2[6]	 = {1,2,4,8,16,32};
 static const int tetrahedron5a[] = {
-								0,2,5,7,
+								//0,2,5,7,
+								0,2,7,5,
 								0,1,2,5,
 								0,2,3,7,
 								0,4,5,7,
@@ -115,7 +108,7 @@ public:
 	void  create3dIsosurface(float isovalue, int stepX, int stepY, int stepZ);
 	void    draw3dIsosurface();
 	void destroy3dIsosurface();
-	void	drawTetrahedrons();
+	void	drawTetrahedrons(int id);
 
 	v3		getCenterPoint();
 	float szX, szY, szZ;
