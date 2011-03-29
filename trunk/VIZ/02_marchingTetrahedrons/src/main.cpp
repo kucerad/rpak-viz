@@ -251,7 +251,7 @@ void initGUI()
 
    TwWindowSize(g_WindowWidth, g_WindowHeight);
    TwBar *controlBar = TwNewBar("Controls");
-   TwDefine(" Controls position='10 10' size='200 350' refresh=0.1 ");
+   TwDefine(" Controls position='10 10' size='200 370' refresh=0.1 ");
    TwAddVarRO(controlBar, "triangles",  TW_TYPE_INT32, &numTriangles, " group='Triangles' label='Number of trinagles' "); 
  
 
