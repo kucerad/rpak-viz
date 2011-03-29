@@ -88,6 +88,8 @@ bool CTdata::loadFromFiles(const char * filename, int cnt, int scaleX, int scale
 
 void CTdata::create3dIsosurface(float isovalue, int _stepX, int _stepY, int _stepZ)
 {
+	vertices.clear();
+	normals.clear();
 	// prepare structures
 	stepX = _stepX;
 	stepY = _stepY;
@@ -130,13 +132,13 @@ Vertex CTdata::interpolate (Vertex v1, Vertex v2, float isovalue) {
 
 void CTdata::push(Vertex v1, Vertex v2, Vertex v3) {
 	vertices.push_back(v1.position.x-64);
-	vertices.push_back(-v1.position.z+64);
+	vertices.push_back(-v1.position.z+57);
 	vertices.push_back(v1.position.y-64);
 	vertices.push_back(v2.position.x-64);
-	vertices.push_back(-v2.position.z+64);
+	vertices.push_back(-v2.position.z+57);
 	vertices.push_back(v2.position.y-64);
 	vertices.push_back(v3.position.x-64);
-	vertices.push_back(-v3.position.z+64);
+	vertices.push_back(-v3.position.z+57);
 	vertices.push_back(v3.position.y-64);
 
 	normals.push_back(v1.normal.x);
