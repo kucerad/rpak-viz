@@ -252,11 +252,14 @@ void initGUI()
    TwWindowSize(g_WindowWidth, g_WindowHeight);
    TwBar *controlBar = TwNewBar("Controls");
    TwDefine(" Controls position='10 10' size='200 350' refresh=0.1 ");
+   TwAddVarRO(controlBar, "triangles",  TW_TYPE_INT32, &numTriangles, " group='Triangles' label='Number of trinagles' "); 
+ 
+
    TwAddButton(controlBar, "BonesView", cbBones, NULL, " group='Default values' label='Bones' "); 
    TwAddButton(controlBar, "SkinView", cbSkin, NULL, " group='Default values' label='Skin' "); 
 
    TwAddVarCB(controlBar, "Isovalue", TW_TYPE_INT16, cbSetZ, cbGetZ, NULL, " group='Custom value' min=0 max=3272 step=1 ");
-   TwAddVarRO(controlBar, "triangles",  TW_TYPE_INT32, &numTriangles, " group='Custom value' label='Number of trinagles' "); 
+
  
    TwAddButton(controlBar, "UPDATE", cbUpdate, NULL, " group='Custom value' label='Update mesh' "); 
  
