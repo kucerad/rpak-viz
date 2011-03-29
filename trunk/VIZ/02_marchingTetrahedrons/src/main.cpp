@@ -1,20 +1,3 @@
-//-----------------------------------------------------------------------------
-//  [PGR2] Simple GLSL Example
-//  27/02/2008
-//-----------------------------------------------------------------------------
-//  Controls: 
-//    [mouse-left-button]  ... scene rotation
-//    [t], [T]             ... move scene forward/backward
-//    [r]                  ... toggle scene rotation
-//    [v]                  ... toggle vertex shader
-//    [g]                  ... toggle geometry shader
-//    [f]                  ... toggle fragment shader
-//    [s]                  ... toggle programmable pipeline (shaders)
-//    [b]                  ... build shader programs
-//    [w]                  ... toggle wire mode
-//    [c]                  ... toggle face culling
-//    [space]              ... change model type
-//-----------------------------------------------------------------------------
 #define USE_ANTTWEAKBAR
 #define NULL 0
 
@@ -26,7 +9,6 @@
 #include <assert.h>
 #include "ctTexture.h"
 #include "ctData.h"
-//#include "./GL/glut.h"
 
 // GLOBAL CONSTANTS____________________________________________________________
 const char* VS_FILE_NAME     = "shaders/vs.glsl";  // Vertex shader source file
@@ -40,7 +22,7 @@ GLint    g_WindowHeight      = 600;    // Window height
 GLfloat  g_SceneRot[]        = { 0.0f, 0.0f, 0.0f, 1.0f }; // Scene orientation
 GLfloat  g_SceneTraX         = 0.0f;   // Scene translation along x-axis
 GLfloat  g_SceneTraY         = 0.0f;   // Scene translation along y-axis
-GLfloat  g_SceneTraZ         = 10.0f;   // Scene translation along z-axis
+GLfloat  g_SceneTraZ         = 150.0f;   // Scene translation along z-axis
 bool     g_SceneRotEnabled   = false;  // Scene auto-rotation enabled/disabled
 bool     g_WireMode          = false;  // Wire mode enabled/disabled
 bool     g_FaceCulling       = false;  // Face culling enabled/disabled
@@ -55,16 +37,6 @@ int      g_thID = 0;
 CTdata	 dataCT;
 int cutValue = 500;
 
-
-enum EGeometry                         // Geometry type enum
-{	
-   ELEPHANT_GEOMETRY = 0, 
-   CUBE_GEOMETRY,
-   NUM_GEOMETRY_TYPES
-};
-int      g_GeometryType       = ELEPHANT_GEOMETRY; // Geometry type
-
-
 // GLSL variables
 GLuint   g_ProgramId       = 0;      // Shader program id
 
@@ -75,7 +47,6 @@ GLuint   g_ProgramId       = 0;      // Shader program id
 #endif
 void TW_CALL cbCompileShaderProgram(void *clientData);
 void initGUI();
-
 
 void updateMesh() {
 	dataCT.create3dIsosurface(cutValue, 1, 1, 1);
@@ -90,14 +61,11 @@ void cbDisplay()
    static GLfloat scene_rot = 0.0f;
 
    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-   //glPolygonMode(GL_FRONT_AND_BACK, g_WireMode ? GL_LINE : GL_FILL);
-   glPolygonMode(GL_FRONT, GL_FILL);
-   glPolygonMode(GL_BACK, GL_LINE);
+   glPolygonMode(GL_FRONT_AND_BACK, g_WireMode ? GL_LINE : GL_FILL);
    (g_FaceCulling) ? glEnable(GL_CULL_FACE) : glDisable(GL_CULL_FACE);
 
 	// Setup camera
    glLoadIdentity();
-    //  glTranslatef(g_SceneTraX, g_SceneTraY, -100);
    glTranslatef(g_SceneTraX, g_SceneTraY, -g_SceneTraZ);
    pgr2AddQuaternionRotationToTransformation(g_SceneRot);
    glRotatef(scene_rot-145, 0.0f, 1.0f, 0.0f);
@@ -107,20 +75,19 @@ void cbDisplay()
    {
 		   glUseProgram(g_ProgramId);    // Active shader program
    }
-   
- 
-   // Draw model
-   //glColor3f(1.0, 0.0, 0.0);
-   //glRotatef(180, 0.f,1.f,0.f);
-   //glScalef(0.1, 0.1, 0.1);
+
+   //Draw mesh
+   glRotatef(90, 1.f,0.f,0.f);
    dataCT.draw3dIsosurface();
 
    // Turn off programmable pipeline
    glUseProgram(NULL);
    
+   /*
    glDisable(GL_LIGHTING);
 		dataCT.drawTetrahedrons(g_thID);
    glEnable(GL_LIGHTING);
+   */
    
    if (g_SceneRotEnabled)
    {
@@ -130,11 +97,10 @@ void cbDisplay()
 
 void initApp()
 {
-	//dataCT.loadFromFiles("ctdata/cthead-16bit%03i.png", 113, 1,1,1);
-	//dataCT.create3dIsosurface(500, 1, 1, 1);
-	//updateMesh();
-	dataCT.loadSphere(10,10,10,0.f, 1000.f);
-	dataCT.create3dIsosurface(3.1, 1, 1, 1);
+	dataCT.loadFromFiles("ctdata/cthead-16bit%03i.png", 113, 1,1,1);
+	updateMesh();
+	//dataCT.loadSphere(10,10,10,0.f, 1000.f);
+	//dataCT.create3dIsosurface(3.1, 1, 1, 1);
 }
 //-----------------------------------------------------------------------------
 // Name: cbInitGL()
@@ -148,13 +114,12 @@ void cbInitGL()
    initApp();
 
 	// Set OpenGL state variables
-   glClearColor(0.3f, 0.3f, 0.3f, 1);
-   glColor4f(.5f, .5f, .5f, 1.0f);
+   glClearColor(0.0f, 0.0f, 0.0f, 1);
+   glColor4f(.6f, .6f, .6f, 1.0f);
    glEnable(GL_LIGHTING);
    glEnable(GL_LIGHT0);
    glEnable(GL_DEPTH_TEST);
    (g_FaceCulling) ? glEnable(GL_CULL_FACE) : glDisable(GL_CULL_FACE);
-   //glEnable(GL_CULL_FACE);
    GLfloat light_amb[4] = {0.4f, 0.4f, 0.4f, 1.0f};
    GLfloat light_dif[4] = {0.0f, 0.0f, 0.0f, 1.0f};
    GLfloat light_spe[4] = {0.5f, 0.5f, 0.5f, 1.0f};
@@ -257,9 +222,10 @@ void TW_CALL cbSetZ(const void *value, void *clientData)
 { 
     cutValue = *(const int*)value;
 }
+
 void TW_CALL cbGetZ(void *value, void *clientData)
 { 
-    *(int *)value = cutValue;  // for instance
+    *(int *)value = cutValue;
 
 }
 
@@ -299,9 +265,11 @@ void initGUI()
 
    TwAddVarRW(controlBar, "auto-rotation", TW_TYPE_BOOLCPP, &g_SceneRotEnabled,
     " group='Scene' label='rotation' key=r help='Toggle scene rotation.' ");
+   /*
    TwAddVarRW(controlBar, "Tetrahedra", TW_TYPE_INT32, &g_thID, 
     " group='Scene' label='Select tetrahedra' min=0 max=200 step=1 \
     keyIncr=x keyDecr=X help='Scene translation X.' ");
+	*/
    TwAddVarRW(controlBar, "TranslateX", TW_TYPE_FLOAT, &g_SceneTraX, 
     " group='Scene' label='translate X' min=-500 max=500 step=1 \
     keyIncr=x keyDecr=X help='Scene translation X.' ");
@@ -374,8 +342,6 @@ void TW_CALL cbSetShaderStatus(const void *value, void *clientData)
    {
       cbCompileShaderProgram(NULL);
    }
-// TwDefine((g_UseShaders) ? " Controls/Shaders readonly=false " : 
-//                           " Controls/Shaders readonly=true "); 
 }
 
 
