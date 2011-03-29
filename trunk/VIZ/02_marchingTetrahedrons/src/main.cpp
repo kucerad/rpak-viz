@@ -114,7 +114,9 @@ void cbDisplay()
 
    // Turn off programmable pipeline
    glUseProgram(NULL);
-
+   glDisable(GL_LIGHTING);
+   dataCT.drawTetrahedrons();
+   glEnable(GL_LIGHTING);
    if (g_SceneRotEnabled)
    {
       scene_rot++;
@@ -124,6 +126,7 @@ void cbDisplay()
 void initApp()
 {
 	//dataCT.loadFromFiles("ctdata/cthead-16bit%03i.png", 113, 1,1,1);
+	//dataCT.create3dIsosurface(500, 1, 1, 1);
 	//updateMesh();
 	dataCT.loadSphere(10,10,10,0.f, 1000.f);
 	dataCT.create3dIsosurface(3, 1, 1, 1);

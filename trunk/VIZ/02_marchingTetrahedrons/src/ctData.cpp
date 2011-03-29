@@ -263,9 +263,10 @@ README:
 				v2 = interpolate(*tetrahedraVertices[0], *tetrahedraVertices[2], isovalue);
 				v3 = interpolate(*tetrahedraVertices[0], *tetrahedraVertices[3], isovalue);
 				if (flipFlag) {
-					push(v1, v2, v3);
+					//push(v1, v3, v2);
 				} else {
-					push(v3, v2, v1);
+					tetrahedrons.push_back(new Tetrahedron(tetrahedraVertices[0]->position, tetrahedraVertices[1]->position, tetrahedraVertices[2]->position, tetrahedraVertices[3]->position));
+					push(v1, v2, v3);
 				}
 				break;
 			case 2:
@@ -362,6 +363,12 @@ README:
 
 	
 }
+void CTdata::drawTetrahedrons(){
+	for (int i=0; i<tetrahedrons.size(); i++){
+		tetrahedrons[i]->draw();
+	}
+}
+
 
 Vertex& CTdata::getVertexAt(int x, int y, int z)
 {
@@ -377,7 +384,7 @@ Vertex& CTdata::getVertexAt(int x, int y, int z)
 
 		// position
 		v.position = v3(x*scX, y*scY, z*scZ)-center;
-		printf("POS[ %f , %f , %f ]\n", v.position.x, v.position.y, v.position.z);
+		//printf("POS[ %f , %f , %f ]\n", v.position.x, v.position.y, v.position.z);
 		// normal
 		float nx = getValueAt2(x-1, y, z) - getValueAt2(x+1, y, z);
 		float ny = getValueAt2(x, y-1, z) - getValueAt2(x, y+1, z);
