@@ -42,6 +42,9 @@
     <ClCompile Include="..\include\LODEpng\lodepng.cpp">
       <Filter>utils</Filter>
     </ClCompile>
+    <ClCompile Include="Tetrahedron.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="shaders\fs.glsl">
@@ -84,6 +87,9 @@
     </ClInclude>
     <ClInclude Include="..\include\LODEpng\lodepng.h">
       <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Tetrahedron.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

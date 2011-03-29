@@ -6,6 +6,7 @@
 #include "utils.h"
 #include "settings.h"
 #include <map>
+#include "../Tetrahedron.h"
 
 using namespace std;
 class Vertex{
@@ -114,7 +115,7 @@ public:
 	void  create3dIsosurface(float isovalue, int stepX, int stepY, int stepZ);
 	void    draw3dIsosurface();
 	void destroy3dIsosurface();
-
+	void	drawTetrahedrons();
 
 	v3		getCenterPoint();
 	float szX, szY, szZ;
@@ -188,6 +189,7 @@ private:
 	vector<GLuint>	indices;
 	vector<GLfloat>	normals;
 
+	vector<Tetrahedron*> tetrahedrons;
 	void initBuffers();
 	void triangulateCell5(int x, int y, int z, float isovalue);
 	bool getMinMaxForCell(int x, int y, int z, float *max, float *min);
