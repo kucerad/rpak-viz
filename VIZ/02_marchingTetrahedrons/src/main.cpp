@@ -33,7 +33,7 @@ bool     g_UseGeometryShader = false;  // Use geometry shader
 bool     g_UseFragmentShader = true;  // Use fragment shader
 
 int      g_thID = 0;
-
+int      numTriangles = 0;
 CTdata	 dataCT;
 int cutValue = 500;
 
@@ -50,6 +50,7 @@ void initGUI();
 
 void updateMesh() {
 	dataCT.create3dIsosurface(cutValue, 1, 1, 1);
+	numTriangles = dataCT.numVertices/9;
 }
 
 //-----------------------------------------------------------------------------
@@ -255,6 +256,8 @@ void initGUI()
    TwAddButton(controlBar, "SkinView", cbSkin, NULL, " group='Default values' label='Skin' "); 
 
    TwAddVarCB(controlBar, "Isovalue", TW_TYPE_INT16, cbSetZ, cbGetZ, NULL, " group='Custom value' min=0 max=3272 step=1 ");
+   TwAddVarRO(controlBar, "triangles",  TW_TYPE_INT32, &numTriangles, " group='Custom value' label='Number of trinagles' "); 
+ 
    TwAddButton(controlBar, "UPDATE", cbUpdate, NULL, " group='Custom value' label='Update mesh' "); 
  
    // Render panel setup

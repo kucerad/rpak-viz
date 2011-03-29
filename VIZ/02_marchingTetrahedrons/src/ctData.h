@@ -112,6 +112,8 @@ public:
 
 	v3		getCenterPoint();
 	float szX, szY, szZ;
+	int		numIndices;
+	int		numVertices;
 private:
 	float *	data;
 
@@ -174,8 +176,7 @@ private:
 	GLfloat	*pNormalBufferData;
 	GLuint	*pElementBufferData;
 
-	int		numIndices;
-	int		numVertices;
+
 
 	// 3d surface data
 	vector<GLfloat>	vertices;
