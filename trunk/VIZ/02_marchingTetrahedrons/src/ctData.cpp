@@ -120,6 +120,7 @@ bool CTdata::loadFromFiles(const char * filename, int cnt, int scaleX, int scale
 
 void CTdata::create3dIsosurface(float isovalue, int _stepX, int _stepY, int _stepZ)
 {
+	destroy3dIsosurface();
 	vertices.clear();
 	normals.clear();
 	// prepare structures
@@ -485,13 +486,13 @@ void CTdata::destroy3dIsosurface()
 {
 	delete [] pVertexBufferData;
 	delete [] pNormalBufferData;
-	delete [] pElementBufferData;
+	//delete [] pElementBufferData;
 	pVertexBufferData	= NULL;
 	pNormalBufferData	= NULL;
-	pElementBufferData	= NULL;
+	//pElementBufferData	= NULL;
 	numIndices			= 0;
 	numVertices			= 0;
 	glDeleteBuffers(1, &vertexBufferID);
-	glDeleteBuffers(1, &elementBufferID);
+	//glDeleteBuffers(1, &elementBufferID);
 }
 
