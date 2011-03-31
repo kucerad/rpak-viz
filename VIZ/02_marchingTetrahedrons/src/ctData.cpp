@@ -160,7 +160,7 @@ Vertex CTdata::interpolate (Vertex v1, Vertex v2, float isovalue) {
 	float t = (v1.value-isovalue)/(v1.value-v2.value);
 	v.position = (v1.position*(1-t) + v2.position*t);
 	v.normal = (v1.normal*(1-t) + v2.normal*t);
-	v.normal.normalize();
+	//v.normal.normalize();
 	v.value = isovalue;
 	return v;
 }
@@ -397,7 +397,7 @@ Vertex& CTdata::getVertexAt(int x, int y, int z)
 		float ny = getValueAt2(x, y-1, z) - getValueAt2(x, y+1, z);
 		float nz = getValueAt2(x, y, z-1) - getValueAt2(x, y, z+1);
 		v.normal = v3(nx, ny, nz);
-		v.normal.normalize();
+		//v.normal.normalize();
 
 		// value
 		v.value	= getValueAt(x,y,z);
