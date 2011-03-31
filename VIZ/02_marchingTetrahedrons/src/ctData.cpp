@@ -63,10 +63,11 @@ void	CTdata::loadSphere(int _szX, int _szY, int _szZ, float minV, float maxV)
 }
 	
 bool CTdata::loadFromFiles(const char * filename, int cnt, int scaleX, int scaleY, int scaleZ){
+	int divide = 2;
 	int chars = 0;
 	scX = scaleX;
 	scY = scaleY;
-	scZ = scaleZ;
+	scZ = scaleZ/divide;
 	char filen [50];
 	unsigned char * rawData;
 	PNG ctfile;
@@ -79,7 +80,7 @@ bool CTdata::loadFromFiles(const char * filename, int cnt, int scaleX, int scale
 		if (!ctfile.load(filen)){
 			return false;
 		}
-		int divide = 2;
+		
 		rawData		= ctfile.getData();
 		height		= ctfile.height;
 		width		= ctfile.width;
