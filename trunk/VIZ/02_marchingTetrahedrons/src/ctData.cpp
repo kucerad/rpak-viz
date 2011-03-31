@@ -79,18 +79,19 @@ bool CTdata::loadFromFiles(const char * filename, int cnt, int scaleX, int scale
 		if (!ctfile.load(filen)){
 			return false;
 		}
+		int divide = 2;
 		rawData		= ctfile.getData();
 		height		= ctfile.height;
 		width		= ctfile.width;
-		width2		= width/2;
-		height2		= height/2;
+		width2		= width/float(divide);
+		height2		= height/float(divide);
 		if (data==NULL){
 			data = new float[cnt*width2*height2]; //data = new float[cnt*width*height];
 		}
 		for (y=0; y<height2; y++){ //height
 			for (x=0; x<width2; x++){ //width
 				// 2x 8-bit to 1x 16-bit
-				val = 256*rawData[(2*y*width + 2*x)*2]+rawData[(2*y*width + 2*x)*2 + 1]; //val = 256*rawData[2*y*width + 2*x]+rawData[2*y*width + 2*x + 1];
+				val = 256*rawData[(2*y*width + 2*x)*divide]+rawData[(2*y*width + 2*x)*divide + 1]; //val = 256*rawData[2*y*width + 2*x]+rawData[2*y*width + 2*x + 1];
 				// save in array
 				data[z*height2*width2 + y*width2 +x] = val; //data[z*width*height + y*width +x] = val;
 			}
