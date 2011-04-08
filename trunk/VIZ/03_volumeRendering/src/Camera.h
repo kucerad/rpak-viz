@@ -14,11 +14,12 @@ public:
 	~Camera(void);
 	void snapShot(CTdata &ctData, ColorMap &colorMap, int channels);
 	float * imageData;
-private:
-	int width, height;
 	v3 position;
 	v3 up, right, direction;
 	float progress;
+private:
+	int width, height;	
+	
 };
 
 #endif
