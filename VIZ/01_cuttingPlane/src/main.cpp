@@ -1,6 +1,7 @@
 #define USE_ANTTWEAKBAR
 #define NULL 0
 
+#include "settings.h"
 #include <stdarg.h>
 #include "common.h"
 #include "models/cube.h"
@@ -8,7 +9,7 @@
 #include "utils.h"
 #include <assert.h>
 #include "ctTexture.h"
-#include "./GL/glut.h"
+
 
 
 // GLOBAL CONSTANTS____________________________________________________________

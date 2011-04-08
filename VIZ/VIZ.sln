@@ -5,6 +5,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "01_cuttingPlane", "01_cutti
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "02_marchingTetrahedrons", "02_marchingTetrahedrons\02_marchingTetrahedrons.vcxproj", "{A291B9B2-36E9-4B12-9F44-88D871044ED3}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "03_volumeRendering", "03_volumeRendering\03_volumeRendering.vcxproj", "{37A23E35-C563-475D-B63F-8B64C99EEE37}"
+EndProject
 Global
 	GlobalSection(SubversionScc) = preSolution
 		Svn-Managed = True
@@ -23,6 +25,10 @@ Global
 		{A291B9B2-36E9-4B12-9F44-88D871044ED3}.Debug|Win32.Build.0 = Debug|Win32
 		{A291B9B2-36E9-4B12-9F44-88D871044ED3}.Release|Win32.ActiveCfg = Release|Win32
 		{A291B9B2-36E9-4B12-9F44-88D871044ED3}.Release|Win32.Build.0 = Release|Win32
+		{37A23E35-C563-475D-B63F-8B64C99EEE37}.Debug|Win32.ActiveCfg = Debug|Win32
+		{37A23E35-C563-475D-B63F-8B64C99EEE37}.Debug|Win32.Build.0 = Debug|Win32
+		{37A23E35-C563-475D-B63F-8B64C99EEE37}.Release|Win32.ActiveCfg = Release|Win32
+		{37A23E35-C563-475D-B63F-8B64C99EEE37}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
