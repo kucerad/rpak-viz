@@ -49,8 +49,11 @@ void TW_CALL cbCompileShaderProgram(void *clientData);
 void initGUI();
 
 void updateMesh() {
+	printf("Calculating isosurface for value %i.", cutValue);
 	dataCT.create3dIsosurface(cutValue, 1, 1, 1);
 	numTriangles = dataCT.numVertices/9;
+	printf("Generated %i triangles.\n", numTriangles);
+	
 }
 
 //-----------------------------------------------------------------------------
@@ -99,9 +102,8 @@ void cbDisplay()
 void initApp()
 {
 	dataCT.loadFromFiles("ctdata/cthead-16bit%03i.png", 113, 1,1,2);
-	updateMesh();
 	//dataCT.loadSphere(10,10,10,0.f, 1000.f);
-	//dataCT.create3dIsosurface(3.1, 1, 1, 1);
+	updateMesh();
 }
 //-----------------------------------------------------------------------------
 // Name: cbInitGL()
