@@ -75,64 +75,64 @@ void CTtexture::calcIntersections(const v3 &normal, const v3 &u, const v3 &v, co
 	// for each of the 3 faces of data cube
 		// X
 		line = v3(1,0,0);
-		max = ct.szX;
+		maxSz = ct.szX;
 		// for each edge on the face
 		l0 = v3(0,0,0);
-		if (intersect(l0, p0, normal, line, max, u, v, intersection)){
+		if (intersect(l0, p0, normal, line, maxSz, u, v, intersection)){
 			intersections.push_back(intersection);	
 		}
 		l0 = v3(0,y,0);
-		if (intersect(l0, p0, normal, line, max, u, v, intersection)){
+		if (intersect(l0, p0, normal, line, maxSz, u, v, intersection)){
 			intersections.push_back(intersection);	
 		}
 		l0 = v3(0,y,z);
-		if (intersect(l0, p0, normal, line, max, u, v, intersection)){
+		if (intersect(l0, p0, normal, line, maxSz, u, v, intersection)){
 			intersections.push_back(intersection);	
 		}
 		l0 = v3(0,0,z);
-		if (intersect(l0, p0, normal, line, max, u, v, intersection)){
+		if (intersect(l0, p0, normal, line, maxSz, u, v, intersection)){
 			intersections.push_back(intersection);	
 		}
 	
 		// Y
 		line = v3(0,1,0);
-		max = ct.szY;
+		maxSz = ct.szY;
 		// for each edge on the face
 		l0 = v3(0,0,0);
-		if (intersect(l0, p0, normal, line, max, u, v, intersection)){
+		if (intersect(l0, p0, normal, line, maxSz, u, v, intersection)){
 			intersections.push_back(intersection);	
 		}
 		l0 = v3(0,0,z);
-		if (intersect(l0, p0, normal, line, max, u, v, intersection)){
+		if (intersect(l0, p0, normal, line, maxSz, u, v, intersection)){
 			intersections.push_back(intersection);	
 		}
 		l0 = v3(x,0,z);
-		if (intersect(l0, p0, normal, line, max, u, v, intersection)){
+		if (intersect(l0, p0, normal, line, maxSz, u, v, intersection)){
 			intersections.push_back(intersection);	
 		}
 		l0 = v3(x,0,0);
-		if (intersect(l0, p0, normal, line, max, u, v, intersection)){
+		if (intersect(l0, p0, normal, line, maxSz, u, v, intersection)){
 			intersections.push_back(intersection);	
 		}
 
 		// Z
 		line = v3(0,0,1);
-		max = ct.szZ;
+		maxSz = ct.szZ;
 		// for each edge on the face
 		l0 = v3(0,0,0);
-		if (intersect(l0, p0, normal, line, max, u, v, intersection)){
+		if (intersect(l0, p0, normal, line, maxSz, u, v, intersection)){
 			intersections.push_back(intersection);	
 		}
 		l0 = v3(0,y,0);
-		if (intersect(l0, p0, normal, line, max, u, v, intersection)){
+		if (intersect(l0, p0, normal, line, maxSz, u, v, intersection)){
 			intersections.push_back(intersection);	
 		}
 		l0 = v3(x,y,0);
-		if (intersect(l0, p0, normal, line, max, u, v, intersection)){
+		if (intersect(l0, p0, normal, line, maxSz, u, v, intersection)){
 			intersections.push_back(intersection);	
 		}
 		l0 = v3(x,0,0);
-		if (intersect(l0, p0, normal, line, max, u, v, intersection)){
+		if (intersect(l0, p0, normal, line, maxSz, u, v, intersection)){
 			intersections.push_back(intersection);	
 		}
 		// number of intersections?

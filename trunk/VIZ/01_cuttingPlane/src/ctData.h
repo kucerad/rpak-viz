@@ -5,6 +5,7 @@
 #include "png.h"
 #include "utils.h"
 #include "settings.h"
+#include "../../include/GLEE/GLee.h" 
 
 using namespace std;
 
@@ -53,7 +54,9 @@ public:
 	}
 
 	v3		getCenterPoint();
-	float szX, szY, szZ;
+
+	void	create3DIsosurrface(float isovalue, int step_x, int step_y, int step_z );
+	float	szX, szY, szZ;
 private:
 	float *	data;
 
