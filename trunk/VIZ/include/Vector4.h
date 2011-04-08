@@ -94,8 +94,14 @@ class Vector4
 		}
 		
 	public:
-		float x, y, z, w;
+		union
+		{
+			struct{float x, y, z, w;};
+			struct{float r, s, t, u;};
+			struct{float r, g, b, a;};
+			float data[4];
+		};
 };
 typedef Vector4 v4;
-
+typedef Vector4 Color;
 #endif __VECTOR4_H__
