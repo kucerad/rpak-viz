@@ -28,7 +28,8 @@ CTdata::~CTdata(){
 	if (data){
 		delete [] data;
 	}
-	vertexMap.clear();
+	//vertexMap.clear();
+	destroy3dIsosurface();
 }
 
 v3 CTdata::getCenterPoint(){
@@ -53,7 +54,7 @@ void	CTdata::loadSphere(int _szX, int _szY, int _szZ, float minV, float maxV)
 			for (x=0; x<(dimX); x+=1){
 				p = v3(x,y,z);
 				diff = center-p;
-				data[z*dimX*dimY + y*dimX +x] = diff.length();
+				data[z*dimX*dimY + y*dimX +x] = 100.0/diff.length();
 			}
 		}
 	}
@@ -94,7 +95,7 @@ bool CTdata::loadFromFiles(const char * filename, int cnt, int scaleX, int scale
 				// 2x 8-bit to 1x 16-bit
 				val = 256*rawData[(2*y*width + 2*x)*divide]+rawData[(2*y*width + 2*x)*divide + 1]; //val = 256*rawData[2*y*width + 2*x]+rawData[2*y*width + 2*x + 1];
 				// save in array
-				data[z*height2*width2 + y*width2 +x] = val; //data[z*width*height + y*width +x] = val;
+				data[z*height2*width2 + y*width2 +(width2-1-x)] = val; //data[z*width*height + y*width +x] = val;
 			}
 		}
 		BACKSPACE(chars);
@@ -148,7 +149,7 @@ void CTdata::create3dIsosurface(float isovalue, int _stepX, int _stepY, int _ste
 	}
 
 	// vertices, indices and normals MUST be filled in NOW!
-	printf("Triangles: %i\n", vertices.size()/9);
+	//printf("Triangles: %i\n", vertices.size()/9);
 
 
 	// initialization of buffers
@@ -393,10 +394,16 @@ Vertex& CTdata::getVertexAt(int x, int y, int z)
 		v.position = v3(x*scX, y*scY, z*scZ)-center;
 		//printf("POS[ %f , %f , %f ]\n", v.position.x, v.position.y, v.position.z);
 		// normal
-		float nx = getValueAt2(x-1, y, z) - getValueAt2(x+1, y, z);
-		float ny = getValueAt2(x, y-1, z) - getValueAt2(x, y+1, z);
-		float nz = getValueAt2(x, y, z-1) - getValueAt2(x, y, z+1);
-		v.normal = v3(nx, ny, nz);
+		int i;
+		float nx, ny, nz;
+
+		for (i=1; v.normal.length()<=100.0; i++){
+			nx = getValueAt2(x-i, y, z) - getValueAt2(x+i, y, z);
+			ny = getValueAt2(x, y-i, z) - getValueAt2(x, y+i, z);
+			nz = getValueAt2(x, y, z-i) - getValueAt2(x, y, z+i);
+			v.normal = v3(nx, ny, nz);
+		}
+
 		//v.normal.normalize();
 
 		// value

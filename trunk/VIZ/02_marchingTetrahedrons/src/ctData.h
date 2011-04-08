@@ -135,7 +135,6 @@ private:
 		x = max(min(x,dimX-1), 0);
 		y = max(min(y,dimY-1), 0);
 		z = max(min(z,dimZ-1), 0);
-
 		return data[ z*dimX*dimY + y*dimX + x ];
 	}
 
