@@ -14,7 +14,13 @@ enum eAXIS {
 	Z
 };
 
-#define BACKSPACE(cnt) for (int i=0; i<cnt; i++){printf("\b");}
+#define BACKSPACE(cnt) for (int i=0; i<cnt; i++){printf("\b \b");}
+#define BACK(cnt) for (int i=0; i<cnt; i++){printf("\b");}
+
+#define SAFE_DELETE_PTR(VAR) if(VAR!=NULL){delete VAR; VAR=NULL;}
+#define SAFE_DELETE_ARRAY_PTR(VAR) if(VAR!=NULL){delete [] VAR; VAR=NULL;}
+
+
 __forceinline float min2f(float a, float b)
 {
 	return (a<b)?a:b;	
@@ -34,6 +40,7 @@ __forceinline Vertex interpolate1Dlin(Vertex* v1, Vertex* v2, const float t){
 	Vertex out;
 	out.value = (1-t)*v1->value + t * v2->value;
 	out.normal = v1->normal * (1-t) + v2->normal * t;
+	out.color = v1->color * (1-t) + v2->color * t;
 	out.isValid = true;
 	return out;
 }

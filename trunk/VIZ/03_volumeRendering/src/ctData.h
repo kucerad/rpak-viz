@@ -11,7 +11,7 @@
 #include "colorMap.h"
 #include "BBox.h"
 #include "Shader.h"
-
+#define BACKGROUND_COLOR v3(0.f, 0.f, 0.f)
 
 using namespace std;
 
@@ -37,7 +37,7 @@ struct p3iComparator {
 
 class CTdata{
 public:
-	CTdata();
+	CTdata(ColorMap *colorMap, Shader *shader);
 	~CTdata();
 	// load CT 3d grid from files... filename in format like in printf with one %i
 	bool	loadFromFiles(const char * filename, int cnt, int scaleX, int scaleY, int scaleZ);
@@ -52,10 +52,11 @@ public:
 	float	getValueAt(const int x, const int y, const int z);
 	v3		getCenterPoint();
 
-	void	colorizeRay(Ray * rayIn, ColorMap *colorMap, Shader &shader);
-
-
-	float   szX, szY, szZ;
+	void	colorizeRay(Ray * rayIn);
+	Shader*		pShader;
+	ColorMap*	pColorMap;
+	float		szX, szY, szZ;
+	v3			center;
 private:
 	float *	data;
 
@@ -63,7 +64,7 @@ private:
 	int stepX, stepY, stepZ;
 	float scX, scY, scZ;
 
-	v3	center;
+	
 	BBox box;
 	// cached attributes
 	map<Position3i, Vertex, p3iComparator> vertexMap;

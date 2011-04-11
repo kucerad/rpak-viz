@@ -12,7 +12,7 @@ public:
 	BBox(v3 _min, v3 _max);
 	~BBox(void);
 
-	bool intersect(Ray &rRay);
+	bool intersect(Ray *pRay);
 	//v3 min, max;
 	v3 bounds[2];
 };

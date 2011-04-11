@@ -1,7 +1,17 @@
 #include "Shader.h"
 
 
-Shader::Shader(void)
+Shader::Shader(		 v3 _ambientColor,
+					 v3 _diffuseColor,
+					 v3 _specularColor,
+					 float  _ka,
+					 float	_kd,
+					 float  _ks,
+					 float  _shininess):
+	ambientColor(_ambientColor),
+	diffuseColor(_diffuseColor),
+	specularColor(_specularColor),
+	ka(_ka), kd(_kd), ks(_ks), shininess(_shininess)
 {
 }
 
@@ -10,23 +20,16 @@ Shader::~Shader(void)
 {
 }
 
-void Shader::apply(  v3 *outputColor,
-					 v3 *ambientColor,
-					 v3 *diffuseColor,
-					 v3 *specularColor,
-					 float  ka,
-					 float	kd,
-					 float  ks,
-					 float  shininess,
-					 v3		*normal,
-					 v3		*lightDir,
-					 v3		*viewerDir)
+void Shader::apply( v3 *outputColor,				
+					v3 *inColor,
+					v3	*normal,
+					v3	*lightDir,
+					v3	*viewerDir
+			   )
 {
 	float NdotL = lightDir->dot(*normal);
 	v3 R = (*normal)*(NdotL*2.0) - (*lightDir);
 	float RdotV = R.dot(*viewerDir);
 	
-	Color c = (*ambientColor) * ka + (*diffuseColor)*(kd*NdotL) + (*specularColor)*ks*pow(RdotV, shininess);
-	return c;
-
+	*outputColor = (ambientColor) * ka + (*inColor)*(kd*NdotL) + (specularColor)*ks*pow(RdotV, shininess);
 }
