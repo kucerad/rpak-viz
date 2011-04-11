@@ -165,14 +165,13 @@ Vertex* CTdata::getVertexAt(int x, int y, int z)
 	if (!v->isValid){
 		// not precomputed... compute now...
 		// position
-		v->position = v3(x*scX, y*scY, z*scZ)-center;
+		v->position = v3(x*scX, y*scY, z*scZ);
 		//printf("POS[ %f , %f , %f ]\n", v.position.x, v.position.y, v.position.z);
 		// normal
-		int i;
 		float nx, ny, nz;
-		nx = getValueAt(x-i, y, z) - getValueAt(x+i, y, z);
-		ny = getValueAt(x, y-i, z) - getValueAt(x, y+i, z);
-		nz = getValueAt(x, y, z-i) - getValueAt(x, y, z+i);
+		nx = getValueAt(x-1, y, z) - getValueAt(x+1, y, z);
+		ny = getValueAt(x, y-1, z) - getValueAt(x, y+1, z);
+		nz = getValueAt(x, y, z-1) - getValueAt(x, y, z+1);
 		v->normal = v3(nx, ny, nz);
 		
 		// value

@@ -11,7 +11,7 @@
 #include "colorMap.h"
 #include "BBox.h"
 #include "Shader.h"
-#define BACKGROUND_COLOR v3(0.f, 0.f, 0.f)
+#define BACKGROUND_COLOR v3(1.f, 0.f, 0.f)
 
 using namespace std;
 

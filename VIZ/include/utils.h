@@ -45,11 +45,7 @@ __forceinline Vertex interpolate1Dlin(Vertex* v1, Vertex* v2, const float t){
 	return out;
 }
 __forceinline v4	  interpolate1DlinVector4(const v4 & vecA, const v4 & vecB, const float t){
-	float x = interpolate1Dlin( vecA.x, vecB.x, t);
-	float y = interpolate1Dlin( vecA.y, vecB.y, t);
-	float z = interpolate1Dlin( vecA.z, vecB.z, t);
-	float w = interpolate1Dlin( vecA.w, vecB.w, t);
-	return v4(x,y,z,w);
+	return (vecA*(1-t)+vecB*t);
 }
 
 

@@ -1,12 +1,13 @@
 #include "Camera.h"
 
-Camera::Camera(v3 &_position, v3 &_up, v3 &_direction, int _width, int _height):
+Camera::Camera(v3 &_position, v3 &_up, v3 &_direction, int _width, int _height, float _scale):
 	position(_position),
 	up(_up),
 	direction(_direction),
 	width(_width),
 	height(_height),
-	progress(0.0)
+	progress(0.0),
+	scale(_scale)
 {
 	right = up.cross(direction);
 	imageData = NULL;
@@ -27,11 +28,12 @@ void Camera::snapShot(CTdata *ctData, int channels)
 	int chars = 0;
 	SAFE_DELETE_ARRAY_PTR(imageData);
 	imageData = new float[area*channels];
+	float progressPre = 0.f;
 	v3 org;
 	for (y=0; y<height; y++){
 		for (x=0; x<width; x++){
 			// each pixel of image
-			org = position + up*-(y-height2) + right*-(x-width2);
+			org = position + up*-(y-height2)*scale + right*(x-width2)*scale;
 			// create ray
 			Ray vRay(org, direction);
 			// send it through volumetric data and register color
@@ -41,10 +43,13 @@ void Camera::snapShot(CTdata *ctData, int channels)
 				imageData[(y*width + x)*channels + ch]=vRay.color.data[ch];
 			}
 			progress = float(y*width+x)/float(area);
-			BACK(chars);
-			chars = printf("( progress: %3.1f %% )", progress*100);
+			if (progress-progressPre>=0.01){
+				BACK(chars);
+				chars = printf("( progress: %3.1f %% )", progress*100);
+				progressPre = progress;
+			}
 		}
 	}
-	BACKSPACE(chs);
+	BACKSPACE(chs + chars);
 	printf("Rendering done.\n");
 }
