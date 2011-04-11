@@ -1,32 +1,25 @@
 #include "ctData.h"
 
-#define BUFFER_OFFSET(i)	((char*) NULL + (i))
 #define LIGHT_DIR			(-rayIn->dir)
 #define ALPHAACCUM_TRESHOLD 0.01
 
-v3 ambientColor = v3(1.f, 0.f, 0.f);
-v3 specularColor = v3(1.f, 1.f, 1.f);;
-float ka = 1;
-float kd = 1;
-float ks = 1;
-float sh = 2;
 
-
-
-
-CTdata::CTdata(){
-	data				= NULL;
-	stepX = 1;
-	stepY = 1;
-	stepZ = 1;
-	sampleDistance = 1;
-	sampleCount = 0;
+CTdata::CTdata(ColorMap *colorMap, Shader *shader){
+	data			= NULL;
+	stepX			= 1;
+	stepY			= 1;
+	stepZ			= 1;
+	sampleDistance	= 1;
+	sampleCount		= 0;
+	pColorMap		= colorMap;
+	pShader			= shader;
 }
 
 CTdata::~CTdata(){
-	if (data){
-		delete [] data;
-	}
+	SAFE_DELETE_ARRAY_PTR(data)	
+	SAFE_DELETE_PTR(pColorMap)
+	SAFE_DELETE_PTR(pShader)
+
 	vertexMap.clear();
 }
 
@@ -98,7 +91,7 @@ bool CTdata::loadFromFiles(const char * filename, int cnt, int scaleX, int scale
 			}
 		}
 		BACKSPACE(chars);
-		chars = printf("LOADING CT images: %03i %%",((z+1)*100)/cnt);
+		chars = printf(" progress: %03i %%",((z+1)*100)/cnt);
 	
 	}
 
@@ -120,7 +113,7 @@ bool CTdata::loadFromFiles(const char * filename, int cnt, int scaleX, int scale
 
 	// backspace...
 	BACKSPACE(chars);
-	printf("LOADING CT images (%i) DONE\n", cnt);
+	//printf("LOADING CT images (%i) DONE\n", cnt);
 	return true;
 }
 
@@ -134,9 +127,9 @@ Vertex CTdata::interpolate (Vertex v1, Vertex v2, float t) {
 
 Vertex CTdata::getVertexAt(float x, float y, float z)
 {
-	x=max2f(min2f(float(dimX), x),0.f);
-	y=max2f(min2f(float(dimY), y),0.f); 
-	z=max2f(min2f(float(dimZ), z),0.f);
+	x=max2f(min2f(float(szX), x),0.f);
+	y=max2f(min2f(float(szY), y),0.f); 
+	z=max2f(min2f(float(szZ), z),0.f);
 	// get nearby coordinates
 	int xc, yc, zc;
 	float xt, yt,zt;
@@ -185,6 +178,10 @@ Vertex* CTdata::getVertexAt(int x, int y, int z)
 		// value
 		v->value	= getValueAt(x,y,z);
 
+		// color
+		// get color from transfer function
+		v->color = pColorMap->mapValueToColor(v->value);
+
 		// validate
 		v->isValid = true;
 	}
@@ -201,10 +198,13 @@ float CTdata::getValueAt(const int x, const int y, const int z)
 	return data[k*dimY*dimX + j*dimX +i];
 }
 
-void  CTdata::colorizeRay(Ray * rayIn, ColorMap *colorMap, Shader &shader)
+void  CTdata::colorizeRay(Ray * rayIn)
 {
 	// get first intersection with data cube [min, max setting]
-	box.intersect(( *rayIn ) );
+	if (!box.intersect( rayIn  )){
+		rayIn->color = BACKGROUND_COLOR;
+		return;
+	}
 
 	// sample ray and calc colors
 	float i, alphaAccum=1.f, alpha;
@@ -220,20 +220,19 @@ void  CTdata::colorizeRay(Ray * rayIn, ColorMap *colorMap, Shader &shader)
 		// get sample position
 		pos = rayIn->org + rayIn->dir * i;
 		
-		// get value and normal at this position
+		// get value, normal and color at this position
 		v = getVertexAt(pos.x, pos.y, pos.z);
 		
-		// get color from transfer function
-		col = colorMap->mapValueToColor(v.value);
-		
 		// use phong shading model to shade color
-		colDiffuse = col.xyz();
+		v3 colDiffuse = v.color.xyz();
+		v3 outputColor;
+		pShader->apply(&(outputColor), &(colDiffuse), &(v.normal), &(LIGHT_DIR), &(-rayIn->dir));
 		
-		shader.apply(&colShaded, &ambientColor, &colDiffuse, &specularColor, ka, kd, ks, sh, &(v.normal), &(LIGHT_DIR), &(-rayIn->dir));
+		v.color.setFromV3(outputColor);
 
 		// apply this sample to final color
-		alpha = 1.0 - col.a; // recalc to opacity
-		rayIn->color = rayIn->color + colShaded * (alpha * alphaAccum);
+		alpha = 1.0 - v.color.a; // recalc to opacity
+		rayIn->color = rayIn->color + v.color.xyz() * (alpha * alphaAccum);
 		alphaAccum *= ( 1.0 - alpha );
 		
 		// Is it reasonable to continue? Will the sample be visible?
@@ -243,6 +242,5 @@ void  CTdata::colorizeRay(Ray * rayIn, ColorMap *colorMap, Shader &shader)
 		}
 	} // END for each sample on ray
 	// sampling ended
-
 }
 

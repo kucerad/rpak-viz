@@ -17,30 +17,30 @@ BBox::~BBox(void)
 {
 }
 
-bool BBox::intersect(Ray &rRay)
+bool BBox::intersect(Ray *pRay)
 {
 	float tmin, tmax, tymin, tymax, tzmin, tzmax;
-	tmin  = (bounds[ rRay.sign[0]    ].x - rRay.org.x) * rRay.inv_dir.x;
-	tmax  = (bounds[ 1 - rRay.sign[0]].x - rRay.org.x) * rRay.inv_dir.x;
-	tymin = (bounds[ rRay.sign[1]    ].y - rRay.org.y) * rRay.inv_dir.y;
-	tymax = (bounds[ 1 - rRay.sign[1]].y - rRay.org.y) * rRay.inv_dir.y;
+	tmin  = (bounds[ pRay->sign[0]    ].x - pRay->org.x) * pRay->inv_dir.x;
+	tmax  = (bounds[ 1 - pRay->sign[0]].x - pRay->org.x) * pRay->inv_dir.x;
+	tymin = (bounds[ pRay->sign[1]    ].y - pRay->org.y) * pRay->inv_dir.y;
+	tymax = (bounds[ 1 - pRay->sign[1]].y - pRay->org.y) * pRay->inv_dir.y;
 	if ( (tmin > tymax) || (tymin > tmax) )
 		return false;
 	if (tymin > tmin)
 		tmin = tymin;
 	if (tymax < tmax)
 		tmax = tymax;
-	tzmin = (bounds[ rRay.sign[2]     ].z - rRay.org.z) * rRay.inv_dir.z;
-	tzmax = (bounds[ 1 - rRay.sign[2] ].z - rRay.org.z) * rRay.inv_dir.z;
+	tzmin = (bounds[ pRay->sign[2]     ].z - pRay->org.z) * pRay->inv_dir.z;
+	tzmax = (bounds[ 1 - pRay->sign[2] ].z - pRay->org.z) * pRay->inv_dir.z;
 	if ( (tmin > tzmax) || (tzmin > tmax) )
 		return false;
 	if (tzmin > tmin)
 		tmin = tzmin;
 	if (tzmax < tmax)
 		tmax = tzmax;
-	if ((tmin < rRay.max) && (tmax > rRay.min)){
-		rRay.min = min2f(tmin, tmax);
-		rRay.max = max2f(tmin, tmax);
+	if ((tmin < pRay->max) && (tmax > pRay->min)){
+		pRay->min = min2f(tmin, tmax);
+		pRay->max = max2f(tmin, tmax);
 		return true;
 	}
 	return false;

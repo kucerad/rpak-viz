@@ -12,7 +12,7 @@ class Camera
 public:
 	Camera(v3 &_position, v3 &_up, v3 &_direction, int _width, int _height);
 	~Camera(void);
-	void snapShot(CTdata &ctData, ColorMap &colorMap, int channels);
+	void snapShot(CTdata *ctData, int channels);
 	float * imageData;
 	v3 position;
 	v3 up, right, direction;

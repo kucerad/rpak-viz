@@ -1,6 +1,5 @@
 #define USE_ANTTWEAKBAR
 #define NULL 0
-
 #include "settings.h"
 #include <stdarg.h>
 #include "common.h"
@@ -17,12 +16,23 @@
 GLint    g_WindowWidth       = 800;    // Window width
 GLint    g_WindowHeight      = 600;    // Window height
 
-CTdata	 dataCT;
+CTdata	 *pDataCT;
 Camera   *pCamera;
-ColorMap colorMap;
 v3			camDir(0.f, 0.f, 1.f);
 float		camDistance = 100.0;
 float  nDir[3] = {camDir.x, camDir.y, camDir.z};
+
+#define TRANSFER_F_FILENAME "colorMaps/spectrum.png"
+
+// COLORS / barvicty
+#define BLACK v3(0.f, 0.f, 0.f)
+#define WHITE v3(1.f, 1.f, 1.f)
+#define RED   v3(1.f, 0.f, 0.f)
+#define GREEN v3(0.f, 1.f, 0.f)
+#define BLUE  v3(0.f, 0.f, 1.f)
+#define YELLOW v3(1.f, 1.f, 0.f)
+#define CYAN  v3(0.f, 1.f, 1.f)
+#define MAGENTA v3(1.f, 0.f, 1.f)
 
 // FORWARD DECLARATIONS________________________________________________________
 void initGUI();
@@ -42,12 +52,49 @@ void cbDisplay()
    
    glutSwapBuffers();
 }
+void updateView(){
+	// TODO odladit
+	camDir.x = nDir[0]; 
+	camDir.y = nDir[1]; 
+	camDir.z = nDir[2];
+	camDir.normalize();
+	float angle = camDir.angleTo(pCamera->direction);
+	v3 axis = camDir.cross(pCamera->direction);
+	
 
+	pCamera->direction = camDir;
+
+	// recalculate up-vector & right-vector
+	if (axis.length()>= 0.01){
+		pCamera->up.rotate(angle, axis);
+	}
+	pCamera->right = pCamera->up.cross(camDir);
+
+	pCamera->position = pDataCT->center + camDir * (-camDistance);
+
+	// take a picture 
+	pCamera->snapShot(pDataCT, 3);
+}
 void initApp()
 {
-	colorMap.loadFromFile("colorMaps/cm01.png");
+	int textLenght = 0;
+	textLenght = printf("Loading transfer function from file: '%s'.", TRANSFER_F_FILENAME);
+	ColorMap* pColorMap = new ColorMap();
+	pColorMap->loadFromFile(TRANSFER_F_FILENAME);
+	BACKSPACE(textLenght);
+	printf("Transfer function loaded successfully.\n");
+	textLenght = printf("Initializing shader.");
+	Shader* pShader = new Shader(BLACK, BLACK, WHITE, 0.1f, 1.0f, 1.0f, 2.0f); 
+	BACKSPACE(textLenght);
+	printf("%s initialized.\n", pShader->getDescription());
+	textLenght = printf("Loading data. ");
+	pDataCT = new CTdata(pColorMap, pShader);
+	pDataCT->loadFromFiles("ctdata/cthead-16bit%03i.png", 113, 1,1,2);
+	BACKSPACE(textLenght);
+	printf("CT data loaded successfully.\n");	
 	pCamera = new Camera(v3(0.f, 0.f, 100.f), v3(0.f, 1.f, 0.f), v3(0.f, 0.f, -1.f),g_WindowWidth,g_WindowHeight);
-	dataCT.loadFromFiles("ctdata/cthead-16bit%03i.png", 113, 1,1,2);
+	
+	updateView();
 }
 //-----------------------------------------------------------------------------
 // Name: cbInitGL()
@@ -69,23 +116,7 @@ void cbInitGL()
 }
 void TW_CALL cbUpdate(void *clientData)
 {
-	// TODO odladit
-	camDir.x = nDir[0]; 
-	camDir.y = nDir[1]; 
-	camDir.z = nDir[2];
-	camDir.normalize();
-	float angle = camDir.angleTo(pCamera->direction);
-	v3 axis = camDir.cross(pCamera->direction);
-	pCamera->direction = camDir;
-
-	// recalculate up-vector & right-vector
-	pCamera->up.rotate(angle, axis);
-	pCamera->right = pCamera->up.cross(camDir);
-
-	pCamera->position = camDir * (-camDistance);
-
-	// take a picture 
-	pCamera->snapShot(dataCT, colorMap, 3);
+	updateView();
 }
 //-----------------------------------------------------------------------------
 // Name: initGUI()

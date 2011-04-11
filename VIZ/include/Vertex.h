@@ -1,6 +1,7 @@
 #ifndef _VERTEX_H
 #define _VERTEX_H
 #include "Vector3.h"
+#include "Vector4.h"
 
 class Vertex{
 public:
@@ -17,6 +18,8 @@ public:
 	~Vertex(){}
 	v3		normal;
 	v3		position;
+	v4		color;
+
 	float	value;
 	bool	isValid;
 };

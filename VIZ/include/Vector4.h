@@ -52,7 +52,11 @@ class Vector4
 			z = float(copy.ch[2]);
 			w = float(copy.ch[3]);
 		}
-
+		inline void setFromV3(const Vector3 &vec){
+			x = vec.x;
+			y = vec.y;
+			z = vec.z;
+		}
 		inline operator const float*() const	{ return &x;	}
 		inline operator float*()				{ return &x;	}
 	
@@ -88,9 +92,36 @@ class Vector4
 			z = _z;
 			w = _w;
 		}
+		inline Vector4 operator + (const Vector4& vec) const
+		{
+			return Vector4(x + vec.x, y + vec.y, z + vec.z, w + vec.w);
+		}
+
+		inline Vector4 operator - (const Vector4& vec) const
+		{
+			return Vector4(x - vec.x, y - vec.y, z - vec.z, w - vec.w);
+		}
+
+
 		inline Vector4 operator / (float scalar)
 		{
 			return Vector4(x / scalar, y / scalar, z / scalar, w / scalar);
+		}
+		inline Vector4 operator * (float scalar) const
+		{
+			return Vector4(x * scalar, y * scalar, z * scalar, w * scalar);
+		}
+		inline Vector4 operator + (float scalar) const
+		{
+			return Vector4(x + scalar, y + scalar, z + scalar, w + scalar);
+		}
+		inline Vector4 operator - (float scalar) const
+		{
+			return Vector4(x - scalar, y - scalar, z - scalar, w - scalar);
+		}
+		inline Vector4 operator - () const
+		{
+			return Vector4(-x, -y, -z, -w);
 		}
 		
 	public:
