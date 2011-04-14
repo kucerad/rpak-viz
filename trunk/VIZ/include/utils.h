@@ -40,7 +40,7 @@ __forceinline Vertex interpolate1Dlin(Vertex* v1, Vertex* v2, const float t){
 	Vertex out;
 	out.value = (1-t)*v1->value + t * v2->value;
 	out.normal = v1->normal * (1-t) + v2->normal * t;
-	out.color = v1->color * (1-t) + v2->color * t;
+	out.color  = v1->color  * (1-t) + v2->color  * t;
 	out.isValid = true;
 	return out;
 }

@@ -31,5 +31,5 @@ v4 ColorMap::mapValueToColor(const float value){
 	v4 valA = cm.getPixel(x,0);
 	v4 valB = cm.getPixel(x+1,0);
 
-	return interpolate1DlinVector4(valA, valB, t);
+	return interpolate1DlinVector4(valA, valB, t)/255.0;
 } 

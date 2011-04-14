@@ -22,7 +22,7 @@ public:
 
 	void apply(  v3 *outputColor,				
 				 v3 *inColor,
-				 v3	*normal,
+				 v3	*nnormal,
 				 v3	*lightDir,
 				 v3	*viewerDir
 			   );
