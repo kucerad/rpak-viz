@@ -33,26 +33,34 @@ void CTdata::loadSphere(int _szX, int _szY, int _szZ, float minV, float maxV)
 	dimX = _szX;
 	dimY = _szY;
 	dimZ = _szZ;
-	szX = dimX * scX;
-	szY = dimY * scY;
-	szZ = dimZ * scZ;
+	szX = (dimX-1) * scX;
+	szY = (dimY-1) * scY;
+	szZ = (dimZ-1) * scZ;
 	data = new float[dimX*dimY*dimZ];
-	center = v3 (float(dimX)/2.0, float(dimY)/2.0,float(dimZ)/2.0);
+	center.x = szX/2.0;
+	center.y = szY/2.0;
+	center.z = szZ/2.0;
+	
+	//center = v3 (float(dimX)/2.0, float(dimY)/2.0,float(dimZ)/2.0);
 	v3 p;
 	v3 diff;
+	float dia2 = sqrt(szX*szX/4+szY*szY/4+szZ*szZ/4); 
+	float diffVal;
 	int x,y,z;
 	for (z=0; z<(dimZ); z+=1){
 		for (y=0; y<(dimY); y+=1){
 			for (x=0; x<(dimX); x+=1){
 				p = v3(x,y,z);
 				diff = center-p;
-				data[z*dimX*dimY + y*dimX +x] = 100.0/diff.length();
+				diffVal = diff.length();
+				data[z*dimX*dimY + y*dimX +x] = (dia2 - diffVal)/dia2;//minV+(dia2 - diffVal)/dia2*(maxV-minV);
 			}
 		}
 	}
-	center.x = szX/2.0;
-	center.y = szY/2.0;
-	center.z = szZ/2.0;
+
+	// bounding box
+	box.bounds[0] = center-v3(szX,szY,szZ)/2.0;// min corner
+	box.bounds[1] = center+v3(szX,szY,szZ)/2.0;// max corner
 }
 	
 bool CTdata::loadFromFiles(const char * filename, int cnt, int scaleX, int scaleY, int scaleZ){
@@ -87,7 +95,7 @@ bool CTdata::loadFromFiles(const char * filename, int cnt, int scaleX, int scale
 				// 2x 8-bit to 1x 16-bit
 				val = 256*rawData[(2*y*width + 2*x)*divide]+rawData[(2*y*width + 2*x)*divide + 1]; //val = 256*rawData[2*y*width + 2*x]+rawData[2*y*width + 2*x + 1];
 				// save in array
-				data[z*height2*width2 + y*width2 +(width2-1-x)] = val; //data[z*width*height + y*width +x] = val;
+				data[z*height2*width2 + y*width2 +(width2-1-x)] = val/DATA_MAX; //data[z*width*height + y*width +x] = val;
 			}
 		}
 		BACKSPACE(chars);
@@ -127,6 +135,9 @@ Vertex CTdata::interpolate (Vertex v1, Vertex v2, float t) {
 
 Vertex CTdata::getVertexAt(float x, float y, float z)
 {
+	if (x>=szX || y>=szY || z>=szZ){
+		int a = 0;
+	}
 	x=max2f(min2f(float(szX), x),0.f);
 	y=max2f(min2f(float(szY), y),0.f); 
 	z=max2f(min2f(float(szZ), z),0.f);
@@ -156,6 +167,9 @@ Vertex CTdata::getVertexAt(float x, float y, float z)
 
 Vertex* CTdata::getVertexAt(int x, int y, int z)
 {
+	if (x==2 && y==9 && z == 10){
+		int f = 0;
+	}
 	Position3i p;
 	p.x = x;
 	p.y = y;
@@ -169,10 +183,13 @@ Vertex* CTdata::getVertexAt(int x, int y, int z)
 		//printf("POS[ %f , %f , %f ]\n", v.position.x, v.position.y, v.position.z);
 		// normal
 		float nx, ny, nz;
-		nx = getValueAt(x-1, y, z) - getValueAt(x+1, y, z);
-		ny = getValueAt(x, y-1, z) - getValueAt(x, y+1, z);
-		nz = getValueAt(x, y, z-1) - getValueAt(x, y, z+1);
-		v->normal = v3(nx, ny, nz);
+		int i=1;
+		//for (int i=1; v->normal.length()<0.1f; i++){
+			nx = getValueAt(x-i, y, z) - getValueAt(x+i, y, z);
+			ny = getValueAt(x, y-i, z) - getValueAt(x, y+i, z);
+			nz = getValueAt(x, y, z-i) - getValueAt(x, y, z+i);
+			v->normal = v3(nx, ny, nz);
+		//}
 		
 		// value
 		v->value	= getValueAt(x,y,z);
@@ -191,25 +208,25 @@ Vertex* CTdata::getVertexAt(int x, int y, int z)
 float CTdata::getValueAt(const int x, const int y, const int z)
 {
 	int i,j,k;
-	i=max(min(dimX, x),0);
-	j=max(min(dimY, y),0); 
-	k=max(min(dimZ, z),0);
-	return data[k*dimY*dimX + j*dimX +i];
+	i=max(min(dimX-1, x),0);
+	j=max(min(dimY-1, y),0); 
+	k=max(min(dimZ-1, z),0);
+	return data[(k*dimY + j)*dimX +i];
 }
 
 void  CTdata::colorizeRay(Ray * rayIn)
 {
 	// get first intersection with data cube [min, max setting]
 	if (!box.intersect( rayIn  )){
-		rayIn->color = BACKGROUND_COLOR;
+		rayIn->color = RED;
 		return;
 	}
 
 	// sample ray and calc colors
 	float i, alphaAccum=1.f, alpha;
 	Vertex v;
-	v3 pos, colDiffuse, colShaded;
-	v4 col;
+	v3 pos, colDiffuse, colShaded, outputColor;
+	v4 col;						  
 	for ( i = rayIn->min + sampleDistance*0.5;
 		  i < rayIn->max;
 		  i += sampleDistance )
@@ -222,15 +239,31 @@ void  CTdata::colorizeRay(Ray * rayIn)
 		// get value, normal and color at this position
 		v = getVertexAt(pos.x, pos.y, pos.z);
 		
+		// test
+		/*
+		if (v.value>0.5){
+			colDiffuse = pColorMap->mapValueToColor(v.value).xyz();
+
+			//outputColor = (v.normal.getNormalized()+v3(1.f,1.f, 1.f))/2.0;
+			//pShader->apply(&(outputColor), &(colDiffuse), &(v.normal), &(LIGHT_DIR), &(-rayIn->dir));
+			rayIn->color = v.normal;//outputColor;
+			break;
+		}
+		rayIn->color = BACKGROUND_COLOR;
+		continue;
+		*/
+
+
+
 		// use phong shading model to shade color
-		v3 colDiffuse = v.color.xyz();
-		v3 outputColor;
+		colDiffuse = v.color.xyz();
+		outputColor = colDiffuse;
 		pShader->apply(&(outputColor), &(colDiffuse), &(v.normal), &(LIGHT_DIR), &(-rayIn->dir));
 		
 		v.color.setFromV3(outputColor);
 
 		// apply this sample to final color
-		alpha = 1.0 - v.color.a; // recalc to opacity
+		alpha = v.color.a; // recalc to opacity
 		rayIn->color = rayIn->color + v.color.xyz() * (alpha * alphaAccum);
 		alphaAccum *= ( 1.0 - alpha );
 		

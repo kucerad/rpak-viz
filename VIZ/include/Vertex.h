@@ -13,6 +13,7 @@ public:
 		isValid		= v.isValid;
 		normal		= v.normal;
 		position	= v.position;
+		color		= v.color;
 		value		= v.value;
 	}
 	~Vertex(){}

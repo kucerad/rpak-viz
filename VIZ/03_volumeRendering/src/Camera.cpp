@@ -32,16 +32,28 @@ void Camera::snapShot(CTdata *ctData, int channels)
 	v3 org;
 	for (y=0; y<height; y++){
 		for (x=0; x<width; x++){
+			if (x == 372 && y == 200){
+				int k = 0;
+			}
+
+
 			// each pixel of image
 			org = position + up*-(y-height2)*scale + right*(x-width2)*scale;
+			
 			// create ray
 			Ray vRay(org, direction);
+			
 			// send it through volumetric data and register color
 			ctData->colorizeRay(&vRay);
+			
+			
+
 			// colorize the proper pixel in image
 			for (ch=0; ch<channels; ch++){
 				imageData[(y*width + x)*channels + ch]=vRay.color.data[ch];
 			}
+			
+			// update progress
 			progress = float(y*width+x)/float(area);
 			if (progress-progressPre>=0.01){
 				BACK(chars);
@@ -50,6 +62,7 @@ void Camera::snapShot(CTdata *ctData, int channels)
 			}
 		}
 	}
+	// rendering done
 	BACKSPACE(chs + chars);
 	printf("Rendering done.\n");
 }
