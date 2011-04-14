@@ -21,6 +21,15 @@
       <ParseFiles>false</ParseFiles>
       <SourceControlFiles>False</SourceControlFiles>
     </Filter>
+    <Filter Include="data">
+      <UniqueIdentifier>{2fcfc95e-e816-4e78-9e48-8c1c4744b57d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="data\colorMaps">
+      <UniqueIdentifier>{f8443f38-5344-4135-9b34-19fbea21e64c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="data\ctData">
+      <UniqueIdentifier>{b0229b9b-3e50-4b56-a693-78dd15ebefc0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\colorMap.cpp">
@@ -98,6 +107,381 @@
   <ItemGroup>
     <None Include="doc\cviceni9.pdf">
       <Filter>doc</Filter>
+    </None>
+    <None Include="colorMaps\cm_2.png">
+      <Filter>data\colorMaps</Filter>
+    </None>
+    <None Include="colorMaps\cm_2b.png">
+      <Filter>data\colorMaps</Filter>
+    </None>
+    <None Include="colorMaps\cm_2c.png">
+      <Filter>data\colorMaps</Filter>
+    </None>
+    <None Include="colorMaps\cm_Black2White200.png">
+      <Filter>data\colorMaps</Filter>
+    </None>
+    <None Include="colorMaps\cm01.png">
+      <Filter>data\colorMaps</Filter>
+    </None>
+    <None Include="colorMaps\cm02.png">
+      <Filter>data\colorMaps</Filter>
+    </None>
+    <None Include="colorMaps\cm03.png">
+      <Filter>data\colorMaps</Filter>
+    </None>
+    <None Include="colorMaps\cm04.png">
+      <Filter>data\colorMaps</Filter>
+    </None>
+    <None Include="colorMaps\cm06.png">
+      <Filter>data\colorMaps</Filter>
+    </None>
+    <None Include="colorMaps\spectrum.png">
+      <Filter>data\colorMaps</Filter>
+    </None>
+    <None Include="colorMaps\spectrumAlpha.png">
+      <Filter>data\colorMaps</Filter>
+    </None>
+    <None Include="colorMaps\spectrumAlpha2.png">
+      <Filter>data\colorMaps</Filter>
+    </None>
+    <None Include="ctdata\cthead-16bit001.png">
+      <Filter>data\ctData</Filter>
+    </None>
+    <None Include="ctdata\cthead-16bit002.png">
+      <Filter>data\ctData</Filter>
+    </None>
+    <None Include="ctdata\cthead-16bit003.png">
+      <Filter>data\ctData</Filter>
+    </None>
+    <None Include="ctdata\cthead-16bit004.png">
+      <Filter>data\ctData</Filter>
+    </None>
+    <None Include="ctdata\cthead-16bit005.png">
+      <Filter>data\ctData</Filter>
+    </None>
+    <None Include="ctdata\cthead-16bit006.png">
+      <Filter>data\ctData</Filter>
+    </None>
+    <None Include="ctdata\cthead-16bit007.png">
+      <Filter>data\ctData</Filter>
+    </None>
+    <None Include="ctdata\cthead-16bit008.png">
+      <Filter>data\ctData</Filter>
+    </None>
+    <None Include="ctdata\cthead-16bit009.png">
+      <Filter>data\ctData</Filter>
+    </None>
+    <None Include="ctdata\cthead-16bit010.png">
+      <Filter>data\ctData</Filter>
+    </None>
+    <None Include="ctdata\cthead-16bit011.png">
+      <Filter>data\ctData</Filter>
+    </None>
+    <None Include="ctdata\cthead-16bit012.png">
+      <Filter>data\ctData</Filter>
+    </None>
+    <None Include="ctdata\cthead-16bit013.png">
+      <Filter>data\ctData</Filter>
+    </None>
+    <None Include="ctdata\cthead-16bit014.png">
+      <Filter>data\ctData</Filter>
+    </None>
+    <None Include="ctdata\cthead-16bit015.png">
+      <Filter>data\ctData</Filter>
+    </None>
+    <None Include="ctdata\cthead-16bit016.png">
+      <Filter>data\ctData</Filter>
+    </None>
+    <None Include="ctdata\cthead-16bit017.png">
+      <Filter>data\ctData</Filter>
+    </None>
+    <None Include="ctdata\cthead-16bit018.png">
+      <Filter>data\ctData</Filter>
+    </None>
+    <None Include="ctdata\cthead-16bit019.png">
+      <Filter>data\ctData</Filter>
+    </None>
+    <None Include="ctdata\cthead-16bit020.png">
+      <Filter>data\ctData</Filter>
+    </None>
+    <None Include="ctdata\cthead-16bit021.png">
+      <Filter>data\ctData</Filter>
+    </None>
+    <None Include="ctdata\cthead-16bit022.png">
+      <Filter>data\ctData</Filter>
+    </None>
+    <None Include="ctdata\cthead-16bit023.png">
+      <Filter>data\ctData</Filter>
+    </None>
+    <None Include="ctdata\cthead-16bit024.png">
+      <Filter>data\ctData</Filter>
+    </None>
+    <None Include="ctdata\cthead-16bit025.png">
+      <Filter>data\ctData</Filter>
+    </None>
+    <None Include="ctdata\cthead-16bit026.png">
+      <Filter>data\ctData</Filter>
+    </None>
+    <None Include="ctdata\cthead-16bit027.png">
+      <Filter>data\ctData</Filter>
+    </None>
+    <None Include="ctdata\cthead-16bit028.png">
+      <Filter>data\ctData</Filter>
+    </None>
+    <None Include="ctdata\cthead-16bit029.png">
+      <Filter>data\ctData</Filter>
+    </None>
+    <None Include="ctdata\cthead-16bit030.png">
+      <Filter>data\ctData</Filter>
+    </None>
+    <None Include="ctdata\cthead-16bit031.png">
+      <Filter>data\ctData</Filter>
+    </None>
+    <None Include="ctdata\cthead-16bit032.png">
+      <Filter>data\ctData</Filter>
+    </None>
+    <None Include="ctdata\cthead-16bit033.png">
+      <Filter>data\ctData</Filter>
+    </None>
+    <None Include="ctdata\cthead-16bit034.png">
+      <Filter>data\ctData</Filter>
+    </None>
+    <None Include="ctdata\cthead-16bit035.png">
+      <Filter>data\ctData</Filter>
+    </None>
+    <None Include="ctdata\cthead-16bit036.png">
+      <Filter>data\ctData</Filter>
+    </None>
+    <None Include="ctdata\cthead-16bit037.png">
+      <Filter>data\ctData</Filter>
+    </None>
+    <None Include="ctdata\cthead-16bit038.png">
+      <Filter>data\ctData</Filter>
+    </None>
+    <None Include="ctdata\cthead-16bit039.png">
+      <Filter>data\ctData</Filter>
+    </None>
+    <None Include="ctdata\cthead-16bit040.png">
+      <Filter>data\ctData</Filter>
+    </None>
+    <None Include="ctdata\cthead-16bit041.png">
+      <Filter>data\ctData</Filter>
+    </None>
+    <None Include="ctdata\cthead-16bit042.png">
+      <Filter>data\ctData</Filter>
+    </None>
+    <None Include="ctdata\cthead-16bit043.png">
+      <Filter>data\ctData</Filter>
+    </None>
+    <None Include="ctdata\cthead-16bit044.png">
+      <Filter>data\ctData</Filter>
+    </None>
+    <None Include="ctdata\cthead-16bit045.png">
+      <Filter>data\ctData</Filter>
+    </None>
+    <None Include="ctdata\cthead-16bit046.png">
+      <Filter>data\ctData</Filter>
+    </None>
+    <None Include="ctdata\cthead-16bit047.png">
+      <Filter>data\ctData</Filter>
+    </None>
+    <None Include="ctdata\cthead-16bit048.png">
+      <Filter>data\ctData</Filter>
+    </None>
+    <None Include="ctdata\cthead-16bit049.png">
+      <Filter>data\ctData</Filter>
+    </None>
+    <None Include="ctdata\cthead-16bit050.png">
+      <Filter>data\ctData</Filter>
+    </None>
+    <None Include="ctdata\cthead-16bit051.png">
+      <Filter>data\ctData</Filter>
+    </None>
+    <None Include="ctdata\cthead-16bit052.png">
+      <Filter>data\ctData</Filter>
+    </None>
+    <None Include="ctdata\cthead-16bit053.png">
+      <Filter>data\ctData</Filter>
+    </None>
+    <None Include="ctdata\cthead-16bit054.png">
+      <Filter>data\ctData</Filter>
+    </None>
+    <None Include="ctdata\cthead-16bit055.png">
+      <Filter>data\ctData</Filter>
+    </None>
+    <None Include="ctdata\cthead-16bit056.png">
+      <Filter>data\ctData</Filter>
+    </None>
+    <None Include="ctdata\cthead-16bit057.png">
+      <Filter>data\ctData</Filter>
+    </None>
+    <None Include="ctdata\cthead-16bit058.png">
+      <Filter>data\ctData</Filter>
+    </None>
+    <None Include="ctdata\cthead-16bit059.png">
+      <Filter>data\ctData</Filter>
+    </None>
+    <None Include="ctdata\cthead-16bit060.png">
+      <Filter>data\ctData</Filter>
+    </None>
+    <None Include="ctdata\cthead-16bit061.png">
+      <Filter>data\ctData</Filter>
+    </None>
+    <None Include="ctdata\cthead-16bit062.png">
+      <Filter>data\ctData</Filter>
+    </None>
+    <None Include="ctdata\cthead-16bit063.png">
+      <Filter>data\ctData</Filter>
+    </None>
+    <None Include="ctdata\cthead-16bit064.png">
+      <Filter>data\ctData</Filter>
+    </None>
+    <None Include="ctdata\cthead-16bit065.png">
+      <Filter>data\ctData</Filter>
+    </None>
+    <None Include="ctdata\cthead-16bit066.png">
+      <Filter>data\ctData</Filter>
+    </None>
+    <None Include="ctdata\cthead-16bit067.png">
+      <Filter>data\ctData</Filter>
+    </None>
+    <None Include="ctdata\cthead-16bit068.png">
+      <Filter>data\ctData</Filter>
+    </None>
+    <None Include="ctdata\cthead-16bit069.png">
+      <Filter>data\ctData</Filter>
+    </None>
+    <None Include="ctdata\cthead-16bit070.png">
+      <Filter>data\ctData</Filter>
+    </None>
+    <None Include="ctdata\cthead-16bit071.png">
+      <Filter>data\ctData</Filter>
+    </None>
+    <None Include="ctdata\cthead-16bit072.png">
+      <Filter>data\ctData</Filter>
+    </None>
+    <None Include="ctdata\cthead-16bit073.png">
+      <Filter>data\ctData</Filter>
+    </None>
+    <None Include="ctdata\cthead-16bit074.png">
+      <Filter>data\ctData</Filter>
+    </None>
+    <None Include="ctdata\cthead-16bit075.png">
+      <Filter>data\ctData</Filter>
+    </None>
+    <None Include="ctdata\cthead-16bit076.png">
+      <Filter>data\ctData</Filter>
+    </None>
+    <None Include="ctdata\cthead-16bit077.png">
+      <Filter>data\ctData</Filter>
+    </None>
+    <None Include="ctdata\cthead-16bit078.png">
+      <Filter>data\ctData</Filter>
+    </None>
+    <None Include="ctdata\cthead-16bit079.png">
+      <Filter>data\ctData</Filter>
+    </None>
+    <None Include="ctdata\cthead-16bit080.png">
+      <Filter>data\ctData</Filter>
+    </None>
+    <None Include="ctdata\cthead-16bit081.png">
+      <Filter>data\ctData</Filter>
+    </None>
+    <None Include="ctdata\cthead-16bit082.png">
+      <Filter>data\ctData</Filter>
+    </None>
+    <None Include="ctdata\cthead-16bit083.png">
+      <Filter>data\ctData</Filter>
+    </None>
+    <None Include="ctdata\cthead-16bit084.png">
+      <Filter>data\ctData</Filter>
+    </None>
+    <None Include="ctdata\cthead-16bit085.png">
+      <Filter>data\ctData</Filter>
+    </None>
+    <None Include="ctdata\cthead-16bit086.png">
+      <Filter>data\ctData</Filter>
+    </None>
+    <None Include="ctdata\cthead-16bit087.png">
+      <Filter>data\ctData</Filter>
+    </None>
+    <None Include="ctdata\cthead-16bit088.png">
+      <Filter>data\ctData</Filter>
+    </None>
+    <None Include="ctdata\cthead-16bit089.png">
+      <Filter>data\ctData</Filter>
+    </None>
+    <None Include="ctdata\cthead-16bit090.png">
+      <Filter>data\ctData</Filter>
+    </None>
+    <None Include="ctdata\cthead-16bit091.png">
+      <Filter>data\ctData</Filter>
+    </None>
+    <None Include="ctdata\cthead-16bit092.png">
+      <Filter>data\ctData</Filter>
+    </None>
+    <None Include="ctdata\cthead-16bit093.png">
+      <Filter>data\ctData</Filter>
+    </None>
+    <None Include="ctdata\cthead-16bit094.png">
+      <Filter>data\ctData</Filter>
+    </None>
+    <None Include="ctdata\cthead-16bit095.png">
+      <Filter>data\ctData</Filter>
+    </None>
+    <None Include="ctdata\cthead-16bit096.png">
+      <Filter>data\ctData</Filter>
+    </None>
+    <None Include="ctdata\cthead-16bit097.png">
+      <Filter>data\ctData</Filter>
+    </None>
+    <None Include="ctdata\cthead-16bit098.png">
+      <Filter>data\ctData</Filter>
+    </None>
+    <None Include="ctdata\cthead-16bit099.png">
+      <Filter>data\ctData</Filter>
+    </None>
+    <None Include="ctdata\cthead-16bit100.png">
+      <Filter>data\ctData</Filter>
+    </None>
+    <None Include="ctdata\cthead-16bit101.png">
+      <Filter>data\ctData</Filter>
+    </None>
+    <None Include="ctdata\cthead-16bit102.png">
+      <Filter>data\ctData</Filter>
+    </None>
+    <None Include="ctdata\cthead-16bit103.png">
+      <Filter>data\ctData</Filter>
+    </None>
+    <None Include="ctdata\cthead-16bit104.png">
+      <Filter>data\ctData</Filter>
+    </None>
+    <None Include="ctdata\cthead-16bit105.png">
+      <Filter>data\ctData</Filter>
+    </None>
+    <None Include="ctdata\cthead-16bit106.png">
+      <Filter>data\ctData</Filter>
+    </None>
+    <None Include="ctdata\cthead-16bit107.png">
+      <Filter>data\ctData</Filter>
+    </None>
+    <None Include="ctdata\cthead-16bit108.png">
+      <Filter>data\ctData</Filter>
+    </None>
+    <None Include="ctdata\cthead-16bit109.png">
+      <Filter>data\ctData</Filter>
+    </None>
+    <None Include="ctdata\cthead-16bit110.png">
+      <Filter>data\ctData</Filter>
+    </None>
+    <None Include="ctdata\cthead-16bit111.png">
+      <Filter>data\ctData</Filter>
+    </None>
+    <None Include="ctdata\cthead-16bit112.png">
+      <Filter>data\ctData</Filter>
+    </None>
+    <None Include="ctdata\cthead-16bit113.png">
+      <Filter>data\ctData</Filter>
     </None>
   </ItemGroup>
 </Project>
