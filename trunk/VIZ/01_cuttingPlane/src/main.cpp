@@ -9,6 +9,7 @@
 #include "utils.h"
 #include <assert.h>
 #include "ctTexture.h"
+#include "GL\glut.h"
 
 
 
