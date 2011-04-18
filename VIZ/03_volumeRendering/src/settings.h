@@ -6,11 +6,12 @@
 #include "GL/glut.h"
 #include "Vector4.h" // alias v4
 
-const Vector4	BACKGROUND_COLOR(0.0f, 0.0f, 0.0f, 1.0f);
-const float BACKGROUND_VALUE = -1.0f;
-const float DATA_MAX = 3272;
+static const float SAMPLE_DISTANCE = 0.7f;
+static Vector4 BACKGROUND_COLOR(0.5f, 0.5f, 0.0f, 1.0f);
+static const float BACKGROUND_VALUE = -1.0f;
+static const float DATA_MAX = 3272; 
 
-const float EPSILON = 0.01;
+static const float EPSILON = 0.01;
 
 // COLORS / barvicty
 #define BLACK v3(0.f, 0.f, 0.f)

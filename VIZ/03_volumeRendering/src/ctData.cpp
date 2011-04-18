@@ -9,7 +9,7 @@ CTdata::CTdata(ColorMap *colorMap, Shader *shader){
 	stepX			= 1;
 	stepY			= 1;
 	stepZ			= 1;
-	sampleDistance	= 1;
+	sampleDistance	= SAMPLE_DISTANCE;
 	sampleCount		= 0;
 	pColorMap		= colorMap;
 	pShader			= shader;
@@ -218,7 +218,7 @@ void  CTdata::colorizeRay(Ray * rayIn)
 {
 	// get first intersection with data cube [min, max setting]
 	if (!box.intersect( rayIn  )){
-		rayIn->color = RED;
+		rayIn->color = BACKGROUND_COLOR.xyz();
 		return;
 	}
 
@@ -258,7 +258,7 @@ void  CTdata::colorizeRay(Ray * rayIn)
 		// use phong shading model to shade color
 		colDiffuse = v.color.xyz();
 		outputColor = colDiffuse;
-		//pShader->apply(&(outputColor), &(colDiffuse), &(v.normal), &(LIGHT_DIR), &(-rayIn->dir));
+		pShader->apply(&(outputColor), &(colDiffuse), &(v.normal), &(LIGHT_DIR), &(-rayIn->dir));
 		
 		v.color.setFromV3(outputColor);
 
@@ -273,6 +273,9 @@ void  CTdata::colorizeRay(Ray * rayIn)
 			break;
 		}
 	} // END for each sample on ray
+	// count background color contribution now!
+	rayIn->color = rayIn->color + BACKGROUND_COLOR.xyz() * alphaAccum;
+
 	// sampling ended
 }
 
