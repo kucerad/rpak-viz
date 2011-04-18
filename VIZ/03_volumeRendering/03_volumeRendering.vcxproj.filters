@@ -483,5 +483,8 @@
     <None Include="ctdata\cthead-16bit113.png">
       <Filter>data\ctData</Filter>
     </None>
+    <None Include="colorMaps\cm07.png">
+      <Filter>data\colorMaps</Filter>
+    </None>
   </ItemGroup>
 </Project>
