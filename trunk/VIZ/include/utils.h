@@ -29,11 +29,11 @@ __forceinline float max2f(float a, float b)
 {
 	return (a>=b)?a:b;	
 }
-__forceinline float max2i(int a, int b)
+__forceinline int min2i(int a, int b)
 {
-	return (a>=b)?a:b;	
+	return (a<b)?a:b;	
 }
-__forceinline float min2i(int a, int b)
+__forceinline int max2i(int a, int b)
 {
 	return (a>=b)?a:b;	
 }
