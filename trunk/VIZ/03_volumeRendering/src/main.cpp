@@ -16,13 +16,13 @@
 #include "colorMap.h"
 
 // GLOBAL VARIABLES____________________________________________________________
-GLint    g_WindowWidth       = 800;    // Window width
-GLint    g_WindowHeight      = 600;    // Window height
+GLint    g_WindowWidth       = 512;    // Window width
+GLint    g_WindowHeight      = 512;    // Window height
 GLint    mouseX=0, mouseY = 0;
 CTdata	 *pDataCT;
 Camera   *pCamera;
 v3			camDir(0.f, 0.f, 1.f);
-float		camDistance = 50.0;
+float		camDistance = 100.0;
 float  nDir[3] = {camDir.x, camDir.y, camDir.z};
 
 #define TRANSFER_F_FILENAME "colorMaps/cm06.png"
@@ -41,7 +41,7 @@ void cbDisplay()
    glDrawPixels(g_WindowWidth,g_WindowHeight, GL_RGB, GL_FLOAT, pCamera->imageData);
    
 }
-void updateView(){
+void updateView() {
 	// TODO odladit
 	camDir.x = nDir[0]; 
 	camDir.y = nDir[1]; 
@@ -49,13 +49,18 @@ void updateView(){
 	camDir.normalize();
 	float angle = camDir.angleTo(pCamera->direction);
 	v3 axis = camDir.cross(pCamera->direction);
+
+
+	//float angle = camDir.angleTo(Vector3(0.0, 0.0, 1.0));
+	//v3 axis = camDir.cross(Vector3(0.0, 0.0, 1.0));
 	
 	pCamera->direction = camDir;
 
 	// recalculate up-vector & right-vector
-	if (axis.length()>= 0.01){
+	//if (axis.length()>= 0.01){
+	//if (angle>= 0.01){
 		pCamera->up.rotate(angle, axis);
-	}
+	//}
 	pCamera->right = pCamera->up.cross(camDir);
 
 	pCamera->position = pDataCT->center + camDir * (-camDistance);
@@ -98,8 +103,8 @@ void initApp()
 	
 	// Cim mensi cislo SCALE, tim vetsi obrazek [priblizeni]
 	// pro obrazek v puvodni velikosti... scale = 1;, 2x vetsi... scale = 0.5
-	float scale = 0.05;
-	
+	float scale = 2.0;
+
 	pCamera = new Camera(v3(0.f, 0.f, 10.f), v3(0.f, 1.f, 0.f), v3(0.f, 0.f, -1.f),g_WindowWidth,g_WindowHeight, scale);
 	//pCamera = new Camera(v3(0.f, 0.f, 50.f), v3(0.f, 1.f, 0.f), v3(0.f, 0.f, -1.f),g_WindowWidth,g_WindowHeight, scale);
 	
@@ -117,12 +122,67 @@ void cbInitGL()
    initApp();
 
 	// Set OpenGL state variables
-   glClearColor(0.0f, 0.0f, 0.0f, 1);
+   glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 }
 void TW_CALL cbUpdate(void *clientData)
 {
 	updateView();
 }
+
+void TW_CALL cbFront(void *clientData)
+{
+	//settings
+	nDir[0] = 0.0f;
+	nDir[1] = 1.0f;
+	nDir[2] = 0.0f;
+	updateView();
+}
+
+void TW_CALL cbBack(void *clientData)
+{
+	//settings
+	nDir[0] = 0.0f;
+	nDir[1] = -1.0f;
+	nDir[2] = 0.0f;
+	updateView();
+}
+
+void TW_CALL cbTop(void *clientData)
+{
+	//settings
+	nDir[0] = 0.0f;
+	nDir[1] = 0.0f;
+	nDir[2] = 1.0f;
+	updateView();
+}
+
+void TW_CALL cbBottom(void *clientData)
+{
+	//settings
+	nDir[0] = 0.0f;
+	nDir[1] = 0.0f;
+	nDir[2] = -1.0f;
+	updateView();
+}
+
+void TW_CALL cbLeft(void *clientData)
+{
+	//settings
+	nDir[0] = 1.0f;
+	nDir[1] = 0.0f;
+	nDir[2] = 0.0f;
+	updateView();
+}
+
+void TW_CALL cbRight(void *clientData)
+{
+	//settings
+	nDir[0] = -1.0f;
+	nDir[1] = 0.0f;
+	nDir[2] = 0.0f;
+	updateView();
+}
+
 //-----------------------------------------------------------------------------
 // Name: initGUI()
 // Desc: 
@@ -144,6 +204,14 @@ void initGUI()
    TwAddVarRO(controlBar, "mouseX", TW_TYPE_INT32, &mouseX, " group='Refresh' label='MouseX'");
    TwAddVarRO(controlBar, "mouseY", TW_TYPE_INT32, &mouseY, " group='Refresh' label='MouseY'");
    TwAddButton(controlBar, "Update_view", cbUpdate, NULL, " group='Refresh' label='Update view' "); 
+
+
+   TwAddButton(controlBar, "Front", cbFront, NULL, " group='Fixed look' label='Front' "); 
+   TwAddButton(controlBar, "Back", cbBack, NULL, " group='Fixed look' label='Back' ");
+   TwAddButton(controlBar, "Top", cbTop, NULL, " group='Fixed look' label='Top' ");
+   TwAddButton(controlBar, "Bottom", cbBottom, NULL, " group='Fixed look' label='Bottom' "); 
+   TwAddButton(controlBar, "Left", cbLeft, NULL, " group='Fixed look' label='Left' ");
+   TwAddButton(controlBar, "Right", cbRight, NULL, " group='Fixed look' label='Right' ");
 #endif
 }
 
