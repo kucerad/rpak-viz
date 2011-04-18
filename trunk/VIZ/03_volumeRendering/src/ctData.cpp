@@ -258,7 +258,7 @@ void  CTdata::colorizeRay(Ray * rayIn)
 		// use phong shading model to shade color
 		colDiffuse = v.color.xyz();
 		outputColor = colDiffuse;
-		pShader->apply(&(outputColor), &(colDiffuse), &(v.normal), &(LIGHT_DIR), &(-rayIn->dir));
+		//pShader->apply(&(outputColor), &(colDiffuse), &(v.normal), &(LIGHT_DIR), &(-rayIn->dir));
 		
 		v.color.setFromV3(outputColor);
 
