@@ -1,4 +1,5 @@
 #include "ctData.h"
+#include "utils.h"
 
 #define LIGHT_DIR			(-rayIn->dir)
 #define ALPHAACCUM_TRESHOLD 0.01
@@ -166,9 +167,9 @@ Vertex CTdata::interpolate (Vertex v1, Vertex v2, float t) {
 
 Vertex CTdata::getVertexAt(float x, float y, float z)
 {
-	x=max2f(min2f(float(szX), x),0.f);
-	y=max2f(min2f(float(szY), y),0.f); 
-	z=max2f(min2f(float(szZ), z),0.f);
+	x=max2f(min2f(float(szX), x), 0.f);
+	y=max2f(min2f(float(szY), y), 0.f); 
+	z=max2f(min2f(float(szZ), z), 0.f);
 	// get nearby coordinates
 	int xc, yc, zc;
 	float xt, yt,zt;
@@ -195,6 +196,11 @@ Vertex CTdata::getVertexAt(float x, float y, float z)
 
 Vertex* CTdata::getVertexAt(int x, int y, int z)
 {
+
+	x=max2i(min2i((dimX-1), x),0);
+    y=max2i(min2i((dimY-1), y),0); 
+    z=max2i(min2i((dimZ-1), z),0);
+
 	Position3i p;
 	p.x = x;
 	p.y = y;
