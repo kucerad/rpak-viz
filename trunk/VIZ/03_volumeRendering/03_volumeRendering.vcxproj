@@ -79,6 +79,7 @@
       <OutputFile>$(SolutionDir)\bin\$(Configuration)\$(ProjectName).exe</OutputFile>
       <AdditionalLibraryDirectories>../libs/GLEE;../libs/GLUT;../libs/GLEW;../libs/AntTweakBar;../libs/GLFW/msvc10;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>glee.lib;opengl32.lib;glu32.lib;glfw.lib;glew32.lib;glut32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <Profile>true</Profile>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>

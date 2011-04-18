@@ -105,8 +105,11 @@ void initApp()
 	
 	// Cim mensi cislo SCALE, tim vetsi obrazek [priblizeni]
 	// pro obrazek v puvodni velikosti... scale = 1;, 2x vetsi... scale = 0.5
+#if TESTMODE
+	float scale = 0.05f;
+#else
 	float scale = 0.5;
-	
+#endif	
 	pCamera = new Camera(v3(0.f, 0.f, 200.f), v3(0.f, 0.f, 1.f), v3(0.f, 1.f, 0.f),g_WindowWidth,g_WindowHeight, scale);
 	//pCamera = new Camera(v3(0.f, 0.f, 50.f), v3(0.f, 1.f, 0.f), v3(0.f, 0.f, -1.f),g_WindowWidth,g_WindowHeight, scale);
 	

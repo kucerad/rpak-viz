@@ -29,8 +29,7 @@ void Shader::apply( v3  *outputColor,
 {
 	v3 normal = nnormal->getNormalized();
 	float NdotL = lightDir->dot(normal);
-	v3 R = normal*(NdotL*2.0) - (*lightDir);
-	float RdotV = R.dot(*viewerDir);
-	
+	v3 R = normal*(NdotL*2.f) - (*lightDir); //reflected direction
+	float RdotV = R.dot(*viewerDir);	
 	*outputColor = (ambientColor) * ka + (*inColor)*(kd*NdotL) + (specularColor)*ks*pow(RdotV, shininess);
 }
