@@ -83,6 +83,15 @@ void cbDisplay()
    glPopMatrix();
 }
 
+
+void updateTexture() {
+	glEnable(GL_TEXTURE_RECTANGLE_ARB);
+	glBindTexture(GL_TEXTURE_RECTANGLE_ARB, textureID);
+		glTexImage2D(GL_TEXTURE_RECTANGLE_ARB, 0, GL_RGB, g_WindowWidth, g_WindowHeight, 0, GL_RGB, GL_FLOAT, pCamera->imageData);
+	glBindTexture(GL_TEXTURE_RECTANGLE_ARB, 0);
+	glDisable(GL_TEXTURE_RECTANGLE_ARB);
+}
+
 void updateView() {
 	// TODO odladit
 	v3 dir(nDir[0], nDir[1], nDir[2]);
@@ -109,11 +118,7 @@ void updateView() {
 	// take a picture 
 	pCamera->snapShot(pDataCT, 3);
 
-	glEnable(GL_TEXTURE_RECTANGLE_ARB);
-	glBindTexture(GL_TEXTURE_RECTANGLE_ARB, textureID);
-		glTexImage2D(GL_TEXTURE_RECTANGLE_ARB, 0, GL_RGB, g_WindowWidth, g_WindowHeight, 0, GL_RGB, GL_FLOAT, pCamera->imageData);
-	glBindTexture(GL_TEXTURE_RECTANGLE_ARB, 0);
-	glDisable(GL_TEXTURE_RECTANGLE_ARB);
+	updateTexture();
 
 }
 
@@ -190,6 +195,7 @@ void cbInitGL()
 void TW_CALL cbUpdate(void *clientData)
 {
 	updateView();
+	updateTexture();
 }
 
 void TW_CALL cbFront(void *clientData)
@@ -251,22 +257,23 @@ void TW_CALL cbUpdateTexture1(void *clientData)
 	pColorMap->loadFromFile("colorMaps/cm06.png");
 	pDataCT->setCm(pColorMap);
 	pCamera->snapShot(pDataCT, 3);
+	updateTexture();
 }
 
 void TW_CALL cbUpdateTexture2(void *clientData)
 {
 	pColorMap->loadFromFile("colorMaps/cm07.png");
 	pDataCT->setCm(pColorMap);
-	pDataCT->pcColorMap->loadFromFile("colorMaps/cm06.png");
 	pCamera->snapShot(pDataCT, 3);
+	updateTexture();
 }
 
 void TW_CALL cbUpdateTexture3(void *clientData)
 {
 	pColorMap->loadFromFile("colorMaps/spectrumAlpha.png");
 	pDataCT->setCm(pColorMap);
-	pDataCT->pcColorMap->loadFromFile("colorMaps/spectrumAlpha.png");
 	pCamera->snapShot(pDataCT, 3);
+	updateTexture();
 }
 
 
