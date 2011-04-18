@@ -193,24 +193,23 @@ void TW_CALL cbRight(void *clientData)
 
 void TW_CALL cbUpdateTexture1(void *clientData)
 {
-	//pColorMap->loadFromFile("colorMaps/cm07.png");
-	//pDataCT->setCm(pColorMap);
-	pDataCT->pcColorMap->loadFromFile("colorMaps/cm07.png");
+	pColorMap->loadFromFile("colorMaps/cm07.png");
+	pDataCT->setCm(pColorMap);
 	pCamera->snapShot(pDataCT, 3);
 }
 
 void TW_CALL cbUpdateTexture2(void *clientData)
 {
-	//pColorMap->loadFromFile("colorMaps/cm06.png");
-	//pDataCT->setCm(pColorMap);
+	pColorMap->loadFromFile("colorMaps/cm06.png");
+	pDataCT->setCm(pColorMap);
 	pDataCT->pcColorMap->loadFromFile("colorMaps/cm06.png");
 	pCamera->snapShot(pDataCT, 3);
 }
 
 void TW_CALL cbUpdateTexture3(void *clientData)
 {
-	//pColorMap->loadFromFile("colorMaps/spectrumAlpha.png");
-	//pDataCT->setCm(pColorMap);
+	pColorMap->loadFromFile("colorMaps/spectrumAlpha.png");
+	pDataCT->setCm(pColorMap);
 	pDataCT->pcColorMap->loadFromFile("colorMaps/spectrumAlpha.png");
 	pCamera->snapShot(pDataCT, 3);
 }

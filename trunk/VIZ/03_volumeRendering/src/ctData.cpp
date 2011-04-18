@@ -23,7 +23,7 @@ CTdata::~CTdata(){
 
 void CTdata::setCm(ColorMap *colorMap) {
 	pcColorMap		= colorMap;
-	printf("%i \n",pcColorMap->cm.width);
+	vertexMap.clear();
 }
 
 void CTdata::setSh(Shader *shader) {
