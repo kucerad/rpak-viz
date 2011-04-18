@@ -30,11 +30,36 @@ float  nDir[3] = {camDir.x, camDir.y, camDir.z};
 ColorMap* pColorMap = new ColorMap();
 CTdata* pDataCT = new CTdata();
 
+GLuint		textureID;
+
 #define TRANSFER_F_FILENAME "colorMaps/cm06.png"
 //#define TRANSFER_F_FILENAME "colorMaps/spectrumAlpha2.png"
 
+float texWidth = float(g_WindowWidth)/600;
+float texHeight = float(g_WindowHeight)/600;
+
+
 // FORWARD DECLARATIONS________________________________________________________
 void initGUI();
+
+void drawPlane()
+{
+	glBegin(GL_QUADS);
+		
+			glTexCoord2f(0.f, 0.0f);
+			glVertex3f(-texWidth, -texHeight, 0.0f);
+
+			glTexCoord2f(g_WindowWidth, 0.0f);
+			glVertex3f(texWidth, -texHeight, 0.0f);
+
+			glTexCoord2f(g_WindowWidth, g_WindowHeight);
+			glVertex3f(texWidth, texHeight, 0.0f);
+
+			glTexCoord2f(0.0f, g_WindowHeight);
+			glVertex3f(-texWidth, texHeight, 0.0f);
+
+	glEnd();
+}
 //-----------------------------------------------------------------------------
 // Name: cbDisplay()
 // Desc: 
@@ -43,9 +68,21 @@ void cbDisplay()
 {
    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
    // draw pixels
-   glDrawPixels(g_WindowWidth,g_WindowHeight, GL_RGB, GL_FLOAT, pCamera->imageData);
-   
+   //glDrawPixels(g_WindowWidth,g_WindowHeight, GL_RGB, GL_FLOAT, pCamera->imageData);
+ 
+   glDisable(GL_LIGHTING);
+
+   glPushMatrix();
+   glTranslated(0.0, 0.0, -2.0);
+   glColor3f(1.0, 1.0, 0.0);
+   //glutSolidSphere(1.1, 10, 10);
+   glEnable(GL_TEXTURE_RECTANGLE_ARB);
+   glBindTexture(GL_TEXTURE_RECTANGLE_ARB, textureID);
+	drawPlane();
+   glBindTexture(GL_TEXTURE_RECTANGLE_ARB, 0);
+   glPopMatrix();
 }
+
 void updateView() {
 	// TODO odladit
 	v3 dir(nDir[0], nDir[1], nDir[2]);
@@ -71,6 +108,13 @@ void updateView() {
 	pCamera->printOut();
 	// take a picture 
 	pCamera->snapShot(pDataCT, 3);
+
+	glEnable(GL_TEXTURE_RECTANGLE_ARB);
+	glBindTexture(GL_TEXTURE_RECTANGLE_ARB, textureID);
+		glTexImage2D(GL_TEXTURE_RECTANGLE_ARB, 0, GL_RGB, g_WindowWidth, g_WindowHeight, 0, GL_RGB, GL_FLOAT, pCamera->imageData);
+	glBindTexture(GL_TEXTURE_RECTANGLE_ARB, 0);
+	glDisable(GL_TEXTURE_RECTANGLE_ARB);
+
 }
 
 void initApp()
@@ -87,6 +131,17 @@ void initApp()
 //	v4 color = pColorMap->mapValueToColor(0.152811f);
 //	printf("COLOR[ %f %f %f %f ]\n", color.r, color.g,color.b,color.a);
 //	system("PAUSE");
+
+	glEnable(GL_TEXTURE_RECTANGLE_ARB);
+	glGenTextures(1, &textureID);
+	glBindTexture(GL_TEXTURE_RECTANGLE_ARB, textureID);
+		glTexParameteri(GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_WRAP_S, GL_CLAMP); 
+		glTexParameteri(GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_WRAP_T, GL_CLAMP);
+		glTexParameteri(GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+
+		glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
+	glBindTexture(GL_TEXTURE_RECTANGLE_ARB, 0);
 
 
 	textLenght = printf("Initializing shader.");
@@ -259,7 +314,12 @@ void initGUI()
 //-----------------------------------------------------------------------------
 void cbWindowSizeChanged(int width, int height)
 {
-   glViewport(0, 0, width, height);
+	glViewport(0, 0, width, height);
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	gluPerspective(60.0f, GLfloat(width) / height, 1.0f, 1000.0f);
+	glMatrixMode(GL_MODELVIEW);
+
    g_WindowWidth  = width;
    g_WindowHeight = height;
 }
