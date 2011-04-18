@@ -23,6 +23,10 @@ CTdata::~CTdata(){
 	vertexMap.clear();
 }
 
+void CTdata::setCm(ColorMap *colorMap) {
+	pColorMap		= colorMap;
+}
+
 v3 CTdata::getCenterPoint(){
 	return center;//v3(scX*float(dimX)*0.5, scY*float(dimY)*0.5,scZ*float(dimZ)*0.5);
 }

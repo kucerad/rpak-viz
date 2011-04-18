@@ -52,6 +52,8 @@ public:
 	float	getValueAt(const int x, const int y, const int z);
 	v3		getCenterPoint();
 
+	void setCm(ColorMap *colorMap);
+
 	void	colorizeRay(Ray * rayIn);
 	Shader*		pShader;
 	ColorMap*	pColorMap;
