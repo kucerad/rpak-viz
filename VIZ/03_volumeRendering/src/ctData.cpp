@@ -11,10 +11,16 @@ CTdata::CTdata(){
 	stepZ			= 1;
 	sampleDistance	= SAMPLE_DISTANCE;
 	sampleCount		= 0;
+	vertices		= NULL;
 }
 
 CTdata::~CTdata(){
 	SAFE_DELETE_ARRAY_PTR(data)	
+	int size = dimX*dimY*dimZ;
+	for (int i=0; i<size; i++){
+		delete vertices[i];
+	}
+	SAFE_DELETE_ARRAY_PTR(vertices)
 	SAFE_DELETE_PTR(pcColorMap)
 	SAFE_DELETE_PTR(pcShader)
 
@@ -23,6 +29,10 @@ CTdata::~CTdata(){
 
 void CTdata::setCm(ColorMap *colorMap) {
 	pcColorMap		= colorMap;
+	int size = dimX*dimY*dimZ;
+	for (int i=0; i<size; i++){
+		vertices[i]->isValid=false;
+	}
 	vertexMap.clear();
 }
 
@@ -68,6 +78,19 @@ void CTdata::loadSphere(int _szX, int _szY, int _szZ, float minV, float maxV)
 	// bounding box
 	box.bounds[0] = center-v3(szX,szY,szZ)/2.0;// min corner
 	box.bounds[1] = center+v3(szX,szY,szZ)/2.0;// max corner
+
+	initVertices(dimX, dimY, dimZ);
+}
+void CTdata::initVertices(int dx, int dy, int dz){
+	
+	int size = dimZ*dimY*dimX+1;
+	printf("size = %i\n", size);
+	vertices = new Vertex*[size];
+
+	for (int i=0; i<size; i++){
+		vertices[i] = new Vertex();
+		vertices[i]->isValid = false;
+	}
 }
 	
 bool CTdata::loadFromFiles(const char * filename, int cnt, int scaleX, int scaleY, int scaleZ){
@@ -115,9 +138,9 @@ bool CTdata::loadFromFiles(const char * filename, int cnt, int scaleX, int scale
 	dimZ = cnt;
 	
 
-	szX = dimX * scX;
-	szY = dimY * scY;
-	szZ = dimZ * scZ;
+	szX = (dimX-1) * scX;
+	szY = (dimY-1) * scY;
+	szZ = (dimZ-1) * scZ;
 	center.x = szX/2.0;
 	center.y = szY/2.0;
 	center.z = szZ/2.0;
@@ -129,6 +152,7 @@ bool CTdata::loadFromFiles(const char * filename, int cnt, int scaleX, int scale
 	// backspace...
 	BACKSPACE(chars);
 	//printf("LOADING CT images (%i) DONE\n", cnt);
+	initVertices(dimX, dimY, dimZ);
 	return true;
 }
 
@@ -142,9 +166,6 @@ Vertex CTdata::interpolate (Vertex v1, Vertex v2, float t) {
 
 Vertex CTdata::getVertexAt(float x, float y, float z)
 {
-	if (x>=szX || y>=szY || z>=szZ){
-		int a = 0;
-	}
 	x=max2f(min2f(float(szX), x),0.f);
 	y=max2f(min2f(float(szY), y),0.f); 
 	z=max2f(min2f(float(szZ), z),0.f);
@@ -174,15 +195,13 @@ Vertex CTdata::getVertexAt(float x, float y, float z)
 
 Vertex* CTdata::getVertexAt(int x, int y, int z)
 {
-	if (x==2 && y==9 && z == 10){
-		int f = 0;
-	}
 	Position3i p;
 	p.x = x;
 	p.y = y;
 	p.z = z;
-	// is Vetrex allready precomputed in vertexMap?
-	Vertex* v = &(vertexMap[p]);
+	// is Vetrex allready precomputed in vertices?
+	Vertex *v = vertices[(z*dimY + y)*dimX+x];
+	//Vertex* v = &(vertexMap[p]);
 	if (!v->isValid){
 		// not precomputed... compute now...
 		// position
