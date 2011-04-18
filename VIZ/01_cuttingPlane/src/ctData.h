@@ -5,7 +5,7 @@
 #include "png.h"
 #include "utils.h"
 #include "settings.h"
-#include "../../include/GLEE/GLee.h" 
+//#include "../../include/GLEE/GLee.h" 
 
 using namespace std;
 

@@ -66,7 +66,7 @@ void CTtexture::calcIntersections(const v3 &normal, const v3 &u, const v3 &v, co
 	v3 p;
 	float x(ct.szX),y(ct.szY),z(ct.szZ);
 	float d=0, dot=0, up;
-	float max;
+	float max, maxSz;
 	v3 intersection;
 	v3 line;
 	v3 halfCenter(ct.szX*0.5,ct.szY*0.5,ct.szZ*0.5);
