@@ -70,7 +70,7 @@ void Camera::snapShot(CTdata *ctData, int channels)
 			progress = float(y*width+x)/float(area);
 			if (progress-progressPre>=0.01){
 				BACK(chars);
-				chars = printf("( progress: %3.1f %% )", progress*100);
+				chars = printf("( progress: %3.1f %% | %i, %i )", progress*100, x,y);
 				progressPre = progress;
 			}
 		}

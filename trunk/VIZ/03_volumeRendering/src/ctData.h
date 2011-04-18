@@ -62,10 +62,15 @@ public:
 	v3			center;
 private:
 	float *	data;
+	Vertex** vertices;
+
+	void initVertices(int dx, int dy, int dz);
+
 
 	int dimX, dimY, dimZ;
 	int stepX, stepY, stepZ;
 	float scX, scY, scZ;
+
 
 	
 	BBox box;

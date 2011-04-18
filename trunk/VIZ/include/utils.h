@@ -29,6 +29,14 @@ __forceinline float max2f(float a, float b)
 {
 	return (a>=b)?a:b;	
 }
+__forceinline float max2i(int a, int b)
+{
+	return (a>=b)?a:b;	
+}
+__forceinline float min2i(int a, int b)
+{
+	return (a>=b)?a:b;	
+}
 __forceinline float interpolate1Dlin(const float valX, const float valY, const float t){
 	if (t<=0.f) return valX;
 	if (t>=1.f) return valY;
