@@ -35,8 +35,8 @@ GLuint		textureID;
 #define TRANSFER_F_FILENAME "colorMaps/cm06.png"
 //#define TRANSFER_F_FILENAME "colorMaps/spectrumAlpha2.png"
 
-float texWidth = float(g_WindowWidth)/600;
-float texHeight = float(g_WindowHeight)/600;
+float texWidth = float(g_WindowWidth)/float(g_WindowHeight);
+float texHeight = float(g_WindowHeight)/float(g_WindowHeight);
 
 
 // FORWARD DECLARATIONS________________________________________________________
@@ -166,7 +166,7 @@ void initApp()
 #if TESTMODE
 	float scale = 0.05f;
 #else
-	float scale = 0.6;
+	float scale = 0.2;
 #endif	
 	pCamera = new Camera(v3(0.f, 0.f, 200.f), v3(0.f, 0.f, 1.f), v3(1.f, 0.f, 0.f),g_WindowWidth,g_WindowHeight, scale);
 	//pCamera = new Camera(v3(0.f, 0.f, 50.f), v3(0.f, 1.f, 0.f), v3(0.f, 0.f, -1.f),g_WindowWidth,g_WindowHeight, scale);
