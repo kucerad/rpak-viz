@@ -22,7 +22,7 @@ GLint    g_WindowHeight      = 600;    // Window height
 
 GLint    mouseX=0, mouseY = 0;
 Camera   *pCamera;
-v3			camDir(0.f, 1.f, 0.f);
+v3			camDir(1.f, 0.f, 0.f);
 v3			camUp(0.f, 0.f, 1.f);
 float		camDistance = 200.0;
 float  nDir[3] = {camDir.x, camDir.y, camDir.z};
@@ -30,7 +30,7 @@ float  nDir[3] = {camDir.x, camDir.y, camDir.z};
 ColorMap* pColorMap = new ColorMap();
 CTdata* pDataCT = new CTdata();
 
-#define TRANSFER_F_FILENAME "colorMaps/spectrumAlpha.png"
+#define TRANSFER_F_FILENAME "colorMaps/cm06.png"
 //#define TRANSFER_F_FILENAME "colorMaps/spectrumAlpha2.png"
 
 // FORWARD DECLARATIONS________________________________________________________
@@ -111,9 +111,9 @@ void initApp()
 #if TESTMODE
 	float scale = 0.05f;
 #else
-	float scale = 0.9;
+	float scale = 0.6;
 #endif	
-	pCamera = new Camera(v3(0.f, 0.f, 200.f), v3(0.f, 0.f, 1.f), v3(0.f, 1.f, 0.f),g_WindowWidth,g_WindowHeight, scale);
+	pCamera = new Camera(v3(0.f, 0.f, 200.f), v3(0.f, 0.f, 1.f), v3(1.f, 0.f, 0.f),g_WindowWidth,g_WindowHeight, scale);
 	//pCamera = new Camera(v3(0.f, 0.f, 50.f), v3(0.f, 1.f, 0.f), v3(0.f, 0.f, -1.f),g_WindowWidth,g_WindowHeight, scale);
 	
 	updateView();
@@ -193,14 +193,14 @@ void TW_CALL cbRight(void *clientData)
 
 void TW_CALL cbUpdateTexture1(void *clientData)
 {
-	pColorMap->loadFromFile("colorMaps/cm07.png");
+	pColorMap->loadFromFile("colorMaps/cm06.png");
 	pDataCT->setCm(pColorMap);
 	pCamera->snapShot(pDataCT, 3);
 }
 
 void TW_CALL cbUpdateTexture2(void *clientData)
 {
-	pColorMap->loadFromFile("colorMaps/cm06.png");
+	pColorMap->loadFromFile("colorMaps/cm07.png");
 	pDataCT->setCm(pColorMap);
 	pDataCT->pcColorMap->loadFromFile("colorMaps/cm06.png");
 	pCamera->snapShot(pDataCT, 3);
