@@ -57,10 +57,10 @@ void updateView() {
 	pCamera->direction = camDir;
 
 	// recalculate up-vector & right-vector
-	//if (axis.length()>= 0.01){
+	if (axis.length()>= 0.01){
 	//if (angle>= 0.01){
 		pCamera->up.rotate(angle, axis);
-	//}
+	}
 	pCamera->right = pCamera->up.cross(camDir);
 
 	pCamera->position = pDataCT->center + camDir * (-camDistance);
