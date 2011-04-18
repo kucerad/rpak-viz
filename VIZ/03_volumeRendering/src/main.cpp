@@ -23,12 +23,14 @@ GLint    g_WindowHeight      = 600;    // Window height
 GLint    mouseX=0, mouseY = 0;
 CTdata	 *pDataCT;
 Camera   *pCamera;
-v3			camDir(0.f, 0.f, 1.f);
-v3			camUp(0.f, 1.f, 0.f);
+v3			camDir(0.f, 1.f, 0.f);
+v3			camUp(0.f, 0.f, 1.f);
 float		camDistance = 200.0;
 float  nDir[3] = {camDir.x, camDir.y, camDir.z};
 
-#define TRANSFER_F_FILENAME "colorMaps/cm06.png"
+ColorMap* pColorMap = new ColorMap();
+
+#define TRANSFER_F_FILENAME "colorMaps/cm07.png"
 //#define TRANSFER_F_FILENAME "colorMaps/spectrumAlpha2.png"
 
 // FORWARD DECLARATIONS________________________________________________________
@@ -76,7 +78,7 @@ void initApp()
 	int textLenght = 0;
 
 	textLenght = printf("Loading transfer function from file: '%s'.", TRANSFER_F_FILENAME);
-	ColorMap* pColorMap = new ColorMap();
+
 	pColorMap->loadFromFile(TRANSFER_F_FILENAME);
 	BACKSPACE(textLenght);
 	printf("Transfer function loaded successfully.\n");
@@ -108,7 +110,7 @@ void initApp()
 #if TESTMODE
 	float scale = 0.05f;
 #else
-	float scale = 0.5;
+	float scale = 0.9;
 #endif	
 	pCamera = new Camera(v3(0.f, 0.f, 200.f), v3(0.f, 0.f, 1.f), v3(0.f, 1.f, 0.f),g_WindowWidth,g_WindowHeight, scale);
 	//pCamera = new Camera(v3(0.f, 0.f, 50.f), v3(0.f, 1.f, 0.f), v3(0.f, 0.f, -1.f),g_WindowWidth,g_WindowHeight, scale);
@@ -188,6 +190,27 @@ void TW_CALL cbRight(void *clientData)
 	updateView();
 }
 
+void TW_CALL cbUpdateTexture1(void *clientData)
+{
+	pColorMap->loadFromFile("colorMaps/cm07.png");
+	pDataCT->setCm(pColorMap);
+	updateView();
+}
+
+void TW_CALL cbUpdateTexture2(void *clientData)
+{
+	pColorMap->loadFromFile("colorMaps/cm06.png");
+	pDataCT->setCm(pColorMap);
+	updateView();
+}
+
+void TW_CALL cbUpdateTexture3(void *clientData)
+{
+
+	updateView();
+}
+
+
 //-----------------------------------------------------------------------------
 // Name: initGUI()
 // Desc: 
@@ -217,6 +240,11 @@ void initGUI()
    TwAddButton(controlBar, "Bottom", cbBottom, NULL, " group='Fixed look' label='Bottom' "); 
    TwAddButton(controlBar, "Left", cbLeft, NULL, " group='Fixed look' label='Left' ");
    TwAddButton(controlBar, "Right", cbRight, NULL, " group='Fixed look' label='Right' ");
+
+   TwAddButton(controlBar, "Transfer function1", cbUpdateTexture1, NULL, " group='Transfer function' label='Black - white' "); 
+   TwAddButton(controlBar, "Transfer function2", cbUpdateTexture2, NULL, " group='Transfer function' label='Red - white' "); 
+   TwAddButton(controlBar, "Transfer function3", cbUpdateTexture3, NULL, " group='Transfer function' label='Spectrum' "); 
+
 #endif
 }
 

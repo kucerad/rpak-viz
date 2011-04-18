@@ -9,11 +9,11 @@ ColorMap::~ColorMap(){
 }
 
 void ColorMap::loadFromFile(const char * filename){
-	//printf("LOADING Color Map ");
+	printf("LOADING Color Map ");
 	cm.clear();
 	cm.load(filename);
 	width = cm.width;
-	//printf("(width = %i). DONE\n", width);
+	printf("(width = %i). DONE\n", width);
 	
 }
 	
