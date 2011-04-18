@@ -21,7 +21,6 @@ GLint    g_WindowHeight      = 600;    // Window height
 
 
 GLint    mouseX=0, mouseY = 0;
-CTdata	 *pDataCT;
 Camera   *pCamera;
 v3			camDir(0.f, 1.f, 0.f);
 v3			camUp(0.f, 0.f, 1.f);
@@ -29,8 +28,9 @@ float		camDistance = 200.0;
 float  nDir[3] = {camDir.x, camDir.y, camDir.z};
 
 ColorMap* pColorMap = new ColorMap();
+CTdata* pDataCT = new CTdata();
 
-#define TRANSFER_F_FILENAME "colorMaps/cm07.png"
+#define TRANSFER_F_FILENAME "colorMaps/spectrumAlpha.png"
 //#define TRANSFER_F_FILENAME "colorMaps/spectrumAlpha2.png"
 
 // FORWARD DECLARATIONS________________________________________________________
@@ -95,7 +95,8 @@ void initApp()
 	printf("%s initialized.\n", pShader->getDescription());
 
 	textLenght = printf("Loading data. ");
-	pDataCT = new CTdata(pColorMap, pShader);
+	pDataCT->setCm(pColorMap);
+	pDataCT->setSh(pShader);
 
 #if TESTMODE
 	pDataCT->loadSphere(10,10,10, 0.f, 10.f);
@@ -192,22 +193,26 @@ void TW_CALL cbRight(void *clientData)
 
 void TW_CALL cbUpdateTexture1(void *clientData)
 {
-	pColorMap->loadFromFile("colorMaps/cm07.png");
-	pDataCT->setCm(pColorMap);
-	updateView();
+	//pColorMap->loadFromFile("colorMaps/cm07.png");
+	//pDataCT->setCm(pColorMap);
+	pDataCT->pcColorMap->loadFromFile("colorMaps/cm07.png");
+	pCamera->snapShot(pDataCT, 3);
 }
 
 void TW_CALL cbUpdateTexture2(void *clientData)
 {
-	pColorMap->loadFromFile("colorMaps/cm06.png");
-	pDataCT->setCm(pColorMap);
-	updateView();
+	//pColorMap->loadFromFile("colorMaps/cm06.png");
+	//pDataCT->setCm(pColorMap);
+	pDataCT->pcColorMap->loadFromFile("colorMaps/cm06.png");
+	pCamera->snapShot(pDataCT, 3);
 }
 
 void TW_CALL cbUpdateTexture3(void *clientData)
 {
-
-	updateView();
+	//pColorMap->loadFromFile("colorMaps/spectrumAlpha.png");
+	//pDataCT->setCm(pColorMap);
+	pDataCT->pcColorMap->loadFromFile("colorMaps/spectrumAlpha.png");
+	pCamera->snapShot(pDataCT, 3);
 }
 
 
