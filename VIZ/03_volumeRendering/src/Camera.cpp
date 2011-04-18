@@ -16,7 +16,20 @@ Camera::~Camera(void)
 {
 	SAFE_DELETE_ARRAY_PTR(imageData);
 }
+void Camera::printOut(){
+	printf("Camera params:\nPosition: ");
+	position.printOut();
+	printf("\nUp: ");
+	up.printOut();
 
+	printf("\nRight: ");
+	right.printOut();
+
+	printf("\nDirection: ");
+	direction.printOut();
+
+	printf("\n");
+}
 void Camera::snapShot(CTdata *ctData, int channels)
 {
 	int chs = printf("Rendering... ");

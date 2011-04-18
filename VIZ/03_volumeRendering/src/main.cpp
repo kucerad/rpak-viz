@@ -16,13 +16,16 @@
 #include "colorMap.h"
 
 // GLOBAL VARIABLES____________________________________________________________
-GLint    g_WindowWidth       = 512;    // Window width
-GLint    g_WindowHeight      = 512;    // Window height
+GLint    g_WindowWidth       = 800;    // Window width
+GLint    g_WindowHeight      = 600;    // Window height
+
+
 GLint    mouseX=0, mouseY = 0;
 CTdata	 *pDataCT;
 Camera   *pCamera;
 v3			camDir(0.f, 0.f, 1.f);
-float		camDistance = 100.0;
+v3			camUp(0.f, 1.f, 0.f);
+float		camDistance = 200.0;
 float  nDir[3] = {camDir.x, camDir.y, camDir.z};
 
 #define TRANSFER_F_FILENAME "colorMaps/cm06.png"
@@ -43,28 +46,27 @@ void cbDisplay()
 }
 void updateView() {
 	// TODO odladit
-	camDir.x = nDir[0]; 
-	camDir.y = nDir[1]; 
-	camDir.z = nDir[2];
-	camDir.normalize();
-	float angle = camDir.angleTo(pCamera->direction);
-	v3 axis = camDir.cross(pCamera->direction);
+	v3 dir(nDir[0], nDir[1], nDir[2]);
+	dir.normalize();
+	float angle = dir.angleTo(camDir);
+	v3 axis = dir.cross(camDir);
 
 
 	//float angle = camDir.angleTo(Vector3(0.0, 0.0, 1.0));
 	//v3 axis = camDir.cross(Vector3(0.0, 0.0, 1.0));
 	
-	pCamera->direction = camDir;
+	pCamera->direction = dir;
 
 	// recalculate up-vector & right-vector
 	if (axis.length()>= 0.01){
-	//if (angle>= 0.01){
-		pCamera->up.rotate(angle, axis);
+		pCamera->up = camUp.getRotated(angle, axis);
+	} else {
+		pCamera->up = camUp;
 	}
-	pCamera->right = pCamera->up.cross(camDir);
+	pCamera->right = pCamera->up.cross(pCamera->direction);
 
-	pCamera->position = pDataCT->center + camDir * (-camDistance);
-
+	pCamera->position = pDataCT->center + pCamera->direction * (-camDistance);
+	pCamera->printOut();
 	// take a picture 
 	pCamera->snapShot(pDataCT, 3);
 }
@@ -103,9 +105,9 @@ void initApp()
 	
 	// Cim mensi cislo SCALE, tim vetsi obrazek [priblizeni]
 	// pro obrazek v puvodni velikosti... scale = 1;, 2x vetsi... scale = 0.5
-	float scale = 2.0;
-
-	pCamera = new Camera(v3(0.f, 0.f, 10.f), v3(0.f, 1.f, 0.f), v3(0.f, 0.f, -1.f),g_WindowWidth,g_WindowHeight, scale);
+	float scale = 0.5;
+	
+	pCamera = new Camera(v3(0.f, 0.f, 200.f), v3(0.f, 0.f, 1.f), v3(0.f, 1.f, 0.f),g_WindowWidth,g_WindowHeight, scale);
 	//pCamera = new Camera(v3(0.f, 0.f, 50.f), v3(0.f, 1.f, 0.f), v3(0.f, 0.f, -1.f),g_WindowWidth,g_WindowHeight, scale);
 	
 	updateView();

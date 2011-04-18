@@ -11,6 +11,7 @@
 
 #include <math.h>
 #include <stdlib.h>
+#include <cstdio>
 
 union flint{
 	float			f;
@@ -266,6 +267,9 @@ public:
 		Vector3 a = v.getNormalized();
 		Vector3 b = this->getNormalized();
 		return acos(a.dot(b));
+	}
+	void printOut(){
+		printf("[%f %f %f]", x,y,z);
 	}
 
 public:
