@@ -4,27 +4,30 @@
 #define ALPHAACCUM_TRESHOLD 0.01
 
 
-CTdata::CTdata(ColorMap *colorMap, Shader *shader){
+CTdata::CTdata(){
 	data			= NULL;
 	stepX			= 1;
 	stepY			= 1;
 	stepZ			= 1;
 	sampleDistance	= SAMPLE_DISTANCE;
 	sampleCount		= 0;
-	pColorMap		= colorMap;
-	pShader			= shader;
 }
 
 CTdata::~CTdata(){
 	SAFE_DELETE_ARRAY_PTR(data)	
-	SAFE_DELETE_PTR(pColorMap)
-	SAFE_DELETE_PTR(pShader)
+	SAFE_DELETE_PTR(pcColorMap)
+	SAFE_DELETE_PTR(pcShader)
 
 	vertexMap.clear();
 }
 
 void CTdata::setCm(ColorMap *colorMap) {
-	pColorMap		= colorMap;
+	pcColorMap		= colorMap;
+	printf("%i \n",pcColorMap->cm.width);
+}
+
+void CTdata::setSh(Shader *shader) {
+	pcShader			= shader;
 }
 
 v3 CTdata::getCenterPoint(){
@@ -200,7 +203,7 @@ Vertex* CTdata::getVertexAt(int x, int y, int z)
 
 		// color
 		// get color from transfer function
-		v->color = pColorMap->mapValueToColor(v->value);
+		v->color = pcColorMap->mapValueToColor(v->value);
 
 		// validate
 		v->isValid = true;
@@ -262,7 +265,7 @@ void  CTdata::colorizeRay(Ray * rayIn)
 		// use phong shading model to shade color
 		colDiffuse = v.color.xyz();
 		outputColor = colDiffuse;
-		pShader->apply(&(outputColor), &(colDiffuse), &(v.normal), &(LIGHT_DIR), &(-rayIn->dir));
+		pcShader->apply(&(outputColor), &(colDiffuse), &(v.normal), &(LIGHT_DIR), &(-rayIn->dir));
 		
 		v.color.setFromV3(outputColor);
 

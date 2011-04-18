@@ -37,7 +37,7 @@ struct p3iComparator {
 
 class CTdata{
 public:
-	CTdata(ColorMap *colorMap, Shader *shader);
+	CTdata();
 	~CTdata();
 	// load CT 3d grid from files... filename in format like in printf with one %i
 	bool	loadFromFiles(const char * filename, int cnt, int scaleX, int scaleY, int scaleZ);
@@ -53,10 +53,11 @@ public:
 	v3		getCenterPoint();
 
 	void setCm(ColorMap *colorMap);
+	void setSh(Shader *shader);
 
 	void	colorizeRay(Ray * rayIn);
-	Shader*		pShader;
-	ColorMap*	pColorMap;
+	Shader*		pcShader;
+	ColorMap*	pcColorMap;
 	float		szX, szY, szZ;
 	v3			center;
 private:
