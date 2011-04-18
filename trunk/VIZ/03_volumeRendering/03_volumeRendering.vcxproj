@@ -125,6 +125,7 @@
     <None Include="colorMaps\cm06.png">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </None>
+    <None Include="colorMaps\cm07.png" />
     <None Include="colorMaps\cm_2.png">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </None>
