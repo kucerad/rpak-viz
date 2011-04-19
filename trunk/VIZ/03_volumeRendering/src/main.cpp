@@ -32,7 +32,7 @@ CTdata* pDataCT = new CTdata();
 
 GLuint		textureID;
 
-#define TRANSFER_F_FILENAME "colorMaps/cm06.png"
+#define TRANSFER_F_FILENAME "colorMaps/tf04.png"
 //#define TRANSFER_F_FILENAME "colorMaps/spectrumAlpha2.png"
 
 float texWidth = float(g_WindowWidth)/float(g_WindowHeight);
@@ -171,7 +171,7 @@ void initApp()
 #if TESTMODE
 	float scale = 0.05f;
 #else
-	float scale = 0.2;
+	float scale = 1.0;
 #endif	
 	pCamera = new Camera(v3(0.f, 0.f, 200.f), v3(0.f, 0.f, 1.f), v3(1.f, 0.f, 0.f),g_WindowWidth,g_WindowHeight, scale);
 	//pCamera = new Camera(v3(0.f, 0.f, 50.f), v3(0.f, 1.f, 0.f), v3(0.f, 0.f, -1.f),g_WindowWidth,g_WindowHeight, scale);
@@ -254,7 +254,7 @@ void TW_CALL cbRight(void *clientData)
 
 void TW_CALL cbUpdateTexture1(void *clientData)
 {
-	pColorMap->loadFromFile("colorMaps/cm06.png");
+	pColorMap->loadFromFile("colorMaps/tf01.png");
 	pDataCT->setCm(pColorMap);
 	pCamera->snapShot(pDataCT, 3);
 	updateTexture();
@@ -262,7 +262,7 @@ void TW_CALL cbUpdateTexture1(void *clientData)
 
 void TW_CALL cbUpdateTexture2(void *clientData)
 {
-	pColorMap->loadFromFile("colorMaps/cm07.png");
+	pColorMap->loadFromFile("colorMaps/tf02.png");
 	pDataCT->setCm(pColorMap);
 	pCamera->snapShot(pDataCT, 3);
 	updateTexture();
@@ -270,7 +270,15 @@ void TW_CALL cbUpdateTexture2(void *clientData)
 
 void TW_CALL cbUpdateTexture3(void *clientData)
 {
-	pColorMap->loadFromFile("colorMaps/spectrumAlpha.png");
+	pColorMap->loadFromFile("colorMaps/tf03.png");
+	pDataCT->setCm(pColorMap);
+	pCamera->snapShot(pDataCT, 3);
+	updateTexture();
+}
+
+void TW_CALL cbUpdateTexture4(void *clientData)
+{
+	pColorMap->loadFromFile("colorMaps/tf04.png");
 	pDataCT->setCm(pColorMap);
 	pCamera->snapShot(pDataCT, 3);
 	updateTexture();
@@ -292,11 +300,11 @@ void initGUI()
 
    TwWindowSize(g_WindowWidth, g_WindowHeight);
    TwBar *controlBar = TwNewBar("Controls");
-   TwDefine(" Controls position='10 10' size='200 370' refresh=0.1 ");
+   TwDefine(" Controls position='3 3' size='220 370' refresh=0.1 ");
   // TwAddVarRO(controlBar, "progress",  TW_TYPE_FLOAT, &(pCamera->progress), " group='Refresh' label='Progress' "); 
    TwAddVarRW(controlBar, "direction", TW_TYPE_DIR3F, &nDir, " group='Refresh' label='Camera direction'");
-   TwAddVarRO(controlBar, "mouseX", TW_TYPE_INT32, &mouseX, " group='Refresh' label='MouseX'");
-   TwAddVarRO(controlBar, "mouseY", TW_TYPE_INT32, &mouseY, " group='Refresh' label='MouseY'");
+   //TwAddVarRO(controlBar, "mouseX", TW_TYPE_INT32, &mouseX, " group='Refresh' label='MouseX'");
+   //TwAddVarRO(controlBar, "mouseY", TW_TYPE_INT32, &mouseY, " group='Refresh' label='MouseY'");
    TwAddButton(controlBar, "Update_view", cbUpdate, NULL, " group='Refresh' label='Update view' "); 
 
 
@@ -307,9 +315,10 @@ void initGUI()
    TwAddButton(controlBar, "Left", cbLeft, NULL, " group='Fixed look' label='Left' ");
    TwAddButton(controlBar, "Right", cbRight, NULL, " group='Fixed look' label='Right' ");
 
-   TwAddButton(controlBar, "Transfer function1", cbUpdateTexture1, NULL, " group='Transfer function' label='Black - white' "); 
-   TwAddButton(controlBar, "Transfer function2", cbUpdateTexture2, NULL, " group='Transfer function' label='Red - white' "); 
-   TwAddButton(controlBar, "Transfer function3", cbUpdateTexture3, NULL, " group='Transfer function' label='Spectrum' "); 
+   TwAddButton(controlBar, "Transfer function1", cbUpdateTexture1, NULL, " group='Transfer function' label='100% bones' "); 
+   TwAddButton(controlBar, "Transfer function2", cbUpdateTexture2, NULL, " group='Transfer function' label='50% bones' "); 
+   TwAddButton(controlBar, "Transfer function3", cbUpdateTexture3, NULL, " group='Transfer function' label='100% bones, 50% skin' "); 
+   TwAddButton(controlBar, "Transfer function4", cbUpdateTexture4, NULL, " group='Transfer function' label='100% bones, 50% tissue' "); 
 
 #endif
 }

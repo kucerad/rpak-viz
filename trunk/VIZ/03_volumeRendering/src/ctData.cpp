@@ -95,7 +95,7 @@ void CTdata::initVertices(int dx, int dy, int dz){
 }
 	
 bool CTdata::loadFromFiles(const char * filename, int cnt, int scaleX, int scaleY, int scaleZ){
-	int divide = 2;
+	int divide = 1;
 	int chars = 0;
 	scX = scaleX;
 	scY = scaleY;
@@ -261,7 +261,7 @@ void  CTdata::colorizeRay(Ray * rayIn)
 	v4 col;						  
 	for ( i = rayIn->min + sampleDistance*0.5;
 		  i < rayIn->max;
-		  i += sampleDistance )
+		  i += sampleDistance*0.5 )
 	{ // for each sample on ray
 		sampleCount++;
 

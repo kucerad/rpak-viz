@@ -486,5 +486,17 @@
     <None Include="colorMaps\cm07.png">
       <Filter>data\colorMaps</Filter>
     </None>
+    <None Include="colorMaps\tf01.png">
+      <Filter>data\colorMaps</Filter>
+    </None>
+    <None Include="colorMaps\tf02.png">
+      <Filter>data\colorMaps</Filter>
+    </None>
+    <None Include="colorMaps\tf03.png">
+      <Filter>data\colorMaps</Filter>
+    </None>
+    <None Include="colorMaps\tf04.png">
+      <Filter>data\colorMaps</Filter>
+    </None>
   </ItemGroup>
 </Project>

@@ -147,6 +147,10 @@
     <None Include="colorMaps\spectrumAlpha2.png">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </None>
+    <None Include="colorMaps\tf01.png" />
+    <None Include="colorMaps\tf02.png" />
+    <None Include="colorMaps\tf03.png" />
+    <None Include="colorMaps\tf04.png" />
     <None Include="ctdata\cthead-16bit001.png">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </None>
