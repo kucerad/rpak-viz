@@ -7,7 +7,7 @@
 #include "Vector4.h" // alias v4
 
 static const float SAMPLE_DISTANCE = 0.7f;
-static Vector4 BACKGROUND_COLOR(0.5f, 0.5f, 0.0f, 1.0f);
+static Vector4 BACKGROUND_COLOR(0.0f, 0.0f, 0.0f, 1.0f);
 static const float BACKGROUND_VALUE = -1.0f;
 static const float DATA_MAX = 3272; 
 
