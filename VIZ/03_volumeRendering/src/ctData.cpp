@@ -261,7 +261,7 @@ void  CTdata::colorizeRay(Ray * rayIn)
 	v4 col;						  
 	for ( i = rayIn->min + sampleDistance*0.5;
 		  i < rayIn->max;
-		  i += sampleDistance*0.5 )
+		  i += sampleDistance*0.4 )
 	{ // for each sample on ray
 		sampleCount++;
 
